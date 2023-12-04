@@ -63,7 +63,10 @@ class UserList extends Component
                 ->orWhere('email', 'LIKE', '%' . $this->search . '%')
                 ->orWhere('username', 'LIKE', '%' . $this->search . '%');
         })
-            ->paginate(10);
+        ->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'customer');
+        })
+        ->paginate(10);
 
         return view('livewire.user.user-list', [
             'users' => $usersQuery,

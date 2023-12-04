@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class DishForm extends Component
 {
-    public $dishId, $menu_id, $name, $description, $price;
+    public $dishId, $menu_id, $name, $description, $price_full, $price_half;
     public $action = '';
     public $message = '';
 
@@ -30,7 +30,8 @@ class DishForm extends Component
         $this->menu_id = $dish->menu_id;
         $this->name = $dish->name;
         $this->description = $dish->description;
-        $this->price = $dish->price;
+        $this->price_full = $dish->price_full;
+        $this->price_half = $dish->price_half;
     }
 
     public function store() {
@@ -38,7 +39,8 @@ class DishForm extends Component
             'menu_id' => 'required',
             'name' => 'required',
             'description' => 'nullable',
-            'price' => 'required',
+            'price_full' => 'nullable',
+            'price_half' => 'nullable',
         ]);
 
         if ($this->dishId) {

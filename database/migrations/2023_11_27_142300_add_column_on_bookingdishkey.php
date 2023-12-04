@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('customer_id')->nullable()->after('id');
-            $table->foreign('customer_id')->references('id')->on('users');
+        Schema::table('booking_dish_keys', function (Blueprint $table) {
+            $table->float('quantity')->nullable()->after('dish_id');
+
         });
     }
 
@@ -22,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('customer_id');
+        Schema::table('booking_dish_keys', function (Blueprint $table) {
+            $table->dropColumn('quantity');
         });
     }
 };

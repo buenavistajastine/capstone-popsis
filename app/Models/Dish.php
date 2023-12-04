@@ -13,13 +13,15 @@ class Dish extends Model
         'menu_id',
         'name',
         'description',
-        'price',
+        'price_full',
+        'price_half',
     ];
 
     public function menu()
-    {
-        return $this->belongsTo(Menu::class, 'menu_id', 'id');
-    }
+{
+    return $this->belongsTo(Menu::class, 'menu_id', 'id');
+}
+
 
     public function bookingDishKeys()
     {
@@ -28,6 +30,6 @@ class Dish extends Model
 
     public function addOns()
     {
-        return $this->belongsTo(AddOn::class, 'dish_id', 'id');
+        return $this->hasMany(AddOn::class, 'dish_id', 'id');
     }
 }

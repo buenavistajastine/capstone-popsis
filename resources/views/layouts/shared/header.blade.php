@@ -217,20 +217,20 @@
             @endphp
 
             <li class="nav-item">
-              {{-- <div>{{ $profile->first_name }} {{ $profile->last_name }}</div> --}}
+              <div>{{ $profile->first_name }} {{ $profile->last_name }}</div>
             </li>
 
 
             <li class="nav-item dropdown">
-                {{-- <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="wd-30 ht-30 rounded-circle"
                         src="{{ !empty($profile->photo) ? url('upload/admin_images/' . $profile->photo) : url('upload/no_image.jpg') }}"
                         alt="profile">
-                </a> --}}
+                </a>
                 <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
                     <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <img class="wd-80 ht-80 rounded-circle"
                                 src="{{ !empty($profile->photo) ? url('upload/admin_images/' . $profile->photo) : url('upload/no_image.jpg') }}"
                                 alt="">
@@ -238,7 +238,7 @@
                         <div class="text-center">
                             <p class="tx-16 fw-bolder">{{ $profile->name }}</p>
                             <p class="tx-12 text-muted">{{ $profile->email }}</p>
-                        </div> --}}
+                        </div>
                     </div>
                     <ul class="list-unstyled p-1">
                         <li class="dropdown-item py-2">
@@ -260,10 +260,10 @@
                             </a>
                         </li>
                         <li class="dropdown-item py-2">
-                            {{-- <a href="{{ route('user.logout') }}" class="text-body ms-0">
+                            <a href="{{ route('user.logout') }}" class="text-body ms-0">
                                 <i class="me-2 icon-md" data-feather="log-out"></i>
                                 <span>Log Out</span>
-                            </a> --}}
+                            </a>
                         </li>
                     </ul>
                 </div>

@@ -47,11 +47,12 @@
                     <table class="table table-hover table-panel text-nowrap align-middle mb-0">
                         <thead>
                             <tr>
-                                <th style="width: 5%"></th>
+                             
                                 <th style="width: 20%">Menu</th>
                                 <th style="width: 30%">Dish</th>
-                                <th style="width: 20%">Price</th>
-                                <th style="width: 20%">Action</th>
+                                <th style="width: 20%">Price(Full Chafing)</th>
+                                <th style="width: 20%">Price(Half Chafing)</th>
+                                <th style="width: 10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,10 +64,11 @@
                             @else
                             @foreach ($dishes as $dish)
                                 <tr>
-                                    <td></td>
+                                   
                                     <td>{{ $dish->menu->name }}</td>
                                     <td>{{ $dish->name }}</td>
-                                    <td class="text-center">₱ {{ number_format($dish->price, 2) }}</td>
+                                    <td class="text-center">₱ {{ number_format($dish->price_full, 2) }}</td>
+                                    <td class="text-center">₱ {{ number_format($dish->price_half, 2) }}</td>
                                     <td>
 
                                         <div class="btn-group btn-group-xs" role="group">
@@ -144,7 +146,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModal" aria-hidden="true">
+<div wire.ignore.self class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <livewire:dish.dish-form />
     </div>

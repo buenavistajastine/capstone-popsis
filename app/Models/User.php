@@ -27,6 +27,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function customers()
+    {
+        return $this->belongsTo(Customer::class, 'user_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -37,6 +42,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+ 
     /**
      * The attributes that should be cast.
      *

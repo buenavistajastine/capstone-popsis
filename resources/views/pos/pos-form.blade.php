@@ -12,28 +12,6 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-
-        {{-- Links --}}
-        <style>
-            html {
-            line-height: 1.5;
-            -webkit-text-size-adjust: 100%;
-            -moz-tab-size: 4;
-            tab-size: 4;
-            font-family: Figtree, sans-serif;
-            font-feature-settings: normal
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-size: inherit;
-            font-weight: inherit
-        }
-        </style>
     
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/core/core.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/sweetalert2/sweetalert2.min.css') }}">
@@ -52,25 +30,13 @@
     <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.png') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/content/content/toastr.css') }}">
 
-    @livewireStyles
-    @vite([])
-
 </head>
 
 <body>
-    <div class="main-wrapper">
-		@include('layouts.shared.header')
-		@include('layouts.shared.sidebar')
+    
+    @yield('pos-booking')
+    @yield('pos-food-order')
 
-		<!-- Page Content -->
-		<div class="page-wrapper">
-			{{ $slot }}
-		</div>
-		@yield('delete_modal')
-	</div>
-
-	<div class="sidebar-overlay" data-reff></div>
-    @livewireScripts
 
     <script src="{{ asset('backend/assets/vendors/core/core.js') }}"></script>
     <script src="{{ asset('backend/assets/js/select2.js') }}"></script>
@@ -88,13 +54,6 @@
     <script src="{{ asset('backend/assets/js/flatpickr.js') }}"></script>
     <script src="{{ asset('backend/assets/js/pickr.js') }}"></script>
     <script type="text/javascript" src="{{ asset('backend/content/scripts/toastr.min.js') }}"></script>
-
-    
-    @yield('custom_script')
-
-    @stack('script')
-    
-
 </body>
 
 </html>

@@ -200,6 +200,22 @@
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <livewire:employee.employee-form />
+
+        @push('script')
+<script>
+    $(function() {
+        'use strict'
+
+        if ($(".js-example-basic-single").length) {
+            $(".js-example-basic-single").select2();
+        }
+        if ($(".js-example-basic-multiple").length) {
+            $(".js-example-basic-multiple").select2();
+        }
+
+    });
+</script>
+@endpush
     </div>
 </div>
 

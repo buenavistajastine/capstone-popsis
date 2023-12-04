@@ -16,7 +16,7 @@ class AddOn extends Model
 
     public function bookings()
     {
-        return $this->hasOne(Booking::class, 'booking_id', 'id');
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
     public function dishes()
