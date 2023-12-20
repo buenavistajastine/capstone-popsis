@@ -15,7 +15,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group local-forms">
-                        <label>Name</label>
+                        <label>Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="name" placeholder />
                     </div>
                 </div>

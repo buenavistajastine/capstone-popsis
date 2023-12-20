@@ -13,6 +13,7 @@ class Booking extends Model
         'customer_id',
         'package_id',
         'venue_id',
+        'event_name',
         'venue_address',
         'no_pax',
         'date_event',

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('booking_dish_keys', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
-            $table->foreign('booking_id')->references('id')->on('bookings');
+            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
 
             $table->unsignedBigInteger('dish_id');
             $table->foreign('dish_id')->references('id')->on('dishes');
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');
 
-            $table->dateTime('dt_accepted');
-            $table->dateTime('dt_completed');
+            $table->dateTime('dt_accepted')->nullable();
+            $table->dateTime('dt_completed')->nullable();
             $table->timestamps();
         });
     }

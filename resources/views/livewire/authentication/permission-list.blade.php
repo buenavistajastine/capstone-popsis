@@ -1,38 +1,49 @@
-<div>
-    <div class="page-content">
-        <nav class="page-breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">All Permissions</li>
-            </ol>
-        </nav>
 
+    <div class="content">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                        <li class="breadcrumb-item">All Permissions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <livewire:flash-message.flash-message />
         <div class="row d-flex justify-content-center">
-            <div class="col-md-8 grid-margin stretch-card">
-                <div class="card">
+            <div class="col-sm-8">
+                <div class="card card-table show-entire">
                     <div class="card-body">
-                        <h4 class="page-title fw-bold mb-2">PERMISSION DETAILS</h4>
-
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
-                                <button type="button" class="btn btn-md btn-inverse-primary px-3"
-                                    wire:click="createPermission">Add Permission <i
-                                        class="fa-solid fa-plus"></i></button>
-                            </div>
-                            <div class="col-md-4"> <!-- Adjust the width here -->
-                                <div class="input-group">
-                                    
-                                    <input wire:model.debounce.300ms="search" type="text"
-                                        class="form-control bg-tertiary search-input"
-                                        aria-label="Text input with dropdown button"
-                                        placeholder="Search permissions...">
-                                        <div class="input-group-text" id="btnGroupAddon"><i
-                                            class="fa-solid fa-magnifying-glass"></i></div>
+                        <div class="page-table-header mb-2">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="doctor-table-blk">
+                                        <h3>Permission Details</h3>
+                                        <div class="doctor-search-blk">
+                                            <div class="add-group">
+                                                <a class="btn btn-primary ms-2" wire:click="createPermission">
+                                                    <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto text-end float-end ms-auto download-grp">
+                                    <div class="top-nav-search table-search-blk">
+                                        <form>
+                                            <input class="form-control" name="search" placeholder="Search here"
+                                                type="text" wire:model.debounce.500ms="search">
+                                            <a class="btn"><img alt
+                                                    src="{{ asset('assets/img/icons/search-normal.svg') }}"></a>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive mb-3">
-                            <table class="table table-hover table-panel text-nowrap align-middle mb-0">
+                        <div class="table-responsive">
+                            <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -53,14 +64,14 @@
                                             <td>{{ $permission->name }}</td>
                                             <td>
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button" class="btn btn-inverse-primary btn-sm mx-1"
+                                                    <button type="button" class="btn btn-primary btn-sm mx-1"
                                                         wire:click="editPermission({{ $permission->id }})"
-                                                        title="Edit">Edit <i
+                                                        title="Edit"> <i
                                                             class="fa-solid fa-pen-to-square"></i></button>
 
-                                                    <a class="btn btn-inverse-danger btn-sm mx-1"
+                                                    <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deletePermission({{ $permission->id }})"
-                                                        title="Delete">Delete <i class="fa-solid fa-trash"></i></a>
+                                                        title="Delete"> <i class="fa-solid fa-trash"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -69,40 +80,62 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <div class="d-md-flex align-items-center">
-                            <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
-                                Showing {{ $permissions->firstItem() }} to {{ $permissions->lastItem() }} of {{ $permissions->total() }} entries
-                            </div>
-                        
-                            <ul class="pagination pagination-separated mb-0 justify-content-center">
-                                @if ($permissions->onFirstPage())
-                                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                                @else
-                                    <li class="page-item"><a class="page-link" wire:click="previousPage" wire:loading.attr="disabled">Previous</a></li>
-                                @endif
-                        
-                                @foreach ($permissions->getUrlRange(1, $permissions->lastPage()) as $page => $url)
-                                    @if ($page == $permissions->currentPage())
-                                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                        <tfoot>
+                            <div class="d-md-flex align-items-center m-2 p-2">
+                                <div class="me-md-auto counterHead text-sm-left text-center mb-2 mb-md-0">
+                                    Showing {{ $permissions->firstItem() }} to {{ $permissions->lastItem() }} of
+                                    {{ $permissions->total() }}
+                                    entries
+                                </div>
+    
+                                <ul class="pagination pagination-separated mb-0 justify-content-center">
+                                    @if ($permissions->onFirstPage())
+                                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
                                     @else
-                                        <li class="page-item"><a class="page-link" wire:click="gotoPage({{ $page }})">{{ $page }}</a></li>
+                                        <li class="page-item"><a class="page-link" wire:click="previousPage"
+                                                wire:loading.attr="disabled">Previous</a></li>
                                     @endif
-                                @endforeach
-                        
-                                @if ($permissions->hasMorePages())
-                                    <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+    
+                                    @if ($permissions->currentPage() > 2)
+                                        <li class="page-item"><a class="page-link"
+                                                wire:click="gotoPage({{ $permissions->currentPage() - 2 }})">{{ $permissions->currentPage() - 2 }}</a>
+                                        </li>
+                                    @endif
+    
+                                    @if ($permissions->currentPage() > 1)
+                                        <li class="page-item"><a class="page-link"
+                                                wire:click="gotoPage({{ $permissions->currentPage() - 1 }})">{{ $permissions->currentPage() - 1 }}</a>
+                                        </li>
+                                    @endif
+    
+                                    <li class="page-item active"><span class="page-link">{{ $permissions->currentPage() }}</span>
                                     </li>
-                                @else
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Next</span>
-                                    </li>
-                                @endif
-                            </ul>
-                        </div>
-                        
-
+    
+                                    @if ($permissions->hasMorePages())
+                                        <li class="page-item"><a class="page-link"
+                                                wire:click="gotoPage({{ $permissions->currentPage() + 1 }})">{{ $permissions->currentPage() + 1 }}</a>
+                                        </li>
+                                    @endif
+    
+                                    @if ($permissions->currentPage() < $permissions->lastPage() - 1)
+                                        <li class="page-item"><a class="page-link"
+                                                wire:click="gotoPage({{ $permissions->currentPage() + 2 }})">{{ $permissions->currentPage() + 2 }}</a>
+                                        </li>
+                                    @endif
+    
+                                    @if ($permissions->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </tfoot>
+    
                     </div>
                 </div>
             </div>
@@ -114,7 +147,7 @@
             <livewire:authentication.permission-form />
         </div>
     </div>
-</div>
+
 
 @section('custom_script')
     @include('layouts.scripts.permission-scripts')

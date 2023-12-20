@@ -12,11 +12,12 @@ class AddOn extends Model
     protected $fillable = [
         'booking_id',
         'dish_id',
+        'quantity',
     ];
 
     public function bookings()
     {
-        return $this->hasOne(Booking::class, 'booking_id', 'id');
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
     public function dishes()

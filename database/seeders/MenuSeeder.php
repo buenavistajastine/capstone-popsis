@@ -19,7 +19,7 @@ class MenuSeeder extends Seeder
             ['name' => 'Beef'],
             ['name' => 'Pork'],
             ['name' => 'Fish and Seafoods'],
-            ['name' => 'Noodle/Pasta'],
+            ['name' => 'Noodle/Pasta and Salads'],
             ['name' => 'Vegetable'],
             ['name' => 'Beverage'],
             ['name' => 'Dessert'],

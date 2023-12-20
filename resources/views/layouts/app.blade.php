@@ -11,13 +11,21 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-
-    @livewireStyles
-    @vite([])
         {{-- Links --}}
-        <style>
-            html {
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/feather/feather.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+
+            <style>
+            /* html {
             line-height: 1.5;
             -webkit-text-size-adjust: 100%;
             -moz-tab-size: 4;
@@ -34,23 +42,16 @@
         h6 {
             font-size: inherit;
             font-weight: inherit
+        } */
+
+        .counterHead {
+            font-size: 14px;
         }
         </style>
-    
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/core/core.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/sweetalert2/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/prismjs/themes/prism.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/datatables.net-bs5/dataTables.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/fonts/feather-font/css/iconfont.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/demo2/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/fontawesome/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/fontawesome/fontawesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/fontawesome/all.css') }}">
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.png') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('backend/content/content/toastr.css') }}">
-
+    @livewireStyles
+    @yield('upper_script')
+    <!-- Scripts -->
+    @vite([])
 
 </head>
 
@@ -67,29 +68,26 @@
 	</div>
 
 	<div class="sidebar-overlay" data-reff></div>
+
+    <script src="{{ asset('assets/js/jquery-3.6.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/select2.init.js') }}"></script> --}}
+    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.waypoints.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/apexchart/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/apexchart/chart-data.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
     @livewireScripts
-
-    <script src="{{ asset('backend/assets/vendors/core/core.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/flatpickr/flatpickr.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/prismjs/prism.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/clipboard/clipboard.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/feather-icons/feather.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/vendors/feather-icons/feathers.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/template.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/fontawesome/all.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/app.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/dashboard-dark.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/flatpickr.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/pickr.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('backend/content/scripts/toastr.min.js') }}"></script>
-
-    
     @yield('custom_script')
 
     @stack('script')
-
 </body>
 
 </html>

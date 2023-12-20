@@ -24,8 +24,8 @@ return new class extends Migration
 
             $table->string('venue_address');
             $table->string('no_pax');
-            $table->date('date_event');
-            $table->time('call_time');
+            $table->date('date_event')->nullable();
+            $table->time('call_time')->nullable();
             $table->float('total_price');
             $table->dateTime('dt_booked');
             $table->unsignedBigInteger('status_id');

@@ -1,42 +1,51 @@
-<div class="page-content">
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">All Roles</li>
-        </ol>
-    </nav>
-
+<div class="content">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                    <li class="breadcrumb-item">All Roles</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <livewire:flash-message.flash-message />
     <div class="row d-flex justify-content-center">
-        <div class="col-md-8 grid-margin stretch-card">
-            <div class="card">
+        <div class="col-sm-8">
+            <div class="card card-table show-entire">
                 <div class="card-body">
-                   
-                        <h4 class="page-title fw-bold mb-2">ROLES DETAILS</h4>
-                    
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
-                                <button type="button" class="btn btn-md btn-inverse-primary px-3" wire:click="createRole">Add Role <i
-                                        class="fa-solid fa-plus"></i></button>
+                    <div class="page-table-header mb-2">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="doctor-table-blk">
+                                    <h3>Role Details</h3>
+                                    <div class="doctor-search-blk">
+                                        <div class="add-group">
+                                            <a class="btn btn-primary ms-2" wire:click="createRole">
+                                                <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4"> <!-- Adjust the width here -->
-                                <div class="input-group">
-                                    
-                                    <input wire:model.debounce.300ms="search" type="text"
-                                        class="form-control bg-tertiary search-input"
-                                        aria-label="Text input with dropdown button"
-                                        placeholder="Search roles...">
-                                        <div class="input-group-text" id="btnGroupAddon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <div class="col-auto text-end float-end ms-auto download-grp">
+                                <div class="top-nav-search table-search-blk">
+                                    <form>
+                                        <input class="form-control" name="search" placeholder="Search here"
+                                            type="text" wire:model.debounce.500ms="search">
+                                        <a class="btn"><img alt
+                                                src="{{ asset('assets/img/icons/search-normal.svg') }}"></a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        
-                    
-                    
-
-                    <div class="table-responsive mb-3">
-                        <table class="table table-hover">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table border-0 custom-table comman-table table-hover mb-0">
                             <thead>
                                 <tr>
+                                    <th style="width: 3%"></th>
                                     <th style="width: 20%">ID</th>
                                     <th style="width: 60%">Name</th>
                                     <th style="width: 20%">Action</th>
@@ -51,6 +60,7 @@
                                     @else
                                 @foreach ($roles as $role)
                                     <tr>
+                                        <td></td>
                                         <td>{{ $role->id }}</td>
                                         <td>
                                             <span class="text-capitalize">
@@ -59,13 +69,13 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-inverse-primary btn-sm mx-1"
+                                                <button type="button" class="btn btn-primary btn-sm mx-1"
                                                     wire:click="editRole({{ $role->id }})" title="Edit">
-                                                    Edit <i class="fa-solid fa-pen-to-square"></i>
+                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                                <a class="btn btn-inverse-danger btn-sm mx-1"
+                                                <a class="btn btn-danger btn-sm mx-1"
                                                     wire:click="deleteRole({{ $role->id }})" title="Delete">
-                                                    Delete <i class="fa-solid fa-trash"></i></i>
+                                                     <i class="fa-solid fa-trash"></i></i>
                                                 </a>
                                             </div>
                                         </td>
@@ -75,45 +85,67 @@
                             </tbody>
                         </table>
                     </div>
+                    <tfoot>
+                        <div class="d-md-flex align-items-center m-2 p-2">
+                            <div class="me-md-auto counterHead text-sm-left text-center mb-2 mb-md-0">
+                                Showing {{ $roles->firstItem() }} to {{ $roles->lastItem() }} of
+                                {{ $roles->total() }}
+                                entries
+                            </div>
 
-                    <div class="d-md-flex align-items-center">
-                        <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
-                            Showing {{ $roles->firstItem() }} to {{ $roles->lastItem() }} of {{ $roles->total() }} entries
-                        </div>
-                    
-                        <ul class="pagination pagination-separated mb-0 justify-content-center">
-                            @if ($roles->onFirstPage())
-                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                            @else
-                                <li class="page-item"><a class="page-link" wire:click="previousPage" wire:loading.attr="disabled">Previous</a></li>
-                            @endif
-                    
-                            @foreach ($roles->getUrlRange(1, $roles->lastPage()) as $page => $url)
-                                @if ($page == $roles->currentPage())
-                                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                            <ul class="pagination pagination-separated mb-0 justify-content-center">
+                                @if ($roles->onFirstPage())
+                                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
                                 @else
-                                    <li class="page-item"><a class="page-link" wire:click="gotoPage({{ $page }})">{{ $page }}</a></li>
+                                    <li class="page-item"><a class="page-link" wire:click="previousPage"
+                                            wire:loading.attr="disabled">Previous</a></li>
                                 @endif
-                            @endforeach
-                    
-                            @if ($roles->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+
+                                @if ($roles->currentPage() > 2)
+                                    <li class="page-item"><a class="page-link"
+                                            wire:click="gotoPage({{ $roles->currentPage() - 2 }})">{{ $roles->currentPage() - 2 }}</a>
+                                    </li>
+                                @endif
+
+                                @if ($roles->currentPage() > 1)
+                                    <li class="page-item"><a class="page-link"
+                                            wire:click="gotoPage({{ $roles->currentPage() - 1 }})">{{ $roles->currentPage() - 1 }}</a>
+                                    </li>
+                                @endif
+
+                                <li class="page-item active"><span class="page-link">{{ $roles->currentPage() }}</span>
                                 </li>
-                            @else
-                                <li class="page-item disabled">
-                                    <span class="page-link">Next</span>
-                                </li>
-                            @endif
-                        </ul>
-                    </div>
+
+                                @if ($roles->hasMorePages())
+                                    <li class="page-item"><a class="page-link"
+                                            wire:click="gotoPage({{ $roles->currentPage() + 1 }})">{{ $roles->currentPage() + 1 }}</a>
+                                    </li>
+                                @endif
+
+                                @if ($roles->currentPage() < $roles->lastPage() - 1)
+                                    <li class="page-item"><a class="page-link"
+                                            wire:click="gotoPage({{ $roles->currentPage() + 2 }})">{{ $roles->currentPage() + 2 }}</a>
+                                    </li>
+                                @endif
+
+                                @if ($roles->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                    </tfoot>
 
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {{-- Modal --}}
 <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

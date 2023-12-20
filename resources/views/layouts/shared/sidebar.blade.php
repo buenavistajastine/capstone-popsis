@@ -1,345 +1,400 @@
-<nav class="sidebar">
-    <div class="sidebar-header">
-        <a href="#" class="sidebar-brand">
-            Popsi'<span>s</span>
-        </a>
-        <div class="sidebar-toggler">
-            <span></span>
-            <span></span>
-            <span></span>
+{{-- @if (auth()->user()->hasrole(['doctor', 'staff', 'admin', 'Inquiry']))
+@if (!auth()->user()->hasRole('Patient'))
+	<div class="sidebar" id="sidebar">
+		<div class="sidebar-inner slimscroll">
+			<div class="sidebar-menu" id="sidebar-menu">
+				<ul>
+					<li>
+						<a href="/"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
+							<span>Dashboard</span></a>
+					</li>
+					@hasrole(['admin', 'staff'])
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+								<span>Users</span> <span class="menu-arrow"></span>
+							</a>
+
+							<ul style="display: none;">
+								@hasrole('admin')
+									<li><a href="/user">User Management</a></li>
+									<li><a href="/doctor">Doctors</a></li>
+									<li><a href="/staff">Staff</a></li>
+								@endhasrole
+								<li><a href="/patient">Patients</a></li>
+							</ul>
+						</li>
+					@endhasrole
+					@hasrole(['doctor', 'staff', 'admin'])
+						<li>
+							<a href="/appointment"><span class="menu-side"><i class="fa-solid fa-calendar-day"></i></span>
+								<span>Appointments</span>
+							</a>
+						</li>
+						<li>
+							<a href="/booking"><span class="menu-side"><i class="fa-solid fa-calendar-check"></i></span>
+								<span>Booking</span></a>
+						</li>
+						@hasrole(['staff', 'admin'])
+							<li>
+								<a href="/billing"><span class="menu-side"><i class="fa-solid fa-wallet"></i></span>
+									<span>Billing</span></a>
+							</li>
+							<li>
+								<a href="/requests"><span class="menu-side"><i class="fa-solid fa-hourglass-half"></i></i></span>
+									<span>Request</span></a>
+							</li>
+						@endhasrole
+					@endhasrole
+					@hasrole(['supervisor', 'encoder', 'admin'])
+						<li>
+							<a href="/ekonsulta"><span class="menu-side"><i class="fa-solid fa-stethoscope"></i></span>
+								<span>Ekonsulta</span>
+							</a>
+						</li>
+					@endhasrole
+					@hasrole(['supervisor', 'admin', 'inquiry'])
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><i class="fa-solid fa-list"></i></span>
+								<span>Reports</span> <span class="menu-arrow"></span>
+							</a>
+
+							<ul style="display: none;">
+								@hasrole(['supervisor', 'admin'])
+									<li><a href="/report">Employee Efficiency Report</a></li>
+									<li><a href="/billingreport">Front Office Report</a></li>
+									<li><a href="/booking_report1">Booking Report </a></li>
+								@endhasrole
+								<li><a href="/booking_specific_report">Company Report</a></li>
+								<li><a href="/company_physical_exam">PE Report</a></li>
+								@hasrole(['supervisor', 'admin'])
+									<li><a href="/examinationreport">Examination Report</a></li>
+								@endhasrole
+							</ul>
+						</li>
+					@endhasrole
+					@hasrole(['admin', 'staff'])
+						<li class="menu-title">Setup</li>
+
+						<li class="submenu">
+							<a href="#"><i class="fa fa-gear"></i> <span>System</span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								@hasrole('admin')
+									<li><a href="/status">Status</a></li>
+									<li><a href="/specialization">Specialization</a></li>
+									<li><a href="/department">Departments</a></li>
+									<li><a href="/branch">Branch</a></li>
+								@endhasrole
+								<li><a href="/services">Services</a></li>
+								<li><a href="/company">Companies</a></li>
+								<li><a href="/discount">Discount</a></li>
+								<li><a href="/units">Unit</a></li>
+								<li><a href="/actives">Actives</a></li>
+							</ul>
+						</li>
+						@hasrole('admin')
+							<li class="submenu mb-5">
+								<a href="#"><i class="fa fa-user-shield"></i> <span>Authentication</span> <span
+										class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/role">Role</a></li>
+									<li class="mb-5"><a href="/permission">Permission</a></li>
+								</ul>
+							</li>
+						@endhasrole
+					@endhasrole
+				</ul>
+			</div>
+		</div>
+	</div>
+@endif --}}
+
+<div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+						{{-- <li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span> Dashboard </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a class="active" href="index.html">Admin Dashboard</a></li>
+								<li><a href="doctor-dashboard.html">Doctor Dashboard</a></li>
+								<li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+							</ul>
+						</li> --}}
+                        <li>
+							<a href="/dashboard"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Dashboard</span></a>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-02.svg" alt=""></span> <span> Users </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="/user">User Management</a></li>
+								<li><a href="/list">Customer List</a></li>
+								<li><a href="/customer-account">Customer Account</a></li>
+								
+							</ul>
+						</li>
+                        <li>
+							<a href="dish"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Dish</span></a>
+						</li>
+                        <li>
+							<a href="order"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Food Order</span></a>
+						</li>
+                        <li>
+							<a href="booking"><span class="menu-side"><img src="assets/img/icons/menu-icon-04.svg" alt=""></span> <span>Booking</span></a>
+						</li>
+                        <li>
+							<a href="dish"><span class="menu-side"><img src="assets/img/icons/menu-icon-07.svg" alt=""></span> <span>Billing</span></a>
+						</li>
+						<li class="submenu">
+							<a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="expense-reports.html"> Booking Report </a></li>
+								<li><a href="expense-reports.html"> Food Order Report </a></li>
+								<li><a href="invoice-reports.html"> Billing Report </a></li>
+							</ul>
+						</li>
+						
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-03.svg" alt=""></span> <span>Patients </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="patients.html">Patients List</a></li>
+								<li><a href="add-patient.html">Add Patients</a></li>
+								<li><a href="edit-patient.html">Edit Patients</a></li>
+								<li><a href="patient-profile.html">Patients Profile</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-08.svg" alt=""></span> <span> Staff </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="staff-list.html">Staff List</a></li>
+								<li><a href="add-staff.html">Add Staff</a></li>
+								<li><a href="staff-profile.html">Staff Profile</a></li>
+								<li><a href="staff-leave.html">Leaves</a></li>
+								<li><a href="staff-holiday.html">Holidays</a></li>
+								<li><a href="staff-attendance.html">Attendance</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-04.svg" alt=""></span> <span> Appointments </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="appointments.html">Appointment List</a></li>
+								<li><a href="add-appointment.html">Book Appointment</a></li>
+								<li><a href="edit-appointment.html">Edit Appointment</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-05.svg" alt=""></span> <span> Doctor Schedule </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="schedule.html">Schedule List</a></li>
+								<li><a href="add-schedule.html">Add Schedule</a></li>
+								<li><a href="edit-schedule.html">Edit Schedule</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-06.svg" alt=""></span> <span> Departments </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="departments.html">Department List</a></li>
+								<li><a href="add-department.html">Add Department</a></li>
+								<li><a href="edit-department.html">Edit Department</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-07.svg" alt=""></span> <span> Accounts </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="invoices.html">Invoices</a></li>
+								<li><a href="payments.html">Payments</a></li>
+								<li><a href="expenses.html">Expenses</a></li>
+								<li><a href="taxes.html">Taxes</a></li>
+								<li><a href="provident-fund.html">Provident Fund</a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-09.svg" alt=""></span> <span> Payroll </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="salary.html"> Employee Salary </a></li>
+								<li><a href="salary-view.html"> Payslip </a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="chat.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-10.svg" alt=""></span> <span>Chat</span></a>
+						</li>
+                        <li class="submenu">
+                            <a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-11.svg" alt=""></span> <span> Calls</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="voice-call.html">Voice Call</a></li>
+                                <li><a href="video-call.html">Video Call</a></li>
+                                <li><a href="incoming-call.html">Incoming Call</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-12.svg" alt=""></span> <span> Email</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="compose.html">Compose Mail</a></li>
+                                <li><a href="inbox.html">Inbox</a></li>
+                                <li><a href="mail-view.html">Mail View</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-13.svg" alt=""></span> <span> Blog</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="blog-details.html">Blog View</a></li>
+                                <li><a href="add-blog.html">Add Blog</a></li>
+                                <li><a href="edit-blog.html">Edit Blog</a></li>
+                            </ul>
+                        </li>
+						<li>
+							<a href="assets.html"><i class="fa fa-cube"></i> <span>Assets</span></a>
+						</li>
+						<li>
+							<a href="activities.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-14.svg" alt=""></span> <span>Activities</span></a>
+						</li>
+						
+                        <li class="submenu">
+							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-15.svg" alt=""></span> <span> Invoice </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="invoices-list.html"> Invoices List </a></li>
+								<li><a href="invoices-grid.html"> Invoices Grid</a></li>
+								<li><a href="add-invoice.html"> Add Invoices</a></li>
+								<li><a href="edit-invoices.html"> Edit Invoices</a></li>
+								<li><a href="view-invoice.html"> Invoices Details</a></li>
+								<li><a href="invoices-settings.html"> Invoices Settings</a></li>
+							</ul>
+						</li>
+                        
+                        <li>
+                            <a href="settings.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-16.svg" alt=""></span> <span>Settings</span></a>
+                        </li>
+                        <li class="menu-title">UI Interface</li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-laptop"></i> <span> Base UI</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="alerts.html">Alerts</a></li>                                    
+								<li><a href="accordions.html">Accordions</a></li>
+								<li><a href="avatar.html">Avatar</a></li> 
+								<li><a href="badges.html">Badges</a></li>
+								<li><a href="buttons.html">Buttons</a></li>   
+								<li><a href="buttongroup.html">Button Group</a></li>                                  
+								<li><a href="breadcrumbs.html">Breadcrumb</a></li>
+								<li><a href="cards.html">Cards</a></li>
+								<li><a href="carousel.html">Carousel</a></li>                                   
+								<li><a href="dropdowns.html">Dropdowns</a></li>
+								<li><a href="grid.html">Grid</a></li>
+								<li><a href="images.html">Images</a></li>
+								<li><a href="lightbox.html">Lightbox</a></li>
+								<li><a href="media.html">Media</a></li>                              
+								<li><a href="modal.html">Modals</a></li>
+								<li><a href="offcanvas.html">Offcanvas</a></li>
+								<li><a href="pagination.html">Pagination</a></li>
+								<li><a href="popover.html">Popover</a></li>                                    
+								<li><a href="progress.html">Progress Bars</a></li>
+								<li><a href="placeholders.html">Placeholders</a></li>
+								<li><a href="rangeslider.html">Range Slider</a></li>                                    
+								<li><a href="spinners.html">Spinner</a></li>
+								<li><a href="sweetalerts.html">Sweet Alerts</a></li>
+								<li><a href="tab.html">Tabs</a></li>
+								<li><a href="toastr.html">Toasts</a></li>
+								<li><a href="tooltip.html">Tooltip</a></li>
+								<li><a href="typography.html">Typography</a></li>
+								<li><a href="video.html">Video</a></li>
+                            </ul>
+                        </li>
+						<li class="submenu">
+                            <a href="#"><i class="fa fa-box"></i> <span> Elements</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="ribbon.html">Ribbon</a></li>
+								<li><a href="clipboard.html">Clipboard</a></li>
+								<li><a href="drag-drop.html">Drag & Drop</a></li>
+								<li><a href="rating.html">Rating</a></li>
+								<li><a href="text-editor.html">Text Editor</a></li>
+								<li><a href="counter.html">Counter</a></li>
+								<li><a href="scrollbar.html">Scrollbar</a></li>
+								<li><a href="notification.html">Notification</a></li>
+								<li><a href="stickynote.html">Sticky Note</a></li>
+								<li><a href="timeline.html">Timeline</a></li>
+								<li><a href="horizontal-timeline.html">Horizontal Timeline</a></li>
+								<li><a href="form-wizard.html">Form Wizard</a></li>
+                            </ul>
+                        </li>
+						<li class="submenu">
+                            <a href="#"><i class="fa fa-chart-simple"></i> <span>Charts</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="chart-apex.html">Apex Charts</a></li>
+								<li><a href="chart-js.html">Chart Js</a></li>
+								<li><a href="chart-morris.html">Morris Charts</a></li>
+								<li><a href="chart-flot.html">Flot Charts</a></li>
+								<li><a href="chart-peity.html">Peity Charts</a></li>
+								<li><a href="chart-c3.html">C3 Charts</a></li>
+                            </ul>
+                        </li>
+						<li class="submenu">
+                            <a href="#"><i class="fa fa-award"></i> <span>Icons</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+								<li><a href="icon-fontawesome.html">Fontawesome Icons</a></li>
+								<li><a href="icon-feather.html">Feather Icons</a></li>
+								<li><a href="icon-ionic.html">Ionic Icons</a></li>
+								<li><a href="icon-material.html">Material Icons</a></li>
+								<li><a href="icon-pe7.html">Pe7 Icons</a></li>
+								<li><a href="icon-simpleline.html">Simpleline Icons</a></li>
+								<li><a href="icon-themify.html">Themify Icons</a></li>
+								<li><a href="icon-weather.html">Weather Icons</a></li>
+								<li><a href="icon-typicon.html">Typicon Icons</a></li>
+								<li><a href="icon-flag.html">Flag Icons</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-edit"></i> <span> Forms</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="form-basic-inputs.html">Basic Inputs</a></li>
+                                <li><a href="form-input-groups.html">Input Groups</a></li>
+                                <li><a href="form-horizontal.html">Horizontal Form</a></li>
+                                <li><a href="form-vertical.html">Vertical Form</a></li>
+								<li><a href="form-mask.html">Form Mask </a></li>
+								<li><a href="form-validation.html">Form Validation </a></li>
+								<li><a href="form-select2.html">Form Select2 </a></li>
+								<li><a href="form-fileupload.html">File Upload </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-table"></i> <span> Tables</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="tables-basic.html">Basic Tables</a></li>
+                                <li><a href="tables-datatables.html">Data Table</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a>
+                        </li>
+                        <li class="menu-title">Setup</li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-columns"></i> <span>System</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="login.html"> Login </a></li>
+                                <li><a href="register.html"> Register </a></li>
+                                <li><a href="forgot-password.html"> Forgot Password </a></li>
+                                <li><a href="change-password2.html"> Change Password </a></li>
+                                <li><a href="lock-screen.html"> Lock Screen </a></li>
+                                <li><a href="profile.html"> Profile </a></li>
+                                <li><a href="gallery.html"> Gallery </a></li>
+                                <li><a href="error-404.html">404 Error </a></li>
+                                <li><a href="error-500.html">500 Error </a></li>
+                                <li><a href="blank-page.html"> Blank Page </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i class="fa fa-share-alt"></i> <span>Authentication</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li>
+                                    <a href="/role"><span>Role</span></a>
+                                </li>
+                                <li>
+                                    <a href="/permission"><span>Permission</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+					<div class="logout-btn">
+						<a href="{{ route('logout') }}"><span class="menu-side"><img src="assets/img/icons/logout.svg" alt=""></span> <span>Logout</span></a>
+					</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="sidebar-body">
-        <ul class="nav">
-            <li class="nav-item nav-category">Main</li>
-            <li class="nav-item">
-                <a href="/dashboard" class="nav-link">
-                    <i class="link-icon" data-feather="grid"></i>
-                    <span class="link-title">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Employees</li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false"
-                    aria-controls="emails">
-                    <i class="link-icon" data-feather="mail"></i>
-                    <span class="link-title">Email</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="emails">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/email/inbox.html" class="nav-link">Inbox</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/email/read.html" class="nav-link">Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/email/compose.html" class="nav-link">Compose</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a href="/dish" class="nav-link">
-                    <i class="link-icon fa-solid fa-bowl-food"></i>
-                    <span class="link-title">Dish</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="pages/apps/calendar.html" class="nav-link">
-                    <i class="link-icon" data-feather="calendar"></i>
-                    <span class="link-title">Calendar</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Components</li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false"
-                    aria-controls="uiComponents">
-                    <i class="link-icon" data-feather="feather"></i>
-                    <span class="link-title">UI Kit</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="uiComponents">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/ui-components/accordion.html" class="nav-link">Accordion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/alerts.html" class="nav-link">Alerts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/badges.html" class="nav-link">Badges</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/breadcrumbs.html" class="nav-link">Breadcrumbs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/buttons.html" class="nav-link">Buttons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/button-group.html" class="nav-link">Button group</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/cards.html" class="nav-link">Cards</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/carousel.html" class="nav-link">Carousel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/collapse.html" class="nav-link">Collapse</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/dropdowns.html" class="nav-link">Dropdowns</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/list-group.html" class="nav-link">List group</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/media-object.html" class="nav-link">Media object</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/modal.html" class="nav-link">Modal</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/navs.html" class="nav-link">Navs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/navbar.html" class="nav-link">Navbar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/pagination.html" class="nav-link">Pagination</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/popover.html" class="nav-link">Popovers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/progress.html" class="nav-link">Progress</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/scrollbar.html" class="nav-link">Scrollbar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/scrollspy.html" class="nav-link">Scrollspy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/spinners.html" class="nav-link">Spinners</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/tabs.html" class="nav-link">Tabs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/ui-components/tooltips.html" class="nav-link">Tooltips</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#advancedUI" role="button"
-                    aria-expanded="false" aria-controls="advancedUI">
-                    <i class="link-icon" data-feather="anchor"></i>
-                    <span class="link-title">Advanced UI</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="advancedUI">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/advanced-ui/cropper.html" class="nav-link">Cropper</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/advanced-ui/owl-carousel.html" class="nav-link">Owl carousel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/advanced-ui/sortablejs.html" class="nav-link">SortableJs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/advanced-ui/sweet-alert.html" class="nav-link">Sweet Alert</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#forms" role="button" aria-expanded="false"
-                    aria-controls="forms">
-                    <i class="link-icon" data-feather="inbox"></i>
-                    <span class="link-title">Forms</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="forms">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/forms/basic-elements.html" class="nav-link">Basic Elements</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/forms/advanced-elements.html" class="nav-link">Advanced Elements</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/forms/editors.html" class="nav-link">Editors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/forms/wizard.html" class="nav-link">Wizard</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false"
-                    aria-controls="charts">
-                    <i class="link-icon" data-feather="pie-chart"></i>
-                    <span class="link-title">Charts</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="charts">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/charts/apex.html" class="nav-link">Apex</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/chartjs.html" class="nav-link">ChartJs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/flot.html" class="nav-link">Flot</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/morrisjs.html" class="nav-link">Morris</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/peity.html" class="nav-link">Peity</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/sparkline.html" class="nav-link">Sparkline</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#tables" role="button" aria-expanded="false"
-                    aria-controls="tables">
-                    <i class="link-icon" data-feather="layout"></i>
-                    <span class="link-title">Table</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="tables">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/tables/basic-table.html" class="nav-link">Basic Tables</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/tables/data-table.html" class="nav-link">Data Table</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#icons" role="button" aria-expanded="false"
-                    aria-controls="icons">
-                    <i class="link-icon" data-feather="smile"></i>
-                    <span class="link-title">Icons</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="icons">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/icons/feather-icons.html" class="nav-link">Feather Icons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/icons/flag-icons.html" class="nav-link">Flag Icons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/icons/mdi-icons.html" class="nav-link">Mdi Icons</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item nav-category">Pages</li>
-            <li class="nav-item">
-                <a href="/employee" class="nav-link">
-                    <i class="link-icon" data-feather="users"></i>
-                    <span class="link-title">Employee List</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/position" class="nav-link">
-                    <i class="link-icon" data-feather="users"></i>
-                    <span class="link-title">Position List</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button"
-                    aria-expanded="false" aria-controls="general-pages">
-                    <i class="link-icon" data-feather="book"></i>
-                    <span class="link-title">Special pages</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="general-pages">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/general/blank-page.html" class="nav-link">Blank page</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/general/faq.html" class="nav-link">Faq</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/general/invoice.html" class="nav-link">Invoice</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/general/profile.html" class="nav-link">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/general/pricing.html" class="nav-link">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/general/timeline.html" class="nav-link">Timeline</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#authPages" role="button"
-                    aria-expanded="false" aria-controls="authPages">
-                    <i class="link-icon" data-feather="unlock"></i>
-                    <span class="link-title">Authentication</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="authPages">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="pages/auth/login.html" class="nav-link">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/auth/register.html" class="nav-link">Register</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-
-            <li class="nav-item nav-category">Authentication</li>
-            <li class="nav-item">
-                <a href="/user" class="nav-link">
-                    <i class="link-icon" data-feather="user"></i>
-                    <span class="link-title">User List</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#errorPages" role="button"
-                    aria-expanded="false" aria-controls="errorPages">
-                    <i class="mdi mdi-account-multiple-outline"></i>
-                    <i class="link-icon" data-feather="user-check"></i>
-                    <span class="link-title">Roles & Permission</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="errorPages">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item">
-                            <a href="permission" class="nav-link">All Permission</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="role" class="nav-link">All Roles</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>

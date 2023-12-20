@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Package;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PackageSeeder extends Seeder
 {
@@ -12,6 +13,14 @@ class PackageSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Package::insert([
+            ['name' => 'Small Package 1',
+             'price' => 420,
+             'description' => 'test1',
+             'limitation_of_maindish' => 3,
+             'minimum_pax' => 30,
+             'venue_id' => null],
+
+        ]);
     }
 }

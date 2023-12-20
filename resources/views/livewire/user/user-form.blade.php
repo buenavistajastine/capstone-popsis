@@ -23,18 +23,18 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 ">
                             <div class="form-group local-forms">
                                 <label>
                                     First Name
-                                   
+                                    <span class="login-danger">*</span>
                                 </label>
                                 <input class="form-control" type="text" wire:model="first_name" placeholder />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group local-forms">
-                                <label>Middle Name</label>
+                                <label>Middle Name<span class="login-danger">*</span></label>
                                 <input class="form-control" type="text" wire:model="middle_name" placeholder />
                             </div>
                         </div>
@@ -42,18 +42,18 @@
                             <div class="form-group local-forms">
                                 <label>
                                     Last Name
-                                   
+                                    <span class="login-danger">*</span>
                                 </label>
                                 <input class="form-control" type="text" wire:model="last_name" placeholder />
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row ">
                         <div class="col-md-6">
                             <div class="form-group local-forms">
                                 <label>
                                     Username
-                                   
+                                    <span class="login-danger">*</span>
                                 </label>
                                 <input class="form-control" type="text" wire:model="username" placeholder />
                             </div>
@@ -62,7 +62,7 @@
                             <div class="form-group local-forms">
                                 <label>
                                     Email
-                                   
+                                    <span class="login-danger">*</span>
                                 </label>
                                 <input class="form-control" type="email" wire:model="email" placeholder />
                             </div>
@@ -74,7 +74,7 @@
                                 <div class="form-group local-forms">
                                     <label>
                                         Password
-                                       
+                                        <span class="login-danger">*</span>
                                     </label>
                                     <input class="form-control" type="password" wire:model="password" placeholder />
                                 </div>
@@ -83,7 +83,7 @@
                                 <div class="form-group local-forms">
                                     <label>
                                         Confirm Password
-                                 
+                                        <span class="login-danger">*</span>
                                     </label>
                                     <input class="form-control" type="password" wire:model="password_confirmation"
                                         placeholder />
@@ -96,13 +96,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group local-forms">
-                                        <label>New Password</label>
+                                        <label>New Password<span class="login-danger">*</span></label>
                                         <input class="form-control" type="password" wire:model="password" placeholder />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group local-forms">
-                                        <label>Confirm New Password</label>
+                                        <label>Confirm New Password<span class="login-danger">*</span></label>
                                         <input class="form-control" type="password" wire:model="password_confirmation" placeholder />
                                     </div>
                                 </div>

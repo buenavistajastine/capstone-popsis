@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('menu_id');
+            $table->unsignedBigInteger('menu_id')->nullable();
+            $table->foreign('menu_id')->references('id')->on('menus');
+
             $table->string('name');
             $table->string('description')->nullable();
-            $table->float('price');
+            $table->float('price_full')->nullable();
+            $table->float('price_half')->nullable();
             $table->timestamps();
         });
     }

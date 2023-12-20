@@ -12,6 +12,7 @@ class BookingDishKey extends Model
     protected $fillable = [
         'booking_id',
         'dish_id',
+        'quantity',
         'status_id',
         'dt_accepted',
         'dt_completed',
