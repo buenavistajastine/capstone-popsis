@@ -7,6 +7,7 @@ use App\Http\Livewire\Booking\BookingForm;
 use App\Http\Livewire\Booking\BookingList;
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\Customer\CustomerList;
+use App\Http\Livewire\Customer\CustomerList;
 use App\Http\Livewire\Employee\EmployeeList;
 use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;
@@ -40,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/logout', [ProfileController::class, 'Logout'])->name('user.logout');
     Route::get('/logout', [ProfileController::class, 'Logout'])->name('user.logout');
 
     Route::get('permission', PermissionList::class)->name('permission');

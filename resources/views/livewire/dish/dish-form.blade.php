@@ -18,6 +18,15 @@
             </ul>
         </div>
     @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -55,6 +64,7 @@
                         <input class="form-control" type="text" wire:model="price_half" placeholder />
                     </div>
                 </div>
+                <div class="col-md-12">
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label class="form-label">Description (optional)<span class="login-danger">*</span></label>
