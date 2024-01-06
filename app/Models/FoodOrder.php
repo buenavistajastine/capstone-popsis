@@ -11,6 +11,7 @@ class FoodOrder extends Model
 
     protected $fillable = [
         'customer_id',
+        'order_no',
         'ordered_by',
         'address',
         'contact_no',

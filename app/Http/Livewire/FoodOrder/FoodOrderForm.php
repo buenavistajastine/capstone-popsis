@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\FoodOrder;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Dish;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\FoodOrder;
 use App\Models\FoodOrderDishKey;
 use Illuminate\Support\Facades\DB;
+use App\Models\ModeOfTransportation;
 
 class FoodOrderForm extends Component
 {
@@ -111,9 +113,10 @@ class FoodOrderForm extends Component
                 'address' => 'required',
                 'date_need' => 'required',
                 'call_time' => 'required',
+                'contact_no' => 'nullable',
                 'total_price' => 'required',
                 'transport_id' => 'required',
-                'status_id' => 'required',
+                'status_id' => 'nullable',
                 'remarks' => 'nullable',
             ]);
 
@@ -133,7 +136,7 @@ class FoodOrderForm extends Component
                 $order = FoodOrder::find($this->orderId);
                 $order->update($order_data, ['status_id' => 2]);
 
-                foreach ($this->disItems as $key => $value) {
+                foreach ($this->dishItems as $key => $value) {
                     if ($this->dishItems[$key]['id'] == null) {
                         FoodOrderDishKey::create([
                             'order_id' => $this->orderId,
@@ -163,7 +166,15 @@ class FoodOrderForm extends Component
                 $order_data['status_id'] = 1;
                 $order = FoodOrder::create($order_data);
 
-                foreach ($this->disItems as $key => $value) {
+                $currentYear = Carbon::now()->year;
+                $paddedRowId = str_pad($order->id, 6, '0', STR_PAD_LEFT);
+                $result = $currentYear . $paddedRowId;
+
+                $order->update([
+                    'order_no' => $result
+                ]);
+
+                foreach ($this->dishItems as $key => $value) {
                     FoodOrderDishKey::create([
                         'order_id' => $order->id,
                         'dish_id' => $this->dishItems[$key]['dish_id'],
@@ -201,11 +212,23 @@ class FoodOrderForm extends Component
         foreach ($this->dishItems as $dishItem) {
             if (!empty($dishItem['dish_id'])) {
                 $dish = Dish::find($dishItem['dish_id']);
-                $dishesTotalPrice += $dish->full_price;
+
+                if ($dish) {
+                    $dishesTotalPrice += ($dish->price_full * $dishItem['quantity']);
+                }
             }
         }
 
         $this->total_price = $dishesTotalPrice;
+    }
+
+    public function addDish()
+    {
+        $this->dishItems[] = [
+            'id' => null,
+            'dish_id' => '',
+            'quantity' => 1,
+        ];
     }
 
     public function deleteDish($dishIndex)
@@ -217,8 +240,9 @@ class FoodOrderForm extends Component
     public function render()
     {
         $customers = Customer::all();
+        $transports = ModeOfTransportation::all();
         $dishes = Dish::all();
         
-        return view('livewire.food-order.food-order-form', compact('customers', 'dishes'));
+        return view('livewire.food-order.food-order-form', compact('customers', 'dishes', 'transports'));
     }
 }

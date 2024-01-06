@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('transport_id');
             $table->foreign('transport_id')->references('id')->on('mode_of_transportations');
 
-            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
 
             $table->longText('remarks')->nullable();

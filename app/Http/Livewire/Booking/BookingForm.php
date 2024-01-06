@@ -302,11 +302,23 @@ class BookingForm extends Component
 
                 $booking_data['dt_booked'] = Carbon::now();
 
+
+
                 // $booking_data['event_date'] = Carbon::parse($this->event_date);
 
                 // $booking_data['call_time'] = Carbon::parse($this->call_time);                
                 $booking = Booking::create($booking_data);
 
+                $currentYear = Carbon::now()->year;
+                $paddedRowId = str_pad($booking->id, 6, '0', STR_PAD_LEFT);
+                $result = $currentYear . $paddedRowId;
+
+                // dd($result);
+                $booking->update([
+                    'booking_no' => $result
+                ]);
+
+                
                 // $billing = Billing::create([
                 //     'customer_id' => $booking->customer_id,
                 //     'booking_id' => $booking->id,

@@ -46,8 +46,8 @@
                     <div class="dash-content dash-count">
                         <h4>Bookings</h4>
                         <h2><span class="counter-up">{{ $bookings->count() }}</span></h2>
-                        <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>40%</span> vs last
-                            month</p>
+                        {{-- <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>40%</span> vs last
+                            month</p> --}}
                     </div>
                 </div>
             </div>
@@ -59,8 +59,8 @@
                     <div class="dash-content dash-count">
                         <h4>Customers</h4>
                         <h2><span class="counter-up">{{ $customers->count() }}</span></h2>
-                        <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>20%</span> vs last
-                            month</p>
+                        {{-- <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>20%</span> vs last
+                            month</p> --}}
                     </div>
                 </div>
             </div>
@@ -72,8 +72,8 @@
                     <div class="dash-content dash-count">
                         <h4>Food Orders</h4>
                         <h2><span class="counter-up">{{ $orders->count() }}</span></h2>
-                        <p><span class="negative-view"><i class="feather-arrow-down-right me-1"></i>15%</span> vs last
-                            month</p>
+                        {{-- <p><span class="negative-view"><i class="feather-arrow-down-right me-1"></i>15%</span> vs last
+                            month</p> --}}
                     </div>
                 </div>
             </div>
@@ -84,14 +84,14 @@
                     </div>
                     <div class="dash-content dash-count">
                         <h4>Earnings</h4>
-                        <h2>$<span class="counter-up"> 20,250</span></h2>
-                        <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>30%</span> vs last
-                            month</p>
+                        <h2>₱<span class="counter-up"> 20,250</span></h2>
+                        {{-- <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>30%</span> vs last
+                            month</p> --}}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12 col-md-12 col-lg-6 col-xl-9">
                 <div class="card">
                     <div class="card-body">
@@ -523,7 +523,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     <div class="notification-box">
         <div class="msg-sidebar notifications msg-noti">

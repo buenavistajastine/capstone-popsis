@@ -205,7 +205,7 @@
                         <div class="col-md-1 ms-3 fw-bold">
                             <h5>Filter by:</h5>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group local-forms">
                                 <label for="paymentMode">Menu</label>
                                 <select class="form-control" wire:model="selectedMenuFilter" id="paymentMode">

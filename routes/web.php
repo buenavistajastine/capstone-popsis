@@ -7,7 +7,6 @@ use App\Http\Livewire\Booking\BookingForm;
 use App\Http\Livewire\Booking\BookingList;
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\Customer\CustomerList;
-use App\Http\Livewire\Customer\CustomerList;
 use App\Http\Livewire\Employee\EmployeeList;
 use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;

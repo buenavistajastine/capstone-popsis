@@ -17,7 +17,8 @@ class FoodOrderList extends Component
 
     public function createOrder()
     {
-        // return redirect()->route('booking-form');
+        $this->emit('resetInputFields');
+        $this->emit('openFoodOrderModal');
     }
 
 
@@ -25,7 +26,7 @@ class FoodOrderList extends Component
     {
         $this->orderId = $orderId;
         $this->emit('orderId', $this->orderId);
-        // $this->emit('openBookingModal');
+        $this->emit('openFoodOrderModal');
     }
 
     public function deleteOrder($orderId)

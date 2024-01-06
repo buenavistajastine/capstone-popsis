@@ -153,7 +153,7 @@
 							</ul>
 						</li>
 						
-						<li class="submenu">
+						{{-- <li class="submenu">
 							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-03.svg" alt=""></span> <span>Patients </span> <span class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a href="patients.html">Patients List</a></li>
@@ -259,9 +259,9 @@
 								<li><a href="view-invoice.html"> Invoices Details</a></li>
 								<li><a href="invoices-settings.html"> Invoices Settings</a></li>
 							</ul>
-						</li>
+						</li> --}}
                         
-                        <li>
+                        {{-- <li>
                             <a href="settings.html"><span class="menu-side"><img src="assets/img/icons/menu-icon-16.svg" alt=""></span> <span>Settings</span></a>
                         </li>
                         <li class="menu-title">UI Interface</li>
@@ -363,7 +363,7 @@
                         </li>
                         <li>
                             <a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a>
-                        </li>
+                        </li> --}}
                         <li class="menu-title">Setup</li>
                         <li class="submenu">
                             <a href="#"><i class="fa fa-columns"></i> <span>System</span> <span class="menu-arrow"></span></a>

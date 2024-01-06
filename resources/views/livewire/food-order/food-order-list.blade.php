@@ -60,25 +60,25 @@
                                 @else
                                     @foreach ($orders as $order)
                                         <tr>
-                                            <td>{{ $order->customers->last_name }},
-                                                {{ $order->customers->first_name }}
-                                                {{ $order->customers->middle_name }}</td>
-                                            <td>{{ $order['date_need'] ? Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
+                                            <td>{{ ucfirst($order->customers->last_name) }},
+                                                {{ ucfirst($order->customers->first_name) }}
+                                                {{ $order->customers->middle_name ? ucfirst($order->customers->middle_name) : ''}}</td>
+                                            <td>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
                                                 at
-                                                {{ $order['call_time'] ? Carbon::parse($order['call_time'])->format('g:i A') : '' }}
+                                                {{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}
                                             </td>
-                                            <td>{{ $order->address }} Pax</td>
+                                            <td>{{ $order->transports->name }}</td>
                                             <td>
                                                 <div class="btn-group btn-group-sm" role="group">
                                                     <button type="button"
-                                                        class="btn btn-inverse-primary btn-sm mx-1"
+                                                        class="btn btn-primary btn-sm mx-1"
                                                         wire:click="editOrder({{ $order->id }})"
-                                                        title="Edit">Edit <i
+                                                        title="Edit"> <i
                                                             class="fa-solid fa-pen-to-square"></i></button>
 
-                                                    <a class="btn btn-inverse-danger btn-sm mx-1"
+                                                    <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteOrder({{ $order->id }})"
-                                                        title="Delete">Delete <i class="fa-solid fa-trash"></i></a>
+                                                        title="Delete"> <i class="fa-solid fa-trash"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -151,14 +151,14 @@
     </div>
 </div>
 {{-- Modal --}}
-{{-- <div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
+<div wire.ignore.self class="modal fade" id="foodOrderModal" tabindex="-1" aria-labelledby="foodOrderModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-top modal-xl">
-        <livewire:booking.booking-form />
+    <div class="modal-dialog modal-dialog-top modal-lg">
+        <livewire:food-order.food-order-form />
     </div>
 </div>
 
 
 @section('custom_script')
-    @include('layouts.scripts.booking-scripts')
-@endsection --}}
+    @include('layouts.scripts.food-order-scripts')
+@endsection
