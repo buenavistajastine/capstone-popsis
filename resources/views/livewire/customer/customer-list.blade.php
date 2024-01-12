@@ -85,7 +85,7 @@
                                                                 class="btn btn-primary btn-sm mx-1"
                                                                 wire:click="createCustomerAccount({{ $customer->id }})"
                                                                 title="Create Account">
-                                                                Register <i class="fa-solid fa-pen-to-square"></i>
+                                                                Register <i class="fa-regular fa-square-plus"></i>
                                                             </button>
                                                         @else
                                                         @endif

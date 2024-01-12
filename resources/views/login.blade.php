@@ -28,7 +28,7 @@
 					<div class="col-lg-6 login-wrap">
 						<div class="login-sec">
 							<div class="log-img">
-								<img class="img-fluid" src="assets/img/login-02.png" alt="Logo">
+								<img class="img-fluid" src="assets/img/popsislogo.png" alt="Logo">
 							</div>
 						</div>
 					</div>
@@ -40,9 +40,9 @@
 							<div class="loginbox">								
 								<div class="login-right">
 									<div class="login-right-wrap">
-										<div class="account-logo">
+										{{-- <div class="account-logo">
 											<a href="index.html"><img src="assets/img/login-logo.png" alt=""></a>
-										</div>
+										</div> --}}
 										<h2>Login</h2>
 										<!-- Form -->
 										<form method="POST" action="{{ route('login') }}">
@@ -84,7 +84,7 @@
 										</form>
 										<!-- /Form -->
 										  
-										<div class="next-sign">
+										{{-- <div class="next-sign">
 											<p class="account-subtitle">Need an account?  <a href="register.html">Sign Up</a></p>
 											
 											<!-- Social Login -->
@@ -95,7 +95,7 @@
 											</div>
 											<!-- /Social Login -->
 											
-										</div>
+										</div> --}}
 									</div>
 								</div>
 							</div>

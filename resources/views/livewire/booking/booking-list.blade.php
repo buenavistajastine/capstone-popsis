@@ -45,8 +45,8 @@
                             <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20%;">Customer</th>
-                                        <th style="width: 30%;">Event</th>
+                                        <th style="width: 30%;">Customer</th>
+                                        <th style="width: 20%;">Event</th>
                                         <th style="width: 30%;">Venue</th>
                                         <th style="width: 20%;">Action</th>
                                     </tr>
@@ -66,15 +66,15 @@
                                                             {{ ucwords($booking->customers->first_name) }}
                                                             {{ $booking->customers->middle_name ? ucfirst($booking->customers->middle_name) : '' }}
                                                         </div>
-                                                        <div class="col-md-12 mb-1 text-sm">
+                                                        {{-- <div class="col-md-12 mb-1 text-sm">
                                                             #{{ $booking->booking_no }}
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-12 mb-1 text-justify">
-                                                            {{ $booking->event_name }} | {{ $booking->no_pax }} Pax
+                                                            {{ $booking->event_name }} - <i>{{ $booking->no_pax }} Pax</i>
                                                         </div>
                                                         <div class="col-md-12 mb-1">
                                                             {{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
@@ -94,6 +94,12 @@
                                                             wire:click="editBooking({{ $booking->id }})"
                                                             title="Edit"> <i
                                                                 class="fa-solid fa-pen-to-square"></i></button>
+
+                                                        {{-- <a href="{{ route('module_print', $booking->id) }} target="_blank">Module</a> --}}
+                                                        <a class="btn btn-primary btn-sm mx-1" href="{{ route('module_print', $booking->id) }}"
+                                                            target="_blank" title="View Booking">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </a>
 
                                                         <a class="btn btn-danger btn-sm mx-1"
                                                             wire:click="deleteBooking({{ $booking->id }})"

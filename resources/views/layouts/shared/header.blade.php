@@ -21,7 +21,7 @@
 <div class="header">
 	<div class="header-left">
 		<a href="/" class="logo">
-			<img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt> <span>Popsi's</span>
+			<img src="{{ asset('assets/img/finalcroplogo1.png') }}" width="60" height="50" alt> <span>Popsi's</span>
 		</a>
 	</div>
 	<a id="toggle_btn" href="#"><img src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>

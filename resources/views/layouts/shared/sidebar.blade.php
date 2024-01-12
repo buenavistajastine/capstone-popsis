@@ -123,26 +123,29 @@
                         <li>
 							<a href="/dashboard"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Dashboard</span></a>
 						</li>
+						@hasrole(['admin', 'manager'])
 						<li class="submenu">
-							<a href="#"><span class="menu-side"><img src="assets/img/icons/menu-icon-02.svg" alt=""></span> <span> Users </span> <span class="menu-arrow"></span></a>
+							<a href="#"><span class="menu-side"><i class="fa-solid fa-users"></i></span> <span> Users </span> <span class="menu-arrow"></span></a>
 							<ul style="display: none;">
+								
 								<li><a href="/user">User Management</a></li>
 								<li><a href="/list">Customer List</a></li>
 								<li><a href="/customer-account">Customer Account</a></li>
 								
 							</ul>
 						</li>
+						@endhasrole
                         <li>
-							<a href="dish"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Dish</span></a>
+							<a href="dish"><span class="menu-side"><i class="fa-solid fa-list"></i></span> <span>Dish</span></a>
 						</li>
                         <li>
-							<a href="order"><span class="menu-side"><img src="assets/img/icons/menu-icon-01.svg" alt=""></span> <span>Food Order</span></a>
+							<a href="order"><span class="menu-side"><i class="fa-solid fa-basket-shopping"></i></span> <span>Food Order</span></a>
 						</li>
                         <li>
-							<a href="booking"><span class="menu-side"><img src="assets/img/icons/menu-icon-04.svg" alt=""></span> <span>Booking</span></a>
+							<a href="booking"><span class="menu-side"><i class="fa-solid fa-calendar-day"></i></i></span> <span>Booking</span></a>
 						</li>
                         <li>
-							<a href="dish"><span class="menu-side"><img src="assets/img/icons/menu-icon-07.svg" alt=""></span> <span>Billing</span></a>
+							<a href="dish"><span class="menu-side"><i class="fa-solid fa-calculator"></i></span> <span>Billing</span></a>
 						</li>
 						<li class="submenu">
 							<a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
@@ -367,7 +370,7 @@
                         <li class="menu-title">Setup</li>
                         <li class="submenu">
                             <a href="#"><i class="fa fa-columns"></i> <span>System</span> <span class="menu-arrow"></span></a>
-                            <ul style="display: none;">
+                            {{-- <ul style="display: none;">
                                 <li><a href="login.html"> Login </a></li>
                                 <li><a href="register.html"> Register </a></li>
                                 <li><a href="forgot-password.html"> Forgot Password </a></li>
@@ -378,8 +381,9 @@
                                 <li><a href="error-404.html">404 Error </a></li>
                                 <li><a href="error-500.html">500 Error </a></li>
                                 <li><a href="blank-page.html"> Blank Page </a></li>
-                            </ul>
+                            </ul> --}}
                         </li>
+						@hasrole('admin')
                         <li class="submenu">
                             <a href="javascript:void(0);"><i class="fa fa-share-alt"></i> <span>Authentication</span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
@@ -391,9 +395,10 @@
                                 </li>
                             </ul>
                         </li>
+						@endhasrole
                     </ul>
 					<div class="logout-btn">
-						<a href="{{ route('logout') }}"><span class="menu-side"><img src="assets/img/icons/logout.svg" alt=""></span> <span>Logout</span></a>
+						<a href="{{ route('logout') }}"><span class="menu-side"><i class="fa-solid fa-right-from-bracket"></i></span> <span>Logout</span></a>
 					</div>
                 </div>
             </div>

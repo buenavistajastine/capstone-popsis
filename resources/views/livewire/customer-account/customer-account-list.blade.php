@@ -63,11 +63,14 @@
                                         $cust_addr = $customer->bookings;
                                     @endphp --}}
                                         <tr>
+                                            @if (!is_null($cust_acc->users))
                                             <td></td>
-                                            <td>{{ $cust_acc->last_name }}, {{ $cust_acc->first_name }}
-                                                {{ $cust_acc->middle_name }}</td>
+                                            <td>{{ $cust_acc->users->last_name }}, {{ $cust_acc->users->first_name }}
+                                                {{ $cust_acc->users->middle_name }}</td>
+                                            
                                             <td>{{ $cust_acc->users->username }}</td>
                                             <td>{{ $cust_acc->users->email ?? '' }}</td>
+                                            
                                             <td>
 
                                                 <div class="btn-group" role="group">
@@ -84,6 +87,7 @@
                                                         </a> --}}
                                                 </div>
                                             </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif

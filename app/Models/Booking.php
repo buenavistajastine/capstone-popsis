@@ -68,5 +68,16 @@ class Booking extends Model
     {
         return $this->hasOne(Billing::class, 'booking_id', 'id');
     }
+
+    public function dishes()
+
+    {
+        return $this->belongsToMany(Dish::class, 'booking_dish_keys');
+    }
     
+    public function dishess()
+
+    {
+        return $this->belongsToMany(Dish::class, 'add_ons');
+    }
 }

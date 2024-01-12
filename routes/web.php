@@ -10,6 +10,7 @@ use App\Http\Livewire\Customer\CustomerList;
 use App\Http\Livewire\Employee\EmployeeList;
 use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PrintController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\CustomerAccount\CustomerAccountList;
@@ -54,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('order', FoodOrderList::class)->name('order');
     Route::get('list', CustomerList::class)->name('customer');
     Route::get('customer-account', CustomerAccountList::class)->name('customer_account');
+
+    // printables
+    Route::get('print/module/{id}', [PrintController::class, 'PrintModule'])->name('module_print');
 });
 
 Route::get('/admin/login', [ProfileController::class, 'Login'])->name('user.login');

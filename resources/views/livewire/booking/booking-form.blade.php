@@ -18,7 +18,7 @@
             </ul>
         </div>
     @endif
-    <livewire:flash-message.flash-message />
+
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -42,7 +42,7 @@
                     <div class="form-group local-forms">
                         <label>First Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="first_name" placeholder
-                            @if ($customer_id) readonly @endif />
+                             />
                         @error('first_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -52,7 +52,7 @@
                     <div class="form-group local-forms">
                         <label>Last Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="last_name" placeholder
-                            @if ($customer_id) readonly @endif />
+                            />
                         @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -63,6 +63,16 @@
                         <label>Contact No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="contact_no" placeholder />
                         @error('contact_no')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group local-forms">
+                        <label>No. of Pax<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="no_pax" placeholder />
+                        @error('no_pax')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -87,15 +97,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="form-group local-forms">
-                        <label>No. of Pax<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="no_pax" placeholder />
-                        @error('no_pax')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
+               
 
                 <div class="col-md-3">
                     <div class="form-group local-forms">
@@ -115,7 +117,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Package<span class="login-danger">*</span></label>
                         <select wire:model="package_id" wire:change="calculateTotalPrice" class="form-control select">
@@ -130,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label style="z-index: 1">Total Price
                             <span class="login-danger">*</span>
@@ -146,7 +148,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div class="d-flex justify-content-left align-items-center">
-                                    <h6 class="fs-5">Dishes</h6>
+                                    <h6 class="fs-6">Dishes</h6>
                                 </div>
                                 <table class="table border-0 custom-table comman-table mb-0">
                                     <thead>
@@ -211,8 +213,14 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div class="d-flex justify-content-left align-items-center">
-                                    <h6 class="fs-5">Add-on Dishes</h6>
+                                    <div>
+                                        <h6 class="fs-6">Add-on Dishes</h6>
+                                    </div>
+                                    <div>
+                                        <i style="font-size: small;" class="text-danger">(Prices are not included in the package.)</i>
+                                    </div>
                                 </div>
+                                
                                 <table class="table border-0 custom-table comman-table mb-0">
                                     <thead>
                                         <tr>
@@ -271,7 +279,14 @@
                 </div>
 
 
+                <div class="row mb-3">
+                    <h6 class="fs-6">Additional Request:</h6>
 
+                        <div class="col-md-12">
+                            <textarea name="doctor_remarks" id="doctor_remarks" cols="60" rows="5" class="rounded"
+                             wire:model="remarks" placeholder="Write here..."></textarea>
+                        </div>           
+                </div>
 
 
                     {{-- <div class="col-6">

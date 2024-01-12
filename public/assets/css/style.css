@@ -1546,7 +1546,7 @@ textarea.form-control {
     -webkit-flex-wrap: wrap;
 }
 .login-wrap {
-    background-color: #1a4b22;
+    background-color: #fefefe;
     top: 0;
     left: 0;
     position: fixed;
@@ -1562,7 +1562,7 @@ textarea.form-control {
 }
 .login-wrap .login-sec {
     position: absolute;
-    background-image: url("../img/login-0l.png");
+    background-image: url("");
     background-repeat: no-repeat;
     background-position: top right;
     background-size: cover, auto;
