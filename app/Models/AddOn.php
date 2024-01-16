@@ -20,8 +20,13 @@ class AddOn extends Model
         return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
+    public function dishess()
+    {
+        return $this->belongsTo(Dish::class, 'dish_id', 'id');
+    }
+
     public function dishes()
     {
-        return $this->belongsToMany(Dish::class, 'dish_id', 'id');
+        return $this->belongsToMany(Dish::class, 'add_ons', 'booking_id', 'dish_id', 'id');
     }
 }

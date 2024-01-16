@@ -5,7 +5,7 @@
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-					<li class="breadcrumb-item">Dish List</li>
+					<li class="breadcrumb-item">Billing</li>
 				</ul>
 			</div>
 		</div>
@@ -19,14 +19,14 @@
 						<div class="row align-items-center">
 							<div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Dish List</h3>
-                                    <div class="doctor-search-blk">
+                                    <h3>Billing</h3>
+                                    {{-- <div class="doctor-search-blk">
                                         <div class="add-group">
                                             <a class="btn btn-primary ms-2" wire:click="createDish">
                                                 <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
                                             </a>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 							<div class="col-auto text-end float-end ms-auto download-grp">
@@ -45,7 +45,7 @@
                         <div class="col-md-1 ms-3 fw-bold">
                             <h5>Filter by:</h5>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <div class="form-group local-forms">
                                 <label for="paymentMode">Menu</label>
                                 <select class="form-control" wire:model="selectedMenuFilter" id="paymentMode">
@@ -55,7 +55,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
 					<div class="table-responsive">
@@ -64,36 +64,60 @@
                                 <tr>
                                     
                                     <th style="width: 3%"></th>
-                                    <th style="width: 17%">Menu</th>
-                                    <th style="width: 30%">Dish</th>
-                                    <th style="width: 20%">Price(Full Chafing)</th>
-                                    <th style="width: 20%">Price(Half Chafing)</th>
+                                    <th style="width: 27%">Name</th>
+                                    <th style="width: 20%">Package </th>
+                                    <th style="width: 20%">Paid Amount</th>
+                                    <th style="width: 20%">Payable Amount</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                             </thead>
 							<tbody>
-                                @if ($dishes->isEmpty())
+                                @if (is_array($billings) && count($billings) === 0)
                                 <tr>
                                     <td colspan="5" class="text-center">No data available in table.</td>
                                 </tr>
                           
                                 @else
-                                @foreach ($dishes as $dish)
+                                @foreach ($billings as $billing)
                                     <tr>
                                        <td></td>
-                                        <td>{{ $dish->menu->name }}</td>
-                                        <td>{{ $dish->name }}</td>
-                                        <td class="text-center">₱ {{ number_format($dish->price_full, 2) }}</td>
-                                        <td class="text-center">₱ {{ number_format($dish->price_half, 2) }}</td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-12 mb-1 text-justify">
+                                                    {{ ucwords($billing->customers->last_name) }},
+                                                    {{ ucwords($billing->customers->first_name) }}
+                                                    {{ $billing->customers->middle_name ? ucfirst($billing->customers->middle_name) : '' }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ optional($billing->bookings->packages)->name }} <span style="font-size: small">(₱ {{ optional($billing->bookings->packages)->price }} /pax)</span>
+                                            @if (count($billing->bookings->dishess) > 0)
+                                                <div class="row" style="font-size: x-small">
+                                                    <span>Add-ons:</span>
+                                                    <div class="row ps-3">
+                                                        @foreach ($billing->bookings->dishess as $addon)
+                                                   
+                                                            {{-- @foreach ($addon as $dish) --}}
+                                                                <div class="ps-3">{{ $addon->name }}</div>
+                                                            {{-- @endforeach --}}
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </td>
+                                        
+                                        <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
+                                        <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}</td>
                                         <td>
     
                                             <div class="btn-group btn-group-xs" role="group">
                                                 <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                    wire:click="editDish({{ $dish->id }})" title="Edit">
+                                                    wire:click="editBilling({{ $billing->id }})" title="Edit">
                                                      <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                                 <a class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteDish({{ $dish->id }})" title="Delete">
+                                                    wire:click="deleteBilling({{ $billing->id }})" title="Delete">
                                                      <i class="fa-solid fa-trash"></i>
                                                 </a>
                                             </div>
@@ -107,46 +131,46 @@
                     <tfoot>
                         <div class="d-md-flex align-items-center m-2 p-2">
                             <div class="me-md-auto counterHead text-sm-left text-center mb-2 mb-md-0">
-                                Showing {{ $dishes->firstItem() }} to {{ $dishes->lastItem() }} of {{ $dishes->total() }}
+                                Showing {{ $billings->firstItem() }} to {{ $billings->lastItem() }} of {{ $billings->total() }}
                                 entries
                             </div>
         
                             <ul class="pagination pagination-separated mb-0 justify-content-center">
-                                @if ($dishes->onFirstPage())
+                                @if ($billings->onFirstPage())
                                     <li class="page-item disabled"><span class="page-link">Previous</span></li>
                                 @else
                                     <li class="page-item"><a class="page-link" wire:click="previousPage"
                                             wire:loading.attr="disabled">Previous</a></li>
                                 @endif
         
-                                @if ($dishes->currentPage() > 2)
+                                @if ($billings->currentPage() > 2)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $dishes->currentPage() - 2 }})">{{ $dishes->currentPage() - 2 }}</a>
+                                            wire:click="gotoPage({{ $billings->currentPage() - 2 }})">{{ $billings->currentPage() - 2 }}</a>
                                     </li>
                                 @endif
         
-                                @if ($dishes->currentPage() > 1)
+                                @if ($billings->currentPage() > 1)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $dishes->currentPage() - 1 }})">{{ $dishes->currentPage() - 1 }}</a>
+                                            wire:click="gotoPage({{ $billings->currentPage() - 1 }})">{{ $billings->currentPage() - 1 }}</a>
                                     </li>
                                 @endif
         
-                                <li class="page-item active"><span class="page-link">{{ $dishes->currentPage() }}</span>
+                                <li class="page-item active"><span class="page-link">{{ $billings->currentPage() }}</span>
                                 </li>
         
-                                @if ($dishes->hasMorePages())
+                                @if ($billings->hasMorePages())
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $dishes->currentPage() + 1 }})">{{ $dishes->currentPage() + 1 }}</a>
+                                            wire:click="gotoPage({{ $billings->currentPage() + 1 }})">{{ $billings->currentPage() + 1 }}</a>
                                     </li>
                                 @endif
         
-                                @if ($dishes->currentPage() < $dishes->lastPage() - 1)
+                                @if ($billings->currentPage() < $billings->lastPage() - 1)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $dishes->currentPage() + 2 }})">{{ $dishes->currentPage() + 2 }}</a>
+                                            wire:click="gotoPage({{ $billings->currentPage() + 2 }})">{{ $billings->currentPage() + 2 }}</a>
                                     </li>
                                 @endif
         
-                                @if ($dishes->hasMorePages())
+                                @if ($billings->hasMorePages())
                                     <li class="page-item">
                                         <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
                                     </li>
@@ -164,14 +188,3 @@
 		</div>
 	</div>
 </div>
-
-<div wire.ignore.self class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
-        <livewire:dish.dish-form />
-    </div>
-</div>
-
-</div>
-@section('custom_script')
-    @include('layouts.scripts.dish-scripts')
-@endsection

@@ -44,4 +44,9 @@ class Billing extends Model
     {
         return $this->belongsTo(ModeOfPayment::class, 'payment_id', 'id');
     }
+
+    public function addons()
+    {
+        return $this->hasMany(AddOn::class, 'booking_id', 'booking_id');
+    }
 }

@@ -18,7 +18,7 @@
             </ul>
         </div>
     @endif
-
+    <livewire:flash-message.flash-message />
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -233,20 +233,17 @@
                                         @foreach ($addOns as $addOnIndex => $dishItem)
                                             <tr>
                                                 <td>
-                                                    <select wire:model="addOns.{{ $addOnIndex }}.dish_id" wire:change="calculateTotalPrice"
-                                                        id="dish_id_{{ $addOnIndex }}"
-                                                        name="addOns[{{ $addOnIndex }}][dish_id]"
-                                                        class="form-control select">
+                                                    <select wire:model="addOns.{{ $addOnIndex }}.dish_id" wire:change="calculateTotalPrice" id="dish_id_{{ $addOnIndex }}" name="addOns[{{ $addOnIndex }}][dish_id]" class="form-control select">
                                                         <option selected value="">--select--</option>
                                                         @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
                                                             <optgroup label="{{ $menu }}">
                                                                 @foreach ($menuDishes as $dish)
-                                                                    <option value="{{ $dish->id }}">
-                                                                        {{ $dish->name }}</option>
+                                                                    <option value="{{ $dish->id }}">{{ $dish->name }}</option>
                                                                 @endforeach
                                                             </optgroup>
                                                         @endforeach
                                                     </select>
+                                                    
                                                 </td>
                                                 <td>
                                                     <input class="form-control" type="text"

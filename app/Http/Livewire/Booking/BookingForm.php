@@ -45,6 +45,9 @@ class BookingForm extends Component
     {
         $this->bookingId = $bookingId;
 
+        $this->dishItems = [];
+        $this->addOns = [];
+
         $booking = Booking::whereId($bookingId)->with('customers')->first();
         // dd($booking);
         // if ($booking->customers) {
@@ -106,10 +109,6 @@ class BookingForm extends Component
         // $this->status_id = $booking->status_id;
 
         $dishes = BookingDishKey::where('booking_id', $bookingId)->get();
-        $addOnDishes = AddOn::where('booking_id', $bookingId)->get();
-
-        // $this->dishItems = [];
-        // $this->addOns = [];
         $i = 0;
 
         if ($dishes == null) {
@@ -129,20 +128,23 @@ class BookingForm extends Component
             }
         }
 
+        $addOnDishes = AddOn::where('booking_id', $bookingId)->get();
+        $j = 0;
+
         if ($addOnDishes == null) {
-            $this->addOns[$i] = [
+            $this->addOns[$j] = [
                 'id' => null,
                 'dish_id' => null,
                 'quantity' => null,
             ];
         } else {
             foreach ($addOnDishes as $add) {
-                $this->addOns[$i] = [
+                $this->addOns[$j] = [
                     'id' => $add->id,
                     'dish_id' => $add->dish_id,
                     'quantity' => $add->quantity,
                 ];
-                $i++;
+                $j++;
             }
         }
 
@@ -265,6 +267,23 @@ class BookingForm extends Component
                     }
                 }
 
+                $billing = Billing::where('booking_id', $this->bookingId)->first();
+                if ($billing) {
+                    $billing->update([
+                        'total_amt' => $booking_data['total_price'],
+                        'payable_amt' => $booking_data['total_price'],
+                    ]);
+                } else {
+                    // Create billing if it does not exist
+                    Billing::create([
+                        'customer_id' => $booking->customer_id,
+                        'booking_id' => $booking->id,
+                        'total_amt' => $booking_data['total_price'],
+                        'payable_amt' => $booking_data['total_price'],
+                        'status_id' => 6,
+                    ]);
+                }
+
                 foreach ($this->addOns as $key => $value) {
                     if ($this->addOns[$key]['id'] == null) {
                         AddOn::create([
@@ -294,6 +313,8 @@ class BookingForm extends Component
                         ->update(['update' => 0]);
                 }
 
+                
+                
                 $action = "edit";
                 $message = 'Successfully Updated';
             } else {
@@ -319,13 +340,13 @@ class BookingForm extends Component
                 ]);
 
                 
-                // $billing = Billing::create([
-                //     'customer_id' => $booking->customer_id,
-                //     'booking_id' => $booking->id,
-                //     'total_amt' => $booking_data['total_price'],
-                //     'payable_amt' => $booking_data['total_price'],
-                //     'status' => 6
-                // ]);
+                Billing::create([
+                    'customer_id' => $booking->customer_id,
+                    'booking_id' => $booking->id,
+                    'total_amt' => $booking_data['total_price'],
+                    'payable_amt' => $booking_data['total_price'],
+                    'status_id' => 6,
+                ]);
                 // dd($billing->customer_id);
                 foreach ($this->dishItems as $key => $value) {
                     BookingDishKey::create([
@@ -417,6 +438,16 @@ class BookingForm extends Component
     {
         unset($this->addOns[$addOnIndex]);
         $this->addOns = array_values($this->addOns);
+
+        $this->calculateTotalPrice();
+    }
+
+    public function mount()
+    {
+        $this->resetInputFields();
+
+        $this->dishItems = [];
+        $this->addOns = [];
     }
 
     public function render()
