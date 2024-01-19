@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers');
 
-            $table->string('ordered_by');
+            $table->string('ordered_by')->nullable();
             $table->string('address');
             $table->string('contact_no');
             $table->date('date_need');

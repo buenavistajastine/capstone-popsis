@@ -11,6 +11,7 @@ class Dish extends Model
 
     protected $fillable = [
         'menu_id',
+        'type_id',
         'name',
         'description',
         'price_full',
@@ -18,9 +19,14 @@ class Dish extends Model
     ];
 
     public function menu()
-{
-    return $this->belongsTo(Menu::class, 'menu_id', 'id');
-}
+    {
+        return $this->belongsTo(Menu::class, 'menu_id', 'id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class, 'type_id', 'id');
+    }
 
 
     public function bookingDishKeys()

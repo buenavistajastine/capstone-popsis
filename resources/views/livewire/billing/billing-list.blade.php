@@ -42,9 +42,9 @@
 					</div>
 
                     <div class="row mt-3">
-                        <div class="col-md-1 ms-3 fw-bold">
+                        {{-- <div class="col-md-1 ms-3 fw-bold">
                             <h5>Filter by:</h5>
-                        </div>
+                        </div> --}}
                         {{-- <div class="col-md-3">
                             <div class="form-group local-forms">
                                 <label for="paymentMode">Menu</label>

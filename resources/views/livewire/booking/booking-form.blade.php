@@ -71,7 +71,7 @@
                 <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>No. of Pax<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="no_pax" placeholder />
+                        <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
                         @error('no_pax')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -123,7 +123,7 @@
                         <select wire:model="package_id" wire:change="calculateTotalPrice" class="form-control select">
                             <option selected value="">--select--</option>
                             @foreach ($packages as $package)
-                                <option value="{{ $package->id }}">{{ $package->name }}</option>
+                                <option value="{{ $package->id }}">{{ $package->name }} (₱ {{ $package->price }} /person)</option>
                             @endforeach
                         </select>
                         @error('package_id')

@@ -87,11 +87,25 @@
                         @enderror
                     </div>
                 </div> --}}
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Address<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="address" placeholder />
                         @error('address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Transportation<span class="login-danger">*</span></label>
+                        <select wire:model="transport_id" class="form-control ">
+                            <option selected value="">--select--</option>
+                            @foreach ($transports as $transpo)
+                                <option value="{{ $transpo->id }}">{{ $transpo->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('transport_id')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -125,22 +139,16 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
-                        <label>Transportation<span class="login-danger">*</span></label>
-                        <select wire:model="transport_id" class="form-control">
-                            <option selected value="">--select--</option>
-                            @foreach ($transports as $transpo)
-                                <option value="{{ $transpo->id }}">{{ $transpo->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('transport_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <label style="z-index: 1">Remarks
+                            <span class="login-danger">*</span>
+                        </label>
+                        <input type="text" wire:model="remarks" class="form-control" placeholder
+                            />
                     </div>
                 </div>
-
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label style="z-index: 1">Total Price
                             <span class="login-danger">*</span>
@@ -149,15 +157,7 @@
                             readonly />
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label style="z-index: 1">Remarks
-                            <span class="login-danger">*</span>
-                        </label>
-                        <input type="text" wire:model="remarks" class="form-control text-end" placeholder
-                            readonly />
-                    </div>
-                </div>
+                
 
                 <div class="col-md-10">
                     <div class="card">

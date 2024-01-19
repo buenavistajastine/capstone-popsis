@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('dishes', function (Blueprint $table) { 
+            $table->unsignedBigInteger('type_id')->nullable()->after('menu_id');
+            $table->foreign('type_id')->references('id')->on('types');
+
         });
     }
 
@@ -23,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::table('dishes', function (Blueprint $table) {
+            $table->dropColumn('type_id');
+        });
     }
 };

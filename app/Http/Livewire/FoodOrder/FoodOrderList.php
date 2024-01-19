@@ -10,11 +10,18 @@ class FoodOrderList extends Component
     public $orderId;
     public $search = '';
 
+    protected $listeners = [
+        'refreshParentFoodOrder' => '$refresh',
+        'deleteOrder',
+        'editOrder',
+        'deleteConfirmBooking'
+    ];
+
     public function updatingSearch()
     {
         $this->resetPage(); // Reset pagination when the search term changes
     }
-
+    
     public function createOrder()
     {
         $this->emit('resetInputFields');

@@ -4,11 +4,12 @@ namespace App\Http\Livewire\Dish;
 
 use App\Models\Dish;
 use App\Models\Menu;
+use App\Models\Type;
 use Livewire\Component;
 
 class DishForm extends Component
 {
-    public $dishId, $menu_id, $name, $description, $price_full, $price_half;
+    public $dishId, $menu_id, $name, $type_id, $description, $price_full, $price_half;
     public $action = '';
     public $message = '';
 
@@ -29,19 +30,25 @@ class DishForm extends Component
         $dish = Dish::whereId($dishId)->first();
         $this->menu_id = $dish->menu_id;
         $this->name = $dish->name;
+        $this->type_id = $dish->type_id;
         $this->description = $dish->description;
-        $this->price_full = $dish->price_full;
-        $this->price_half = $dish->price_half;
+        $this->price_full = number_format($dish->price_full, 2);
+        $this->price_half = number_format($dish->price_half, 2);
     }
+
 
     public function store() {
         $data = $this->validate([
             'menu_id' => 'required',
             'name' => 'required',
+            'type_id' => 'nullable',
             'description' => 'nullable',
             'price_full' => 'nullable',
             'price_half' => 'nullable',
         ]);
+
+        $data['price_full'] = str_replace(',', '', $data['price_full']);
+        $data['price_half'] = str_replace(',', '', $data['price_half']);
 
         if ($this->dishId) {
             Dish::whereId($this->dishId)->first()->update($data);
@@ -62,6 +69,7 @@ class DishForm extends Component
     public function render()
     {
         $menus = Menu::all();
-        return view('livewire.dish.dish-form', compact('menus'));
+        $types = Type::all();
+        return view('livewire.dish.dish-form', compact('menus', 'types'));
     }
 }

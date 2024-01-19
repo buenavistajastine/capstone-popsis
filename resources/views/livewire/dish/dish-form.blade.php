@@ -30,48 +30,67 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label class="form-label">Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="name" placeholder />
-                    </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="form-group local-forms">
-                        <label class="form-label">Menu<span class="login-danger">*</span>
-                        </label>
-                        <select class="form-control select form-select-md" wire:model="menu_id">
-                            <option selected value="">--select--</option>
-                            @foreach ($menus as $menu)
-                            <option value="{{ $menu->id }}">
-                                {{ $menu->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
-                
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label class="form-label">Price(Full Chafing)<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="price_full" placeholder />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label class="form-label">Price(Half Chafing)<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="price_half" placeholder />
-                    </div>
-                </div>
                 <div class="col-md-12">
-                <div class="col-md-12">
-                    <div class="form-group local-forms">
-                        <label class="form-label">Description (optional)<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="description" placeholder />
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Name<span class="login-danger">*</span></label>
+                                <input class="form-control" type="text" wire:model="name" placeholder />
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Menu<span class="login-danger">*</span>
+                                </label>
+                                <select class="form-control select form-select-md" wire:model="menu_id">
+                                    <option selected value="">--select--</option>
+                                    @foreach ($menus as $menu)
+                                    <option value="{{ $menu->id }}">
+                                        {{ $menu->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Type<span class="login-danger">*</span>
+                                </label>
+                                <select class="form-control select form-select-md" wire:model="type_id">
+                                    <option selected value="">--select--</option>
+                                    @foreach ($types as $type)
+                                    <option value="{{ $type->id }}">
+                                        {{ $type->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                       
+                        <div class="col-md-6">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Price(Full Chafing)<span class="login-danger">*</span></label>
+                                <input class="form-control" type="text" wire:model="price_full" placeholder />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Price(Half Chafing)<span class="login-danger">*</span></label>
+                                <input class="form-control" type="text" wire:model="price_half" placeholder />
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-12"> --}}
+                        <div class="col-md-12">
+                            <div class="form-group local-forms">
+                                <label class="form-label">Description (optional)<span class="login-danger">*</span></label>
+                                <input class="form-control" type="text" wire:model="description" placeholder />
+                            </div>
+                        </div>
                     </div>
+                       
                 </div>
-               
+    
             </div>
         </div>
         <div class="modal-footer">

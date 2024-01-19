@@ -399,33 +399,41 @@ class BookingForm extends Component
     }
 
     public function calculateTotalPrice()
-    {
-        $packagePrice = 0;
-        $addOnPrice = 0;
+{
+    $packagePrice = 0;
+    $addOnPrice = 0;
 
-        if (isset($this->package_id)) {
-            $package = Package::find($this->package_id);
+    if (!empty($this->package_id)) {
+        $package = Package::find($this->package_id);
 
-            if ($package) {
-                $packagePrice = $package->price ?? 0;
-            }
+        if ($package) {
+            $packagePrice = $package->price ?? 0;
         }
-
-        foreach ($this->addOns as $addOn) {
-            if (!empty($addOn['dish_id'])) {
-                $add = Dish::find($addOn['dish_id']);
-        
-                if ($add) {
-                    $addOnPrice += ($add->price_full * $addOn['quantity']);
-                }
-            }
-        }
-        
-
-        $total = $packagePrice * $this->no_pax;
-        $overallPrice = $total + $addOnPrice;
-        $this->total_price = $overallPrice;
     }
+
+    foreach ($this->addOns as $addOn) {
+        if (!empty($addOn['dish_id'])) {
+            $add = Dish::find($addOn['dish_id']);
+
+            if ($add) {
+                // Ensure that price_full is numeric before multiplying
+                $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
+            }
+        }
+    }
+
+    // Ensure that no_pax is set and is a numeric value
+    $noPax = is_numeric($this->no_pax) ? $this->no_pax : 0;
+
+    if ($this->total_price < 0) {
+        $this->total_price = 0;
+    }
+
+    $total = $packagePrice * $noPax;
+    $overallPrice = $total + $addOnPrice;
+    $this->total_price = $overallPrice;
+}
+
 
 
     public function deleteDish($dishIndex)

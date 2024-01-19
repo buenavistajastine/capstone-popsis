@@ -80,6 +80,7 @@
                                                             title="Edit">
                                                              <i class="fa-solid fa-pen-to-square"></i>
                                                         </button>
+                                                        @hasrole(['admin', 'manager'])
                                                         @if (is_null($customer->user_id))
                                                             <button type="button"
                                                                 class="btn btn-primary btn-sm mx-1"
@@ -89,6 +90,7 @@
                                                             </button>
                                                         @else
                                                         @endif
+                                                        @endhasrole
                                                         {{-- @else
                                                             <button type="button"
                                                                 class="btn btn-inverse-warning btn-sm mx-1"
@@ -97,11 +99,13 @@
                                                                 Edit Account <i class="fa-solid fa-pen-to-square"></i>
                                                             </button>
                                                         @endif --}}
+                                                        @hasrole('admin')
                                                         <a class="btn btn-danger btn-sm mx-1"
                                                             wire:click="deleteCustomer({{ $customer->id }})"
                                                             title="Delete">
                                                              <i class="fa-solid fa-trash"></i>
                                                         </a>
+                                                        @endhasrole
                                                     </div>
                                                 </td>
                                             </tr>
