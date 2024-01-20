@@ -13,6 +13,7 @@ use App\Models\Package;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\BookingDishKey;
+use App\Models\Venue;
 use Illuminate\Support\Facades\DB;
 
 class BookingForm extends Component
@@ -20,6 +21,9 @@ class BookingForm extends Component
     public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id;
     public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id;
     public $dishItems = [];
+    public $selectedVenue, $city, $barangay, $specific_address, $landmark;
+    public $packageDescription;
+    public $maxFormRepeaters = 0;
     public $addOns = [];
     public $selectedDishes = [];
     public $selectedMenus = [];
@@ -49,17 +53,6 @@ class BookingForm extends Component
         $this->addOns = [];
 
         $booking = Booking::whereId($bookingId)->with('customers')->first();
-        // dd($booking);
-        // if ($booking->customers) {
-        //     $this->customer_id = $booking->customer_id;
-        //     $this->fill([
-        //         'first_name' => $booking->customers->first_name,
-        //         'middle_name' => $booking->customers->middle_name,
-        //         'last_name' => $booking->customers->last_name,
-        //         'contact_no' => $booking->customers->contact_no,
-        //         'gender_id' => $booking->customers->gender_id,
-        //     ]);
-        // }
 
         if ($booking) {
             $this->customer_id = $booking->customer_id;
@@ -72,19 +65,23 @@ class BookingForm extends Component
             ]);
 
             $this->package_id = $booking->package_id;
-            $this->venue_id = $booking->venue_id;
+            $this->selectedVenue = $booking->venue_id;
+            $this->city = $booking->city;
+            $this->barangay = $booking->barangay;
+            $this->specific_address = $booking->specific_address;
+            $this->landmark = $booking->landmark;
             $this->event_name = $booking->event_name;
             $this->venue_address = $booking->venue_address;
             $this->no_pax = $booking->no_pax;
             $this->date_event = $booking->date_event;
             $this->call_time = $booking->call_time;
-            $this->total_price = $booking->total_price;
+            $this->total_price = number_format($booking->total_price, 2);
             $this->dt_booked = $booking->dt_booked;
             $this->remarks = $booking->remarks;
             $this->status_id = $booking->status_id;
         } else {
             $this->package_id = null;
-            $this->venue_id = null;
+            $this->selectedVenue = null;
             $this->event_name = null;
             $this->venue_address = null;
             $this->no_pax = null;
@@ -95,18 +92,6 @@ class BookingForm extends Component
             $this->remarks = null;
             $this->status_id = null;
         }
-
-        // $this->package_id = $booking->package_id;
-        // $this->venue_id = $booking->venue_id;
-        // $this->venue_name = $booking->venue_name;
-        // $this->venue_address = $booking->venue_address;
-        // $this->no_pax = $booking->no_pax;
-        // $this->date_event = $booking->date_event;
-        // $this->call_time = $booking->call_time;
-        // $this->total_price = $booking->total_price;
-        // $this->dt_booked = $booking->dt_booked;
-        // $this->remarks = $booking->remarks;
-        // $this->status_id = $booking->status_id;
 
         $dishes = BookingDishKey::where('booking_id', $bookingId)->get();
         $i = 0;
@@ -153,37 +138,51 @@ class BookingForm extends Component
         $this->calculateTotalPrice();
     }
 
-    // public function loadCustomerDetails()
-    // {
-    //     $selectedCustomer = Customer::find($this->customer_id);
-
-    //     if ($selectedCustomer) {
-    //         $this->fill([
-    //             'first_name' => $selectedCustomer->first_name,
-    //             'middle_name' => $selectedCustomer->middle_name,
-    //             'last_name' => $selectedCustomer->last_name,
-    //             'contact_no' => $selectedCustomer->contact_no,
-    //         ]);
-    //     } else {
-    //         $this->fill([
-    //             'first_name' => null,
-    //             'middle_name' => null,
-    //             'last_name' => null,
-    //             'contact_no' => null,
-    //         ]);
-    //     }
-    // }
-
-
+    public function updatedDishItems()
+    {
+        // Recalculate the total quantity of all dishes whenever the dishItems are updated
+        $totalDishes = array_reduce($this->dishItems, function ($carry, $item) {
+            $dish = Dish::find($item['dish_id']);
+            if ($dish) {
+                $carry += $item['quantity'];
+            }
+            return $carry;
+        }, 0);
+    
+        // Check if the total dishes exceed the limitation
+        $package = Package::find($this->package_id);
+        if ($package && $package->limitation_of_maindish > 0) {
+            $this->maxFormRepeaters = max(0, $package->limitation_of_maindish - $totalDishes);
+        } else {
+            $this->maxFormRepeaters = 0;
+        }
+    }
+    
     public function addDish()
     {
-        $this->dishItems[] = [
-            'id' => null,
-            'dish_id' => '',
-            'quantity' => 1,
-        ];
+        // Ensure that the total quantity does not exceed the maximum form repeaters
+        if (count($this->dishItems) < $this->maxFormRepeaters) {
+            $this->dishItems[] = [
+                'id' => null,
+                'dish_id' => '',
+                'quantity' => 1,
+            ];
+        }
     }
 
+    public function updatedPackageId()
+    {
+        $package = Package::find($this->package_id);
+        
+        if ($package) {
+            $this->packageDescription = $package->description;
+        }
+
+        $this->updatedDishItems();
+        $this->calculateTotalPrice();
+    }
+
+    
     public function addOnDish()
     {
         $this->addOns[] = [
@@ -191,6 +190,8 @@ class BookingForm extends Component
             'dish_id' => '',
             'quantity' => 1,
         ];
+
+        $this->calculateTotalPrice();
     }
 
     public function store()
@@ -210,7 +211,11 @@ class BookingForm extends Component
 
             $booking_data = $this->validate([
                 'package_id' => 'required',
-                'venue_id' => 'nullable',
+                'selectedVenue' => 'required',
+                'city' => 'nullable',
+                'barangay' => 'nullable',
+                'specific_address' => 'nullable',
+                'landmark' => 'nullable',
                 'event_name' => 'nullable',
                 'venue_address' => 'nullable',
                 'no_pax' => 'required',
@@ -222,6 +227,8 @@ class BookingForm extends Component
                 'status_id' => 'nullable',
             ]);
 
+            $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
+            $booking_data['venue_id'] = $this->selectedVenue;
 
             if (!$this->customer_id) {
                 $newCustomer = Customer::create($customer_data);
@@ -399,43 +406,43 @@ class BookingForm extends Component
     }
 
     public function calculateTotalPrice()
-{
-    $packagePrice = 0;
-    $addOnPrice = 0;
-
-    if (!empty($this->package_id)) {
-        $package = Package::find($this->package_id);
-
-        if ($package) {
-            $packagePrice = $package->price ?? 0;
-        }
-    }
-
-    foreach ($this->addOns as $addOn) {
-        if (!empty($addOn['dish_id'])) {
-            $add = Dish::find($addOn['dish_id']);
-
-            if ($add) {
-                // Ensure that price_full is numeric before multiplying
-                $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
+    {
+        $packagePrice = 0;
+        $addOnPrice = 0;
+    
+        if (!empty($this->package_id)) {
+            $package = Package::find($this->package_id);
+    
+            if ($package) {
+                $packagePrice = $package->price ?? 0;
             }
         }
+    
+        foreach ($this->addOns as $addOn) {
+            if (!empty($addOn['dish_id'])) {
+                $add = Dish::find($addOn['dish_id']);
+    
+                if ($add) {
+                    // Ensure that price_full is numeric before multiplying
+                    $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
+                }
+            }
+        }
+    
+        // Ensure that no_pax is set and is a numeric value
+        $noPax = is_numeric($this->no_pax) ? $this->no_pax : 0;
+    
+        if ($this->total_price < 0) {
+            $this->total_price = 0;
+        }
+    
+        $total = $packagePrice * $noPax;
+        $overallPrice = $total + $addOnPrice;
+    
+        // Format the overall price with two decimal places and commas
+        $this->total_price = '₱ ' . number_format($overallPrice, 2);
     }
-
-    // Ensure that no_pax is set and is a numeric value
-    $noPax = is_numeric($this->no_pax) ? $this->no_pax : 0;
-
-    if ($this->total_price < 0) {
-        $this->total_price = 0;
-    }
-
-    $total = $packagePrice * $noPax;
-    $overallPrice = $total + $addOnPrice;
-    $this->total_price = $overallPrice;
-}
-
-
-
+    
     public function deleteDish($dishIndex)
     {
         unset($this->dishItems[$dishIndex]);
@@ -458,13 +465,27 @@ class BookingForm extends Component
         $this->addOns = [];
     }
 
+    public function updatePackages()
+    {
+        // This method will be called when the selected venue is changed
+        $this->reset('package_id'); // Reset the selected package when venue changes
+        $this->calculateTotalPrice(); // You may need to recalculate the total price based on the new packages
+    }
+
     public function render()
     {
         $customers = Customer::all();
         $dishes = Dish::all();
-        $packages = Package::all(); 
+        // $packages = Package::all(); 
         $menus = Menu::all();
+        $venues = Venue::all();
+        $selectedVenue = Venue::find($this->selectedVenue);
+    
+        $packages = [];
+        if ($selectedVenue) {
+            $packages = Package::where('venue_id', $selectedVenue->id)->get();
+        }
 
-        return view('livewire.booking.booking-form', compact('packages', 'dishes', 'customers', 'menus'));
+        return view('livewire.booking.booking-form', compact('packages', 'dishes', 'customers', 'menus', 'venues'));
     }
 }

@@ -63,11 +63,12 @@
 							<thead>
                                 <tr>
                                     
-                                    <th style="width: 3%"></th>
-                                    <th style="width: 27%">Name</th>
+                                    {{-- <th style="width: 3%"></th> --}}
+                                    <th style="width: 20%">Name</th>
                                     <th style="width: 20%">Package </th>
                                     <th style="width: 20%">Paid Amount</th>
                                     <th style="width: 20%">Payable Amount</th>
+                                    <th style="width: 10%">Status</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                             </thead>
@@ -80,7 +81,7 @@
                                 @else
                                 @foreach ($billings as $billing)
                                     <tr>
-                                       <td></td>
+                                       {{-- <td></td> --}}
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-12 mb-1 text-justify">
@@ -109,6 +110,7 @@
                                         
                                         <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
                                         <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}</td>
+                                        <td><button class="custom-badge status-orange">{{ $billing->statuses->name }}</button></td>
                                         <td>
     
                                             <div class="btn-group btn-group-xs" role="group">

@@ -38,6 +38,7 @@
 
                                     </div>
                                 </div> --}}
+                                <h4 class="mb-3">Customer Details</h4>
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
                         <label>First Name<span class="login-danger">*</span></label>
@@ -68,17 +69,75 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <h4 class="mb-3">Address</h4>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @foreach ($venues as $venue)
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="venue_id" id="venue_{{ $venue->id }}" wire:change="updatePackages" wire:model="selectedVenue" value="{{ $venue->id }}">
+                                <label class="form-check-label" for="venue_{{ $venue->id }}">
+                                    {{ $venue->name }}
+                                </label>
+                            </div>
+                        @endforeach
+                
+                        <!-- Display error message for selectedVenue -->
+                        {{-- <div class="text-danger">
+                            @error('selectedVenue')
+                                {{ $message }}
+                            @enderror
+                        </div> --}}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>No. of Pax<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
-                        @error('no_pax')
+                        <label>City/Town<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="city" placeholder />
+                        @error('city')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Barangay<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="barangay" placeholder />
+                        @error('barangay')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Event's Place/ Venue<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="venue_address" placeholder />
+                        @error('venue_address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Specific Address<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="specific_address" placeholder />
+                        @error('specific_address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Landmark (optional)<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="landmark" placeholder />
+                        @error('landmark')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <h4 class="mb-3">Booking Details</h4>
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Event Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="event_name" placeholder />
@@ -87,17 +146,6 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label>Event Venue (Address)<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="venue_address" placeholder />
-                        @error('venue_address')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-               
 
                 <div class="col-md-3">
                     <div class="form-group local-forms">
@@ -117,10 +165,19 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group local-forms">
+                        <label>No. of Guests<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
+                        @error('no_pax')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Package<span class="login-danger">*</span></label>
-                        <select wire:model="package_id" wire:change="calculateTotalPrice" class="form-control select">
+                        <select wire:model="package_id"  class="form-control select">
                             <option selected value="">--select--</option>
                             @foreach ($packages as $package)
                                 <option value="{{ $package->id }}">{{ $package->name }} (₱ {{ $package->price }} /person)</option>
@@ -132,7 +189,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label style="z-index: 1">Total Price
                             <span class="login-danger">*</span>
@@ -140,10 +197,33 @@
                         <input type="text" wire:model="total_price" class="form-control text-end" placeholder
                             readonly />
                     </div>
+                </div> --}}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="col-md-12 d-flex justify-content-between">
+                                <div>
+                                    <h4>Total Price:</h4>
+                                </div>
+                                <div class="text-end">
+                                    <h4>{{ $total_price }}</h4>
+                                </div>
+                            </div>     
+                            
+                            {{-- <div class="col-md-12 d-flex justify-content-between">
+                                <div>
+                                    <h5>Additional Payment:</h5>
+                                </div>
+                                <div class="text-end">
+                                    <h4></h4>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
                 </div>
 
-                
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
@@ -167,11 +247,12 @@
                                                         name="dishItems[{{ $dishIndex }}][dish_id]"
                                                         class="form-control select">
                                                         <option selected value="">-- choose dish --</option>
-                                                        @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
-                                                            <optgroup label="{{ $menu }}">
-                                                                @foreach ($menuDishes as $dish)
+                                                        @foreach ($dishes->groupBy('type.name') as $type => $typeDishes)
+                                                            <optgroup label="{{ $type }}">
+                                                                @foreach ($typeDishes as $dish)
                                                                     <option value="{{ $dish->id }}">
-                                                                        {{ $dish->name }}</option>
+                                                                        <b class="custom-badge status-green fw-bold">({{ $dish->menu->name }})</b> {{ $dish->name }}
+                                                                    </option>
                                                                 @endforeach
                                                             </optgroup>
                                                         @endforeach
@@ -208,7 +289,7 @@
                 </div>
                 
                     
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
@@ -238,7 +319,7 @@
                                                         @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
                                                             <optgroup label="{{ $menu }}">
                                                                 @foreach ($menuDishes as $dish)
-                                                                    <option value="{{ $dish->id }}">{{ $dish->name }}</option>
+                                                                    <option value="{{ $dish->id }}">{{ $dish->name }} - <strong>₱{{ number_format($dish->price_full, 2) }}</strong></option>
                                                                 @endforeach
                                                             </optgroup>
                                                         @endforeach

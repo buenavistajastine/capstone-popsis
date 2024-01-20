@@ -50,26 +50,25 @@
             <div class="ps-2">
                 <div>MENU:</div>
         
-                @foreach (['Rice' => 1, 'Dessert' => 9, 'Main' => [2, 3, 4, 5], 'Pasta/Noddles' => 6, 'Vegetable/Salad' => 7, 'Soup' => 1] as $category => $menuId)
+                @foreach ($types as $type)
                     <div class="mt-1">
-                        {{ $category }}:
+                        {{ $type->name }}:
                         @foreach ($dishes as $dish)
-                            @if (is_array($menuId) ? in_array($dish->menu_id, $menuId) : $dish->menu_id == $menuId)
+                            @if ($dish->type_id == $type->id)
                                 <div class="row ps-5">{{ $dish->name }}</div>
                             @endif
                         @endforeach
-
+        
                         @foreach ($addons as $addon)
-                            @if (is_array($menuId) ? in_array($addon->menu_id, $menuId) : $addon->menu_id == $menuId)
+                            @if ($addon->type_id == $type->id)
                                 <div class="row ps-5 fw-bold">{{ $addon->name }}</div>
                             @endif
                         @endforeach
-
                     </div>
                 @endforeach
-        
             </div>
         </div>
+        
         
 
         <div class="col-8">
