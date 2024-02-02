@@ -41,7 +41,24 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="row mt-3">
+                            <div class="col-md-1 ms-3 fw-bold">
+                                <h5>Filter by:</h5>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group local-forms">
+                                    <label for="dateFrom">Date From:</label>
+                                    <input type="date" class="form-control" wire:model="dateFrom" id="dateFrom">
+                                </div>
+                            </div>
+    
+                            <div class="col-md-2">
+                                <div class="form-group local-forms">
+                                    <label for="dateTo">Date To:</label>
+                                    <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>

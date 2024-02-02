@@ -165,7 +165,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>No. of Guests<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
@@ -174,7 +174,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Package<span class="login-danger">*</span></label>
                         <select wire:model="package_id"  class="form-control select">
@@ -188,6 +188,27 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Additional Payment<span class="login-danger">*</span></label>
+                        <input class="form-control text-end" type="text" wire:model="additional_amt" wire:change="calculateTotalPrice" placeholder />
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Advance Payment<span class="login-danger">*</span></label>
+                        <input class="form-control text-end" type="text" wire:model="advance_amt" wire:change="calculateTotalPrice" placeholder />
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Discount Amount<span class="login-danger">*</span></label>
+                        <input class="form-control text-end" type="text" wire:model="discount_amt" wire:change="calculateTotalPrice" placeholder />
+                        
+                    </div>
+                </div>
 
                 {{-- <div class="col-md-3">
                     <div class="form-group local-forms">
@@ -198,30 +219,6 @@
                             readonly />
                     </div>
                 </div> --}}
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6"></div>
-                        <div class="col-md-6">
-                            <div class="col-md-12 d-flex justify-content-between">
-                                <div>
-                                    <h4>Total Price:</h4>
-                                </div>
-                                <div class="text-end">
-                                    <h4>{{ $total_price }}</h4>
-                                </div>
-                            </div>     
-                            
-                            {{-- <div class="col-md-12 d-flex justify-content-between">
-                                <div>
-                                    <h5>Additional Payment:</h5>
-                                </div>
-                                <div class="text-end">
-                                    <h4></h4>
-                                </div>
-                            </div> --}}
-                        </div>
-                    </div>
-                </div>
 
                 <div class="col-md-12">
                     <div class="card">
@@ -295,10 +292,7 @@
                             <div class="table-responsive">
                                 <div class="d-flex justify-content-left align-items-center">
                                     <div>
-                                        <h6 class="fs-6">Add-on Dishes</h6>
-                                    </div>
-                                    <div>
-                                        <i style="font-size: small;" class="text-danger">(Prices are not included in the package.)</i>
+                                        <h6 class="fs-6">Add-on Dishes <i style="font-size: small;" class="text-danger">(Prices are not included in the package.)</i></h6>
                                     </div>
                                 </div>
                                 
@@ -364,6 +358,31 @@
                             <textarea name="doctor_remarks" id="doctor_remarks" cols="60" rows="5" class="rounded"
                              wire:model="remarks" placeholder="Write here..."></textarea>
                         </div>           
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="col-md-12 d-flex pe-2 justify-content-between">
+                                <div>
+                                    <h4>Total Price:</h4>
+                                </div>
+                                <div class="text-end">
+                                    <h4>{{ $total_price }}</h4>
+                                </div>
+                            </div>     
+                            
+                            {{-- <div class="col-md-12 d-flex justify-content-between">
+                                <div>
+                                    <h5>Additional Payment:</h5>
+                                </div>
+                                <div class="text-end">
+                                    <h4></h4>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
                 </div>
 
 

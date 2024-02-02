@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class BookingForm extends Component
 {
-    public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id;
+    public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id, $additional_amt, $advance_amt, $discount_amt;
     public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id;
     public $dishItems = [];
     public $selectedVenue, $city, $barangay, $specific_address, $landmark;
@@ -135,6 +135,9 @@ class BookingForm extends Component
 
         $this->selectedMenus = Menu::pluck('id')->toArray();
         $billing = Billing::where('booking_id', $this->bookingId)->first();
+        $this->additional_amt = number_format($billing->additional_amt ?? 0, 2);
+        $this->advance_amt = number_format($billing->advance_amt ?? 0, 2);
+        $this->discount_amt = number_format($billing->discount_amt ?? 0, 2);
         $this->calculateTotalPrice();
     }
 
@@ -225,10 +228,17 @@ class BookingForm extends Component
                 'dt_booked' => 'nullable',
                 'remarks' => 'nullable',
                 'status_id' => 'nullable',
+                'additional_amt' => 'nullable', // Add this line
+                'advance_amt' => 'nullable', // Add this line
+                'discount_amt' => 'nullable', // Add this line
             ]);
 
             $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
             $booking_data['venue_id'] = $this->selectedVenue;
+
+            $additionalAmt = str_replace(',', '', $booking_data['additional_amt'] ?? 0);
+            $advanceAmt = str_replace(',', '', $booking_data['advance_amt'] ?? 0);
+            $discountAmt = str_replace(',', '', $booking_data['discount_amt'] ?? 0);
 
             if (!$this->customer_id) {
                 $newCustomer = Customer::create($customer_data);
@@ -279,6 +289,9 @@ class BookingForm extends Component
                     $billing->update([
                         'total_amt' => $booking_data['total_price'],
                         'payable_amt' => $booking_data['total_price'],
+                        'additional_amt' => $additionalAmt,
+                        'advance_amt' => $advanceAmt,
+                        'discount_amt' => $discountAmt,
                     ]);
                 } else {
                     // Create billing if it does not exist
@@ -287,6 +300,9 @@ class BookingForm extends Component
                         'booking_id' => $booking->id,
                         'total_amt' => $booking_data['total_price'],
                         'payable_amt' => $booking_data['total_price'],
+                        'additional_amt' => $additionalAmt,
+                        'advance_amt' => $advanceAmt,
+                        'discount_amt' => $discountAmt,
                         'status_id' => 6,
                     ]);
                 }
@@ -352,6 +368,9 @@ class BookingForm extends Component
                     'booking_id' => $booking->id,
                     'total_amt' => $booking_data['total_price'],
                     'payable_amt' => $booking_data['total_price'],
+                    'additional_amt' => $additionalAmt,
+                    'advance_amt' => $advanceAmt,
+                    'discount_amt' => $discountAmt,
                     'status_id' => 6,
                 ]);
                 // dd($billing->customer_id);
@@ -438,9 +457,18 @@ class BookingForm extends Component
     
         $total = $packagePrice * $noPax;
         $overallPrice = $total + $addOnPrice;
+
+            // Ensure that additional_amt, advance_amt, and discount_amt are numeric
+        $additionalAmt = is_numeric(str_replace(',', '', $this->additional_amt)) ? str_replace(',', '', $this->additional_amt) : 0;
+        $advanceAmt = is_numeric(str_replace(',', '', $this->advance_amt)) ? str_replace(',', '', $this->advance_amt) : 0;
+        $discountAmt = is_numeric(str_replace(',', '', $this->discount_amt)) ? str_replace(',', '', $this->discount_amt) : 0;
+
+        $addedOverallPrice = $overallPrice + $additionalAmt;
+        $advanceOverallPrice = $addedOverallPrice - $advanceAmt;
+        $discountOverallPrice = $advanceOverallPrice - $discountAmt;
     
         // Format the overall price with two decimal places and commas
-        $this->total_price = '₱ ' . number_format($overallPrice, 2);
+        $this->total_price = '₱ ' . number_format($discountOverallPrice, 2);
     }
     
     public function deleteDish($dishIndex)

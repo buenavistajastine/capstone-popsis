@@ -135,9 +135,10 @@
 							</ul>
 						</li>
 						@endhasrole
+{{-- 						
                         <li>
 							<a href="dish"><span class="menu-side"><i class="fa-solid fa-list"></i></span> <span>Dish</span></a>
-						</li>
+						</li> --}}
                         <li>
 							<a href="order"><span class="menu-side"><i class="fa-solid fa-basket-shopping"></i></span> <span>Food Order</span></a>
 						</li>
@@ -370,18 +371,11 @@
                         <li class="menu-title">Setup</li>
                         <li class="submenu">
                             <a href="#"><i class="fa fa-columns"></i> <span>System</span> <span class="menu-arrow"></span></a>
-                            {{-- <ul style="display: none;">
-                                <li><a href="login.html"> Login </a></li>
-                                <li><a href="register.html"> Register </a></li>
-                                <li><a href="forgot-password.html"> Forgot Password </a></li>
-                                <li><a href="change-password2.html"> Change Password </a></li>
-                                <li><a href="lock-screen.html"> Lock Screen </a></li>
-                                <li><a href="profile.html"> Profile </a></li>
-                                <li><a href="gallery.html"> Gallery </a></li>
-                                <li><a href="error-404.html">404 Error </a></li>
-                                <li><a href="error-500.html">500 Error </a></li>
-                                <li><a href="blank-page.html"> Blank Page </a></li>
-                            </ul> --}}
+                            <ul style="display: none;">
+                                <li><a href="dish"> Dish </a></li>
+                                <li><a href="package"> Packages </a></li>
+                                <li><a href="status"> Status </a></li>
+                            </ul>
                         </li>
 						@hasrole('admin')
                         <li class="submenu">

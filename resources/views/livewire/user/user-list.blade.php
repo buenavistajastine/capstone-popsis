@@ -69,7 +69,7 @@
                                             <td>
                                                 @if ($user->roles->isNotEmpty())
                                                     @foreach ($user->roles as $role)
-                                                        {{ $role->name }}
+                                                            <button class="custom-badge status-green fw-bold">{{ ucfirst($role->name) }}</button>
                                                         @if (!$loop->last)
                                                             ,
                                                         @endif

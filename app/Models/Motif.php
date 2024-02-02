@@ -11,7 +11,8 @@ class Motif extends Model
 
     protected $fillable = [
         'booking_id',
-        'color'
+        'color',
+        'color2',
     ];
 
     public function bookings()

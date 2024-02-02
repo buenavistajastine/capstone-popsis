@@ -2,12 +2,15 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
-use App\Models\FoodOrder;
+use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\FoodOrder;
 
 class FoodOrderList extends Component
 {
     public $orderId;
+    public $dateFrom;
+    public $dateTo;
     public $search = '';
 
     protected $listeners = [
@@ -47,6 +50,12 @@ class FoodOrderList extends Component
         $this->emit('refreshTable');
     }
 
+    public function mount()
+    {
+        $this->dateFrom = now()->toDateString();
+        $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+    }
+
     public function render()
     {
         $orders = FoodOrder::whereHas('customers', function ($query) {
@@ -56,6 +65,7 @@ class FoodOrderList extends Component
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
             });
         })
+            ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
             ->paginate(10);
 
         return view('livewire.food-order.food-order-list', compact('orders'));

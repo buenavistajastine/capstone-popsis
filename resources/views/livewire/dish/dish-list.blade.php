@@ -63,12 +63,12 @@
 							<thead>
                                 <tr>
                                     
-                                    <th style="width: 3%"></th>
-                                    <th style="width: 17%">Menu</th>
-                                    <th style="width: 30%">Dish</th>
-                                    <th style="width: 20%">Price(Full Chafing)</th>
-                                    <th style="width: 20%">Price(Half Chafing)</th>
-                                    <th style="width: 10%">Action</th>
+                                    <th ></th>
+                                    <th >Menu</th>
+                                    <th >Dish</th>
+                                    <th >Price(Full Chafing)</th>
+                                    <th >Price(Half Chafing)</th>
+                                    <th >Action</th>
                                 </tr>
                             </thead>
 							<tbody>

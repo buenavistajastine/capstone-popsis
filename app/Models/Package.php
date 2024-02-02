@@ -22,4 +22,8 @@ class Package extends Model
     {
         return $this->hasMany(Booking::class, 'package_id', 'id');
     }
+
+    public function venue() {
+        return $this->belongsTo(Venue::class, 'venue_id', 'id');
+    }
 }

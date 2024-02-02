@@ -16,6 +16,8 @@ use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\Billing\BillingList;
 use App\Http\Livewire\CustomerAccount\CustomerAccountList;
 use App\Http\Livewire\FoodOrder\FoodOrderList;
+use App\Http\Livewire\Package\PackageList;
+use App\Http\Livewire\Status\StatusList;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +57,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('booking-form', BookingForm::class)->name('booking-form');
     Route::get('order', FoodOrderList::class)->name('order');
     Route::get('list', CustomerList::class)->name('customer');
+    Route::get('package', PackageList::class)->name('package');
+    Route::get('status', StatusList::class)->name('status');
     Route::get('customer-account', CustomerAccountList::class)->name('customer_account');
 
     Route::get('billing', BillingList::class);
