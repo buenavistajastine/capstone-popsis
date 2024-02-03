@@ -28,6 +28,11 @@ class FoodOrder extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    public function orderDish_keys()
+    {
+        return $this->hasMany(FoodOrderDishKey::class, 'order_id', 'id');
+    }
+
     public function statuses()
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');
@@ -42,4 +47,11 @@ class FoodOrder extends Model
     {
         return $this->hasOne(Billing::class, 'foodOrder_id', 'id');
     }
+
+    // public function dishes()
+    // {
+    //     return $this->belongsToMany(Dish::class, 'food_order_dish_keys', 'order_id', 'dish_id')
+    //         ->withPivot('quantity') // Assuming you have a 'quantity' column in your pivot table
+    //         ->withTimestamps(); // If you have created_at and updated_at columns in your pivot table
+    // }
 }

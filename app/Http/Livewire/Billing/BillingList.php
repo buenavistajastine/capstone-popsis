@@ -54,21 +54,20 @@ class BillingList extends Component
     }
 
     public function render()
-{
-    $query = Billing::query();
-
-    if (!empty($this->search)) {
-        $query->whereHas('customers', function ($query) {
-            $query->where('name', 'LIKE', '%' . $this->search . '%');
-        });
+    {
+        $query = Billing::with(['bookings.packages', 'bookings.dishess'])
+            ->whereNotNull('booking_id');
+    
+        if (!empty($this->search)) {
+            $query->whereHas('customers', function ($query) {
+                $query->where('name', 'LIKE', '%' . $this->search . '%');
+            });
+        }
+    
+        $billings = $query->paginate(10);
+    
+        return view('livewire.billing.billing-list', compact('billings'));
     }
-
-    $billings = $query->with('bookings.packages', 'bookings.dishess')->paginate(10);
-
-    // dd($billings->pluck('bookings.dishess')->flatten());
-
-
-    return view('livewire.billing.billing-list', compact('billings'));
-}
+    
 
 }

@@ -145,9 +145,17 @@
                         <li>
 							<a href="booking"><span class="menu-side"><i class="fa-solid fa-calendar-day"></i></i></span> <span>Booking</span></a>
 						</li>
-                        <li>
+                        {{-- <li>
 							<a href="billing"><span class="menu-side"><i class="fa-solid fa-calculator"></i></span> <span>Billing</span></a>
+						</li> --}}
+						<li class="submenu">
+							<a href="#"><i class="fa-solid fa-calculator"></i> <span> Billing </span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="booking_billing"> Booking </a></li>
+								<li><a href="order_billing"> Food Order </a></li>
+							</ul>
 						</li>
+
 						<li class="submenu">
 							<a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 							<ul style="display: none;">

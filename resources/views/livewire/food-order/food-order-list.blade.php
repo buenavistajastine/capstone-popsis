@@ -84,7 +84,7 @@
                                                 {{ $order->customers->middle_name ? ucfirst($order->customers->middle_name) : ''}}</td>
                                             <td>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
                                                 at
-                                                {{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}
+                                                <strong>{{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}</strong>
                                             </td>
                                             <td>{{ $order->transports->name }}</td>
                                             <td>

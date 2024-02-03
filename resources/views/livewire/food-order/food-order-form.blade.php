@@ -148,18 +148,9 @@
                             />
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group local-forms">
-                        <label style="z-index: 1">Total Price
-                            <span class="login-danger">*</span>
-                        </label>
-                        <input type="text" wire:model="total_price" class="form-control text-end" placeholder
-                            readonly />
-                    </div>
-                </div>
                 
 
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
@@ -224,6 +215,39 @@
                 </div>
 
 
+                {{-- <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label style="z-index: 1">Total Price
+                            <span class="login-danger">*</span>
+                        </label>
+                        <input type="text" wire:model="total_price" class="form-control text-end" placeholder
+                            readonly />
+                    </div>
+                </div> --}}
+                <div class="col-md-12 mb-4">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="col-md-12 d-flex pe-2 justify-content-between">
+                                <div>
+                                    <h4>Total Price:</h4>
+                                </div>
+                                <div class="text-end">
+                                    <h4>{{ $total_price }}</h4>
+                                </div>
+                            </div>     
+                            
+                            {{-- <div class="col-md-12 d-flex justify-content-between">
+                                <div>
+                                    <h5>Additional Payment:</h5>
+                                </div>
+                                <div class="text-end">
+                                    <h4></h4>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
                 {{-- <div class="row mb-2">
                     <div class="col-6">
                         <div>

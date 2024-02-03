@@ -64,8 +64,8 @@
                                 <tr>
                                     
                                     {{-- <th style="width: 3%"></th> --}}
-                                    <th style="width: 20%">Name</th>
-                                    <th style="width: 20%">Package </th>
+                                    <th style="width: 20%">Customer</th>
+                                    <th style="width: 20%">Order ID </th>
                                     <th style="width: 20%">Paid Amount</th>
                                     <th style="width: 20%">Balance</th>
                                     <th style="width: 10%">Status</th>
@@ -91,25 +91,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
-                                            @if ($billing->bookings)
-                                                {{ optional($billing->bookings->packages)->name }} <span style="font-size: small">(₱ {{ optional($billing->bookings->packages)->price }} /pax)</span>
-                                            @endif                                            
-                                            @if (optional($billing->bookings)->dishess && count($billing->bookings->dishess) > 0)
-                                            <div class="row" style="font-size: x-small">
-                                                    <span class="text-success">Add-ons:</span>
-                                                    <div class="row ps-3">
-                                                        @foreach ($billing->bookings->dishess as $addon)
-                                                   
-                                                            {{-- @foreach ($addon as $dish) --}}
-                                                                <div class="ps-3 text-success">{{ $addon->name }}</div>
-                                                            {{-- @endforeach --}}
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        
+                                        <td>{{ optional($billing->foodOrders)->order_no }}</td>
                                         <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
                                         <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}</td>
                                         <td>
@@ -123,11 +105,11 @@
     
                                             <div class="btn-group btn-group-xs" role="group">
                                                 <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                    wire:click="editBilling({{ $billing->id }})" title="Edit">
+                                                    wire:click="editOrderBilling({{ $billing->id }})" title="Edit">
                                                      <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                                 <a class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteBilling({{ $billing->id }})" title="Delete">
+                                                    wire:click="deleteOrderBilling({{ $billing->id }})" title="Delete">
                                                      <i class="fa-solid fa-trash"></i>
                                                 </a>
                                             </div>
@@ -198,7 +180,7 @@
 		</div>
 	</div>
 </div>
-
+{{-- 
 <div wire.ignore.self class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <livewire:billing.billing-form />
@@ -208,4 +190,4 @@
 </div>
 @section('custom_script')
     @include('layouts.scripts.billing-scripts')
-@endsection
+@endsection --}}

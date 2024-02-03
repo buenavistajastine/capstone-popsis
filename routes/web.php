@@ -14,6 +14,7 @@ use App\Http\Controllers\PrintController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\Billing\BillingList;
+use App\Http\Livewire\Billing\OrderBilling;
 use App\Http\Livewire\CustomerAccount\CustomerAccountList;
 use App\Http\Livewire\FoodOrder\FoodOrderList;
 use App\Http\Livewire\Package\PackageList;
@@ -61,7 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::get('status', StatusList::class)->name('status');
     Route::get('customer-account', CustomerAccountList::class)->name('customer_account');
 
-    Route::get('billing', BillingList::class);
+    Route::get('booking_billing', BillingList::class);
+    Route::get('order_billing', OrderBilling::class);
 
     // printables
     Route::get('print/module/{id}', [PrintController::class, 'PrintModule'])->name('module_print');
