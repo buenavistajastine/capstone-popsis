@@ -29,6 +29,7 @@ class BookingForm extends Component
     public $selectedMenus = [];
     public $quantity;
     public $event_name;
+    public $activeTab = ['customer', 'address', 'booking'];
     public $action = '';
     public $message = '';
 
@@ -141,30 +142,16 @@ class BookingForm extends Component
         $this->calculateTotalPrice();
     }
 
-    public function updatedDishItems()
-    {
-        // Recalculate the total quantity of all dishes whenever the dishItems are updated
-        $totalDishes = array_reduce($this->dishItems, function ($carry, $item) {
-            $dish = Dish::find($item['dish_id']);
-            if ($dish) {
-                $carry += $item['quantity'];
-            }
-            return $carry;
-        }, 0);
-    
-        // Check if the total dishes exceed the limitation
-        $package = Package::find($this->package_id);
-        if ($package && $package->limitation_of_maindish > 0) {
-            $this->maxFormRepeaters = max(0, $package->limitation_of_maindish - $totalDishes);
-        } else {
-            $this->maxFormRepeaters = 0;
-        }
-    }
-    
     public function addDish()
     {
-        // Ensure that the total quantity does not exceed the maximum form repeaters
-        if (count($this->dishItems) < $this->maxFormRepeaters) {
+        // Calculate the total quantity of all dishes in dishItems
+        $totalQuantity = array_reduce($this->dishItems, function ($carry, $item) {
+            return $carry + (float) $item['quantity'];
+        }, 0);
+
+        // Check if the total quantity exceeds the limitation of main dish
+        $package = Package::find($this->package_id);
+        if ($package && $package->limitation_of_maindish > 0 && $totalQuantity < $package->limitation_of_maindish) {
             $this->dishItems[] = [
                 'id' => null,
                 'dish_id' => '',
@@ -172,6 +159,8 @@ class BookingForm extends Component
             ];
         }
     }
+
+    
 
     public function updatedPackageId()
     {
@@ -182,6 +171,14 @@ class BookingForm extends Component
         }
 
         $this->updatedDishItems();
+        $this->calculateTotalPrice();
+    }
+
+    
+    public function updatePackages()
+    {
+
+        $this->reset('package_id'); 
         $this->calculateTotalPrice();
     }
 
@@ -353,7 +350,7 @@ class BookingForm extends Component
                 // $booking_data['call_time'] = Carbon::parse($this->call_time);                
                 $booking = Booking::create($booking_data);
 
-                $currentYear = Carbon::now()->year;
+                $currentYear = "BKG";
                 $paddedRowId = str_pad($booking->id, 6, '0', STR_PAD_LEFT);
                 $result = $currentYear . $paddedRowId;
 
@@ -491,13 +488,6 @@ class BookingForm extends Component
 
         $this->dishItems = [];
         $this->addOns = [];
-    }
-
-    public function updatePackages()
-    {
-        // This method will be called when the selected venue is changed
-        $this->reset('package_id'); // Reset the selected package when venue changes
-        $this->calculateTotalPrice(); // You may need to recalculate the total price based on the new packages
     }
 
     public function render()

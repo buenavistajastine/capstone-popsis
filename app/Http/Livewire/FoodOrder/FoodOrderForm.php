@@ -189,7 +189,7 @@ class FoodOrderForm extends Component
                 $order_data['status_id'] = 1;
                 $order = FoodOrder::create($order_data);
     
-                $currentYear = Carbon::now()->year;
+                $currentYear ="ORD";
                 $paddedRowId = str_pad($order->id, 6, '0', STR_PAD_LEFT);
                 $result = $currentYear . $paddedRowId;
     

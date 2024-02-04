@@ -20,6 +20,7 @@ class BookingList extends Component
         'refreshParentBooking' => '$refresh',
         'deleteBooking',
         'editBooking',
+        'printDishesByDate',
         'deleteConfirmBooking'
     ];
 
@@ -58,6 +59,17 @@ class BookingList extends Component
         // $this->dateFrom = now()->toDateString();
         $this->dateFrom = Carbon::parse($this->dateFrom)->startOfWeek()->toDateString();
         $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+    }
+
+    // Add a new method to handle printing dishes
+    public function printDishesByDate()
+    {
+        $filteredBookings = Booking::whereBetween('date_event', [
+            Carbon::parse($this->dateFrom)->startOfDay(),
+            Carbon::parse($this->dateTo)->endOfDay(),
+        ])->get();
+    
+        $this->emit('printDishesByDate', ['filteredBookings' => $filteredBookings]);
     }
 
     public function render()

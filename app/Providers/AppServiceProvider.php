@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Any registration code here
     }
 
     /**
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Ignore migrations for Sanctum
+        Sanctum::ignoreMigrations();
     }
 }

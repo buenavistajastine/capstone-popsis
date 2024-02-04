@@ -54,4 +54,19 @@ class FoodOrder extends Model
     //         ->withPivot('quantity') // Assuming you have a 'quantity' column in your pivot table
     //         ->withTimestamps(); // If you have created_at and updated_at columns in your pivot table
     // }
+
+    protected static function booted()
+    {
+        // Creating event to generate order number
+        static::creating(function ($foodOrder) {
+            $currentYear = "ORD";
+            // Ensure the id is always 5 digits long
+            $paddedRowId = str_pad($foodOrder->id, 6, '0', STR_PAD_LEFT);
+            $result = $currentYear . $paddedRowId;
+
+            // Set the generated order number
+            $foodOrder->order_no = $result;
+        });
+    }
+
 }

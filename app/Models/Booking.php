@@ -21,6 +21,7 @@ class Booking extends Model
         'event_name',
         'venue_address',
         'no_pax',
+        'remarks',
         'date_event',
         'call_time',
         'total_price',
@@ -48,10 +49,17 @@ class Booking extends Model
         return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
+    // public function dish_keys()
+    // {
+    //     return $this->hasMany(BookingDishKey::class, 'booking_id', 'id');
+    // }
+
+    // Booking.php model
     public function dish_keys()
     {
-        return $this->hasMany(BookingDishKey::class, 'booking_id', 'id');
+        return $this->hasMany(BookingDishKey::class, 'booking_id', 'id')->with('dishes.menu');
     }
+
 
     public function dish_keyss()
     {
@@ -60,7 +68,7 @@ class Booking extends Model
 
     public function addOns()
     {
-        return $this->hasMany(AddOn::class, 'booking_id', 'id');
+        return $this->hasMany(AddOn::class, 'booking_id', 'id')->with('dishes.menu');
     }
 
     public function addOnss()

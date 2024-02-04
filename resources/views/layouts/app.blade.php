@@ -87,7 +87,7 @@
     @livewireScripts
     @yield('custom_script')
 
-    @stack('script')
+    @stack('scripts')
 </body>
 
 </html>

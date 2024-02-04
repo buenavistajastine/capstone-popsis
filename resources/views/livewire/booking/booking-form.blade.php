@@ -174,7 +174,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Package<span class="login-danger">*</span></label>
                         <select wire:model="package_id"  class="form-control select">
@@ -372,131 +372,9 @@
                                     <h4>{{ $total_price }}</h4>
                                 </div>
                             </div>     
-                            
-                            {{-- <div class="col-md-12 d-flex justify-content-between">
-                                <div>
-                                    <h5>Additional Payment:</h5>
-                                </div>
-                                <div class="text-end">
-                                    <h4></h4>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                 </div>
-
-
-                    {{-- <div class="col-6">
-                        <div>
-                            <div class="row align-items-center">
-                                <div class="d-flex justify-content-left align-items-center mb-3">
-                                    <h6 class="fs-5">Dishes</h6>
-                                    <div class="doctor-search-blk">
-                                        <div class="add-group">
-                                            <a wire:click.prevent="addDish" class="btn btn-primary ms-2">
-                                                <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                @foreach ($dishItems as $dishIndex => $dishItem)
-                                    <div class="row align-items-center">
-                                        <div class="d-flex justify-contents-center">
-                                            <div class="col-md-8">
-                                                <div class="form-group local-forms">
-                                                    <select wire:model="dishItems.{{ $dishIndex }}.dish_id"
-                                                        id="dish_id_{{ $dishIndex }}"
-                                                        name="dishItems[{{ $dishIndex }}][dish_id]"
-                                                        class="form-control select">
-                                                        <option selected value="">-- choose dish --</option>
-                                                        @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
-                                                            <optgroup label="{{ $menu }}">
-                                                                @foreach ($menuDishes as $dish)
-                                                                    <option value="{{ $dish->id }}">
-                                                                        {{ $dish->name }}</option>
-                                                                @endforeach
-                                                            </optgroup>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-control" type="text"
-                                                    name="dishItems[{{ $dishIndex }}][quantity]"
-                                                    wire:model="dishItems.{{ $dishIndex }}.quantity" placeholder />
-                                            </div>
-                                            <div class="col-md-1 pt-1 mx-1">
-                                                <button type="button" title="Delete Item"
-                                                    class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteDish({{ $dishIndex }})">
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                            </div>
-                        </div>
-                    </div> --}}
-                    {{-- <div class="col-2"></div>
-                    <div class="col-5">
-                        <div>
-                            <div class="row align-items-center">
-                                <div class="d-flex justify-content-left align-items-center">
-                                    <h6 class="fs-5">Add-on Dishes</h6>
-                                    
-                                </div>
-                                <div class="doctor-search-blk">
-                                    <div class="add-group">
-                                        <a wire:click.prevent="addOnDish" class="btn btn-primary ms-2">
-                                            <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
-                                        </a>
-                                    </div>
-                                </div>
-                                @foreach ($addOns as $addOnIndex => $dishItem)
-                                    <div class="row align-items-center">
-                                        <div class="d-flex justify-contents-center">
-                                            <div class="col-md-8">
-                                                <div class="form-group local-forms">
-                                                    <select wire:model="addOns.{{ $addOnIndex }}.dish_id" wire:change="calculateTotalPrice"
-                                                        id="dish_id_{{ $addOnIndex }}"
-                                                        name="addOns[{{ $addOnIndex }}][dish_id]"
-                                                        class="form-control select">
-                                                        <option selected value="">--select--</option>
-                                                        @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
-                                                            <optgroup label="{{ $menu }}">
-                                                                @foreach ($menuDishes as $dish)
-                                                                    <option value="{{ $dish->id }}">
-                                                                        {{ $dish->name }}</option>
-                                                                @endforeach
-                                                            </optgroup>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-control" type="text"
-                                                    name="addOns[{{ $addOnIndex }}][quantity]"
-                                                    wire:model="addOns.{{ $addOnIndex }}.quantity" 
-                                                    wire:change="calculateTotalPrice"
-                                                    placeholder />
-                                            </div>
-                                            <div class="col-md-1 pt-1 mx-1">
-                                                <button type="button" title="Delete Item"
-                                                    class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteAddOnDish({{ $addOnIndex }})">
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div> --}}
-                
-
                 <div class="col-12">
                     <div class="doctor-submit text-end">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>

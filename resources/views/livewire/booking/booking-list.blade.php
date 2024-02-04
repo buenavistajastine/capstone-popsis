@@ -67,6 +67,7 @@
                                         <th style="width: 20%;">Event</th>
                                         <th style="width: 30%;">Venue</th>
                                         <th style="width: 20%;">Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,6 +85,7 @@
                                                             {{ ucwords($booking->customers->first_name) }}
                                                             {{ $booking->customers->middle_name ? ucfirst($booking->customers->middle_name) : '' }}
                                                         </div>
+                                                        <div class="col-12"><small>#<i>{{ $booking->booking_no }}</i></small></div>
                                                         {{-- <div class="col-md-12 mb-1 text-sm">
                                                             #{{ $booking->booking_no }}
                                                         </div> --}}

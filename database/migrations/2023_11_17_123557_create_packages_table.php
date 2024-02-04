@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->float('price');
             $table->longText('description')->nullable();
-            $table->string('limitation_of_maindish');
-            $table->string('minimum_pax');
+            $table->float('limitation_of_maindish');
+            $table->float('minimum_pax');
             $table->unsignedBigInteger('venue_id')->nullable();
             $table->foreign('venue_id')->references('id')->on('venues');
             $table->timestamps();

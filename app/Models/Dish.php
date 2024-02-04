@@ -38,4 +38,10 @@ class Dish extends Model
     {
         return $this->hasMany(AddOn::class, 'dish_id', 'id');
     }
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_dish_keys');
+    }
+
 }
