@@ -39,6 +39,9 @@ class FoodOrderForm extends Component
     public function orderId($orderId)
     {
         $this->orderId = $orderId;
+        
+        $this->dishItems = [];
+
         $order = FoodOrder::whereId($orderId)->with('customers') ->first();
 
         if ($order) {

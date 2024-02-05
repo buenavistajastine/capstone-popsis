@@ -31,8 +31,8 @@ class BookingReport extends Component
 
     public function mount()
     {
-        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfWeek()->toDateString();
-        $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfMonth()->toDateString();
+        $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
     }
 
     public function updatedSelectAll($value)
@@ -124,7 +124,7 @@ class BookingReport extends Component
                 }
             }
         }
-    
+        
         $header = Menu::all();
     
         $this->totalAmountSum = $bookings->sum('total_price');

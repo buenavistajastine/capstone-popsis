@@ -57,8 +57,8 @@ class BookingList extends Component
     public function mount()
     {
         // $this->dateFrom = now()->toDateString();
-        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfWeek()->toDateString();
-        $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfMonth()->toDateString();
+        $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
     }
 
     // Add a new method to handle printing dishes

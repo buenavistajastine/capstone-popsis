@@ -30,7 +30,7 @@ class FoodOrder extends Model
 
     public function orderDish_keys()
     {
-        return $this->hasMany(FoodOrderDishKey::class, 'order_id', 'id');
+        return $this->hasMany(FoodOrderDishKey::class, 'order_id', 'id')->with('dishes.menu');
     }
 
     public function statuses()

@@ -160,7 +160,7 @@
 							<a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a href="booking_reports"> Booking Report </a></li>
-								<li><a href="expense-reports.html"> Food Order Report </a></li>
+								<li><a href="order_reports"> Food Order Report </a></li>
 								<li><a href="invoice-reports.html"> Billing Report </a></li>
 							</ul>
 						</li>

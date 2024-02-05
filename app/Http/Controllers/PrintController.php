@@ -14,7 +14,8 @@ use PDF;
 
 class PrintController extends Controller
 {
-    public function PrintModule($id) {
+    public function PrintModule($id)
+    {
         $booking = Booking::find($id);
         $types = Type::all();
         $bookingdishkey = BookingDishKey::where('booking_id', $id)->get();
@@ -22,25 +23,33 @@ class PrintController extends Controller
         $addons = $booking->dishess;
         $customer = Customer::where('id', $booking->customer_id)->first();
 
-        return view ('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types'));
+        return view('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types'));
     }
 
     // Print dishes for kitchen staff
     public function printDishes()
     {
-       // Retrieve the dishes array from the session
-    $dishes = session('dishes', []);
+        $dishes = session('dishes', []);
 
-    // Group dishes by menu
-    $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
+        $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
 
-    // Generate PDF view
-    $pdf = PDF::loadView('layouts.prints.print-dishes', compact('groupedDishes'))->setPaper('letter', 'portrait')->output();
-
-    return response()->streamDownload(
-        fn () => print($pdf),
-        "dishes.pdf"
-    );
+        $pdf = PDF::loadView('layouts.prints.print-dishes', compact('groupedDishes'))->setPaper('letter', 'portrait')->output();
+        return response()->streamDownload(
+            fn () => print($pdf),
+            "dishes.pdf"
+        );
     }
 
+    public function printOrderDishes()
+    {
+        $orderDishes = session('orderDishes', []);
+
+        $groupedOrderDishes = collect($orderDishes)->groupBy('dish.menu.name');
+
+        $pdf = PDF::loadView('layouts.prints.print-order-dishes', compact('groupedOrderDishes'))->setPaper('letter', 'portrait')->output();
+        return response()->streamDownload(
+            fn () => print($pdf),
+            "order-dishes.pdf"
+        );
+    }
 }
