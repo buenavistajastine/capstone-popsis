@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use Carbon\Carbon;
 use App\Models\Dish;
 use App\Models\Type;
 use App\Models\Booking;
@@ -10,7 +12,6 @@ use Illuminate\Http\Request;
 use App\Models\BookingDishKey;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
-use PDF;
 
 class PrintController extends Controller
 {
@@ -27,29 +28,62 @@ class PrintController extends Controller
     }
 
     // Print dishes for kitchen staff
+    // public function printDishes()
+    // {
+    //     $dishes = session('dishes', []);
+    //     dd($dishes);
+
+    //     $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
+
+    //     $pdf = PDF::loadView('layouts.prints.print-dishes', compact('groupedDishes'))->setPaper('letter', 'portrait')->output();
+    //     return response()->streamDownload(
+    //         fn () => print($pdf),
+    //         "dishes.pdf"
+    //     );
+    // }
+
     public function printDishes()
     {
         $dishes = session('dishes', []);
+        $selectedBookings = session('selectedBookings', []);
+
+        $fileName = 'Booking|' . $selectedBookings->pluck('date_event')->unique()->map(function ($date) {
+            return Carbon::parse($date)->format('Y-m-d');
+        })->implode('|') . '.pdf';
 
         $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
 
-        $pdf = PDF::loadView('layouts.prints.print-dishes', compact('groupedDishes'))->setPaper('letter', 'portrait')->output();
-        return response()->streamDownload(
-            fn () => print($pdf),
-            "dishes.pdf"
-        );
+        $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+
+        return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
     }
 
     public function printOrderDishes()
     {
         $orderDishes = session('orderDishes', []);
+        $selectedOrders = session('selectedOrders', []);
 
-        $groupedOrderDishes = collect($orderDishes)->groupBy('dish.menu.name');
+        $fileName = 'Order|' . $selectedOrders->pluck('date_need')->unique()->map(function ($date) {
+            return Carbon::parse($date)->format('Y-m-d');
+        })->implode('|') . '.pdf';
 
-        $pdf = PDF::loadView('layouts.prints.print-order-dishes', compact('groupedOrderDishes'))->setPaper('letter', 'portrait')->output();
-        return response()->streamDownload(
-            fn () => print($pdf),
-            "order-dishes.pdf"
-        );
+        $groupedDishes = collect($orderDishes)->groupBy('dish.menu.name');
+
+        $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+
+        return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
     }
+
+    // public function printOrderDishes()
+    // {
+    //     $orderDishes = session('orderDishes', []);
+
+    //     $groupedOrderDishes = collect($orderDishes)->groupBy('dish.menu.name');
+
+    //     $pdf = PDF::loadView('layouts.prints.print-order-dishes', compact('groupedOrderDishes'))->setPaper('letter', 'portrait')->output();
+    //     return response()->streamDownload(
+    //         fn () => print($pdf),
+    //         "order-dishes.pdf"
+    //     );
+    // }
 }
