@@ -14,4 +14,12 @@
     window.livewire.on('openBillingModal', () => {
         $('#billingModal').modal('show');
     });
+
+    window.livewire.on('closeOrderBillingModal', () => {
+        $('#orderBillingModal').modal('hide');
+    });
+
+    window.livewire.on('openOrderBillingModal', () => {
+        $('#orderBillingModal').modal('show');
+    });
 </script>

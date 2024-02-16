@@ -17,12 +17,12 @@ use App\Http\Controllers\API\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
 
-});
+Route::post('login', [UserController::class, 'loginUser']);
 
-Route::post('login',[UserController::class,'loginUser']);
+// Route::post('login', function (Request $request) {
+//     return (new UserController())->loginUser($request);
+// })->name('login');
 
 
 Route::group(['middleware' => 'auth:sanctum'],function(){

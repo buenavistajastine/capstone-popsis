@@ -5,7 +5,9 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item">All Orders</li>
+                    <li class="breadcrumb-item"><a href="booking">All Bookings</a></li>
+                    <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                    <li class="breadcrumb-item">Booking Records</li>
                 </ul>
             </div>
         </div>
@@ -19,16 +21,9 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Order List</h3>
-                                    <div class="doctor-search-blk">
-                                        <div class="add-group">
-                                            <a class="btn btn-primary ms-2" wire:click="createOrder">
-                                                <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <h3>Booking Records</h3>                                 
+                                   
                                 </div>
-                                <a href="order_records" class="ps-3" style="position: relative; top: -10px;"><small><i>Records</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -42,7 +37,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row mt-3">
                         <div class="col-md-1 ms-3 fw-bold">
                             <h5>Filter by:</h5>
@@ -66,41 +60,65 @@
                             <thead>
                                 <tr>
                                     <th style="width: 20%;">Customer</th>
-                                    <th style="width: 20%;">Date and Call Time</th>
-                                    <th style="width: 30%;">Transport</th>
-                                    {{-- <th style="width: 20%;">Pax</th> --}}
-                                    <th style="width: 20%;">Action</th>
+                                    <th style="width: 20%;">Event</th>
+                                    {{-- <th style="width: 20%;">Package</th> --}}
+                                    <th style="width: 20%;">Status</th>
+                                    <th style="width: 10%;"></th>
+        
+                                   
+
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($orders->isEmpty())
+                                @if ($records->isEmpty())
                                     <tr>
                                         <td colspan="5" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
-                                    @foreach ($orders as $order)
+                                    @foreach ($records as $record)
                                         <tr>
-                                            <td>{{ ucfirst($order->customers->last_name) }},
-                                                {{ ucfirst($order->customers->first_name) }}
-                                                {{ $order->customers->middle_name ? ucfirst($order->customers->middle_name) : ''}}</td>
-                                            <td>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
-                                                at
-                                                <strong>{{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}</strong>
-                                            </td>
-                                            <td>{{ $order->transports->name }}</td>
                                             <td>
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editOrder({{ $order->id }})"
-                                                        title="Edit"> <i
-                                                            class="fa-solid fa-pen-to-square"></i></button>
-
-                                                    <a class="btn btn-danger btn-sm mx-1"
-                                                        wire:click="deleteOrder({{ $order->id }})"
-                                                        title="Delete"> <i class="fa-solid fa-trash"></i></a>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-1 text-justify">
+                                                        {{ ucwords($record->customers->last_name) }},
+                                                        {{ ucwords($record->customers->first_name) }}
+                                                        {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
+                                                    </div>
+                                                    <div class="col-12"><a href="#"><small>#<i>{{ $record->order_no }}</i></small></a></div>
+                                                    {{-- <div class="col-md-12 mb-1 text-sm">
+                                                        #{{ $record->record_no }}
+                                                    </div> --}}
                                                 </div>
                                             </td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-1 text-justify">
+                                                        {{ ucfirst($record->address) }}
+                                                    </div>
+                                                    <div class="col-md-12 mb-1">
+                                                        {{ $record['date_need'] ? \Carbon\Carbon::parse($record['date_need'])->format('F j, Y') : '' }}
+                                                        at
+                                                        <strong>{{ $record['call_time'] ? \Carbon\Carbon::parse($record['call_time'])->format('g:i A') : '' }}</strong>
+                                                        
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                            </td>
+                                            {{-- <td>{{ $record->packages->name }}</td> --}}
+                                        
+                                            <td>
+                                                @if ($record->status_id == 6)
+                                                    <button
+                                                        class="custom-badge status-orange">{{ $record->status->name }}</button>
+                                                @elseif ($record->status_id == 5)
+                                                    <button
+                                                        class="custom-badge status-green">{{ $record->status->name }}</button>
+                                                @endif
+                                            </td>
+                                           
+                                            <td><a href="">More details</a></td>
+   
                                         </tr>
                                     @endforeach
                                 @endif
@@ -110,48 +128,48 @@
                     <tfoot>
                         <div class="d-md-flex align-items-center m-2 p-2">
                             <div class="me-md-auto counterHead text-sm-left text-center mb-2 mb-md-0">
-                                Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of
-                                {{ $orders->total() }}
+                                Showing {{ $records->firstItem() }} to {{ $records->lastItem() }} of
+                                {{ $records->total() }}
                                 entries
                             </div>
 
                             <ul class="pagination pagination-separated mb-0 justify-content-center">
-                                @if ($orders->onFirstPage())
+                                @if ($records->onFirstPage())
                                     <li class="page-item disabled"><span class="page-link">Previous</span></li>
                                 @else
                                     <li class="page-item"><a class="page-link" wire:click="previousPage"
                                             wire:loading.attr="disabled">Previous</a></li>
                                 @endif
 
-                                @if ($orders->currentPage() > 2)
+                                @if ($records->currentPage() > 2)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $orders->currentPage() - 2 }})">{{ $orders->currentPage() - 2 }}</a>
+                                            wire:click="gotoPage({{ $records->currentPage() - 2 }})">{{ $records->currentPage() - 2 }}</a>
                                     </li>
                                 @endif
 
-                                @if ($orders->currentPage() > 1)
+                                @if ($records->currentPage() > 1)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $orders->currentPage() - 1 }})">{{ $orders->currentPage() - 1 }}</a>
+                                            wire:click="gotoPage({{ $records->currentPage() - 1 }})">{{ $records->currentPage() - 1 }}</a>
                                     </li>
                                 @endif
 
                                 <li class="page-item active"><span
-                                        class="page-link">{{ $orders->currentPage() }}</span>
+                                        class="page-link">{{ $records->currentPage() }}</span>
                                 </li>
 
-                                @if ($orders->hasMorePages())
+                                @if ($records->hasMorePages())
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $orders->currentPage() + 1 }})">{{ $orders->currentPage() + 1 }}</a>
+                                            wire:click="gotoPage({{ $records->currentPage() + 1 }})">{{ $records->currentPage() + 1 }}</a>
                                     </li>
                                 @endif
 
-                                @if ($orders->currentPage() < $orders->lastPage() - 1)
+                                @if ($records->currentPage() < $records->lastPage() - 1)
                                     <li class="page-item"><a class="page-link"
-                                            wire:click="gotoPage({{ $orders->currentPage() + 2 }})">{{ $orders->currentPage() + 2 }}</a>
+                                            wire:click="gotoPage({{ $records->currentPage() + 2 }})">{{ $records->currentPage() + 2 }}</a>
                                     </li>
                                 @endif
 
-                                @if ($orders->hasMorePages())
+                                @if ($records->hasMorePages())
                                     <li class="page-item">
                                         <a class="page-link" wire:click="nextPage"
                                             wire:loading.attr="disabled">Next</a>
@@ -171,14 +189,14 @@
     </div>
 </div>
 {{-- Modal --}}
-<div wire.ignore.self class="modal fade" id="foodOrderModal" tabindex="-1" aria-labelledby="foodOrderModal"
+{{-- <div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-top modal-lg">
-        <livewire:food-order.food-order-form />
+        <livewire:booking.booking-form />
     </div>
 </div>
 
 
 @section('custom_script')
-    @include('layouts.scripts.food-order-scripts')
-@endsection
+    @include('layouts.scripts.booking-scripts')
+@endsection --}}

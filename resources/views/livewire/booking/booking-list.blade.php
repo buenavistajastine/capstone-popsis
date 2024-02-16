@@ -19,7 +19,7 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <div class="doctor-table-blk">
-                                        <h3>Booking List</h3>
+                                        <h3>Booking List</h3>                                 
                                         <div class="doctor-search-blk">
                                             <div class="add-group">
                                                 <a class="btn btn-primary ms-2" wire:click="createBooking">
@@ -28,6 +28,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <a href="booking_records" class="ps-4" style="position: relative; top: -10px;"><small><i>Records</i></small></a>
                                 </div>
                                 <div class="col-auto text-end float-end ms-auto download-grp">
                                     <div class="top-nav-search table-search-blk">
@@ -63,7 +64,7 @@
                             <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30%;">Customer</th>
+                                        <th style="width: 20%;">Customer</th>
                                         <th style="width: 20%;">Event</th>
                                         <th style="width: 30%;">Venue</th>
                                         <th style="width: 20%;">Action</th>
@@ -106,7 +107,22 @@
                                                     </div>
                                                     
                                                 </td>
-                                                <td>{{ $booking->venue_address }}</td>
+                                                <td>
+                                                    @if ($booking->venue_address || $booking->barangay || $booking->city)
+                                                    <div>
+                                                        {{ $booking->venue_address ? ucfirst($booking->venue_address) . ', ' : ''}}
+                                                        {{ $booking->barangay ? ucfirst($booking->barangay) . ', ' : ''}}
+                                                        {{ $booking->city ? ucfirst($booking->city) : ''}}
+                                                    </div>
+                                                    @endif
+                                                
+                                                    @if ($booking->specific_address || $booking->landmark)
+                                                    <div>
+                                                        {{ $booking->specific_address ? ucfirst($booking->specific_address) . ' ' : ''}}
+                                                        ({{ $booking->landmark ? ($booking->landmark) : '' }})
+                                                    </div>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group">
                                                         <button type="button"

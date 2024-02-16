@@ -47,9 +47,9 @@ class PrintController extends Controller
         $dishes = session('dishes', []);
         $selectedBookings = session('selectedBookings', []);
 
-        $fileName = 'Booking|' . $selectedBookings->pluck('date_event')->unique()->map(function ($date) {
+        $fileName = 'Booking_' . $selectedBookings->pluck('date_event')->unique()->map(function ($date) {
             return Carbon::parse($date)->format('Y-m-d');
-        })->implode('|') . '.pdf';
+        })->implode('_') . '.pdf';
 
         $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
 
@@ -63,9 +63,9 @@ class PrintController extends Controller
         $orderDishes = session('orderDishes', []);
         $selectedOrders = session('selectedOrders', []);
 
-        $fileName = 'Order|' . $selectedOrders->pluck('date_need')->unique()->map(function ($date) {
+        $fileName = 'Order_' . $selectedOrders->pluck('date_need')->unique()->map(function ($date) {
             return Carbon::parse($date)->format('Y-m-d');
-        })->implode('|') . '.pdf';
+        })->implode('_') . '.pdf';
 
         $groupedDishes = collect($orderDishes)->groupBy('dish.menu.name');
 

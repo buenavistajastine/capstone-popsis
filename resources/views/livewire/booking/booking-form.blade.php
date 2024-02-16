@@ -137,16 +137,7 @@
                 </div>
 
                 <h4 class="mb-3">Booking Details</h4>
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label>Event Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="event_name" placeholder />
-                        @error('event_name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
+                
                 <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>Date of Event <span class="login-danger">*</span></label>
@@ -165,7 +156,17 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group local-forms">
+                        <label>Event Name<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="event_name" placeholder />
+                        @error('event_name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>No. of Guests<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
@@ -184,6 +185,25 @@
                             @endforeach
                         </select>
                         @error('package_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group local-forms">
+                        <label>Color 1<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="color" placeholder />
+                        @error('color')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group local-forms">
+                        <label>Color 2<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="color2" placeholder />
+                        @error('color2')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -368,8 +388,8 @@
                                 <div>
                                     <h4>Total Price:</h4>
                                 </div>
-                                <div class="text-end">
-                                    <h4>{{ $total_price }}</h4>
+                                <div class="text-end dash-content dash-count">
+                                    <h4><span class="counter-up">{{ $total_price }}</span></h4>
                                 </div>
                             </div>     
                         </div>

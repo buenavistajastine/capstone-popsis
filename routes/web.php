@@ -15,9 +15,11 @@ use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\Billing\BillingList;
 use App\Http\Livewire\Billing\OrderBilling;
+use App\Http\Livewire\Booking\BookingRecord;
 use App\Http\Livewire\Booking\BookingReport;
 use App\Http\Livewire\CustomerAccount\CustomerAccountList;
 use App\Http\Livewire\FoodOrder\FoodOrderList;
+use App\Http\Livewire\FoodOrder\OrderRecord;
 use App\Http\Livewire\FoodOrder\OrderReport;
 use App\Http\Livewire\Package\PackageList;
 use App\Http\Livewire\Status\StatusList;
@@ -77,6 +79,8 @@ Route::middleware('auth')->group(function () {
     // 
     Route::get('booking_reports', BookingReport::class);
     Route::get('order_reports', OrderReport::class);
+    Route::get('booking_records', BookingRecord::class);
+    Route::get('order_records', OrderRecord::class);
 
 });
 

@@ -13,6 +13,7 @@ use App\Models\Package;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\BookingDishKey;
+use App\Models\Motif;
 use App\Models\Venue;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,7 @@ class BookingForm extends Component
     public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id;
     public $dishItems = [];
     public $selectedVenue, $city, $barangay, $specific_address, $landmark;
+    public $color, $color2;
     public $packageDescription;
     public $maxFormRepeaters = 0;
     public $addOns = [];
@@ -54,6 +56,7 @@ class BookingForm extends Component
         $this->addOns = [];
 
         $booking = Booking::whereId($bookingId)->with('customers')->first();
+        $motif = Motif::where('booking_id', $this->bookingId)->first();
 
         if ($booking) {
             $this->customer_id = $booking->customer_id;
@@ -80,6 +83,8 @@ class BookingForm extends Component
             $this->dt_booked = $booking->dt_booked;
             $this->remarks = $booking->remarks;
             $this->status_id = $booking->status_id;
+            $this->color = $motif->color ?? null;
+            $this->color2 = $motif->color2 ?? null;
         } else {
             $this->package_id = null;
             $this->selectedVenue = null;
@@ -92,6 +97,8 @@ class BookingForm extends Component
             $this->dt_booked = null;
             $this->remarks = null;
             $this->status_id = null;
+            $this->color = null;
+            $this->color2 = null;
         }
 
         $dishes = BookingDishKey::where('booking_id', $bookingId)->get();
@@ -228,6 +235,8 @@ class BookingForm extends Component
                 'additional_amt' => 'nullable', // Add this line
                 'advance_amt' => 'nullable', // Add this line
                 'discount_amt' => 'nullable', // Add this line
+                'color' => 'nullable', // Add this line
+                'color2' => 'nullable', // Add this line
             ]);
 
             $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
@@ -304,6 +313,20 @@ class BookingForm extends Component
                     ]);
                 }
 
+                $motif = Motif::where('booking_id', $this->bookingId)->first();
+                if ($motif) {
+                    $motif->update([
+                        'color' => $booking_data['color'],
+                        'color2' => $booking_data['color2'],
+                    ]);
+                } else {
+                    Motif::create([
+                        'booking_id' => $booking->id,
+                        'color' => $booking_data['color'],
+                        'color2' => $booking_data['color2'],
+                    ]);
+                }
+
                 foreach ($this->addOns as $key => $value) {
                     if ($this->addOns[$key]['id'] == null) {
                         AddOn::create([
@@ -370,6 +393,13 @@ class BookingForm extends Component
                     'discount_amt' => $discountAmt,
                     'status_id' => 6,
                 ]);
+
+                Motif::create([
+                    'booking_id' => $booking->id,
+                    'color' => $booking_data['color'],
+                    'color2' => $booking_data['color2'],
+                ]);
+
                 // dd($billing->customer_id);
                 foreach ($this->dishItems as $key => $value) {
                     BookingDishKey::create([
