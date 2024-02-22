@@ -20,22 +20,52 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-   
-        if($validator->fails()){
 
-            return Response(['message' => $validator->errors()],401);
-        }
-   
-        if(Auth::attempt($request->all())){
-
-            $user = Auth::user(); 
-    
-            $success =  $user->createToken('mobile')->plainTextToken; 
-        
-            return Response(['token' => $success],200);
+        if ($validator->fails()) {
+            return response(['message' => $validator->errors()], 401);
         }
 
-        return Response(['message' => 'email or password wrong'],401);
+        if (Auth::attempt($request->all())) {
+            $user = Auth::user();
+            $token = $user->createToken('mobile')->plainTextToken;
+
+            // Include user information along with the token
+            return response([
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+        }
+
+        return response(['message' => 'Email or password wrong'], 401);
+    }
+
+
+
+    public function registerUser(Request $request): Response
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return Response(['message' => $validator->errors()], 400);
+        }
+
+        $user = User::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        $token = $user->createToken('mobile')->plainTextToken;
+
+        return Response(['token' => $token], 201);
     }
 
     /**
@@ -47,10 +77,10 @@ class UserController extends Controller
 
             $user = Auth::user();
 
-            return Response(['data' => $user],200);
+            return Response(['data' => $user], 200);
         }
 
-        return Response(['data' => 'Unauthorized'],401);
+        return Response(['data' => 'Unauthorized'], 401);
     }
 
     /**
@@ -61,8 +91,8 @@ class UserController extends Controller
         $user = Auth::user();
 
         $user->currentAccessToken()->delete();
-        
-        return Response(['data' => 'User Logout successfully.'],200);
+
+        return Response(['data' => 'User Logout successfully.'], 200);
     }
 
     /**
