@@ -6,6 +6,8 @@ use PDF;
 use Carbon\Carbon;
 use App\Models\Dish;
 use App\Models\Type;
+use App\Models\Motif;
+use App\Models\Billing;
 use App\Models\Booking;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -18,13 +20,15 @@ class PrintController extends Controller
     public function PrintModule($id)
     {
         $booking = Booking::find($id);
+        $billing = Billing::where('booking_id', $booking->id)->first();
         $types = Type::all();
         $bookingdishkey = BookingDishKey::where('booking_id', $id)->get();
         $dishes = $booking->dishes;
         $addons = $booking->dishess;
         $customer = Customer::where('id', $booking->customer_id)->first();
+        $motifs = Motif::where('booking_id', $booking->id)->first();
 
-        return view('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types'));
+        return view('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types', 'motifs', 'billing'));
     }
 
     // Print dishes for kitchen staff

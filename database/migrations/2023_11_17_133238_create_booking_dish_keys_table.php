@@ -22,8 +22,6 @@ return new class extends Migration
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
 
-            $table->dateTime('dt_accepted')->nullable();
-            $table->dateTime('dt_completed')->nullable();
             $table->timestamps();
         });
     }

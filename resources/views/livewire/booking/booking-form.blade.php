@@ -190,9 +190,10 @@
                     </div>
                 </div>
 
+                
                 <div class="col-md-3">
                     <div class="form-group local-forms">
-                        <label>Color 1<span class="login-danger">*</span></label>
+                        <label>Motif (color 1)<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="color" placeholder />
                         @error('color')
                             <span class="text-danger">{{ $message }}</span>
@@ -201,7 +202,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group local-forms">
-                        <label>Color 2<span class="login-danger">*</span></label>
+                        <label>Motif (color 2)<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="color2" placeholder />
                         @error('color2')
                             <span class="text-danger">{{ $message }}</span>
@@ -370,28 +371,31 @@
                     </div>
                 </div>
 
-
+              
                 <div class="row mb-3">
                     <h6 class="fs-6">Additional Request:</h6>
+                    <div class="col-12 col-sm-12">
+                        <div class="input-block local-forms">
+                            
+                            <textarea class="form-control" rows="3" cols="30" wire:model="remarks" placeholder="Write here..."></textarea>
+                        </div>
+                    </div>
+                    {{-- <h6 class="fs-6">Additional Request:</h6>
 
                         <div class="col-md-12">
                             <textarea name="doctor_remarks" id="doctor_remarks" cols="60" rows="5" class="rounded"
                              wire:model="remarks" placeholder="Write here..."></textarea>
-                        </div>           
+                        </div>            --}}
                 </div>
 
                 <div class="col-md-12 mb-4">
                     <div class="row">
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
-                            <div class="col-md-12 d-flex pe-2 justify-content-between">
-                                <div>
-                                    <h4>Total Price:</h4>
-                                </div>
-                                <div class="text-end dash-content dash-count">
-                                    <h4><span class="counter-up">{{ $total_price }}</span></h4>
-                                </div>
-                            </div>     
+                            <div class="col-md-12 pe-4 d-flex justify-content-end">
+                                <h3 class="text-end">Total Price: {{ $total_price }}</h3>
+                            </div>
+                             
                         </div>
                     </div>
                 </div>

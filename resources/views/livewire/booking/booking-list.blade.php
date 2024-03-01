@@ -134,7 +134,7 @@
                                                         {{-- <a href="{{ route('module_print', $booking->id) }} target="_blank">Module</a> --}}
                                                         <a class="btn btn-primary btn-sm mx-1" href="{{ route('module_print', $booking->id) }}"
                                                             target="_blank" title="View Booking">
-                                                            <i class="fa-solid fa-eye"></i>
+                                                            <i class="fa-solid fa-print"></i>
                                                         </a>
 
                                                         <a class="btn btn-danger btn-sm mx-1"

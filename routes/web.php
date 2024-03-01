@@ -17,6 +17,7 @@ use App\Http\Livewire\Billing\BillingList;
 use App\Http\Livewire\Billing\OrderBilling;
 use App\Http\Livewire\Booking\BookingRecord;
 use App\Http\Livewire\Booking\BookingReport;
+use App\Http\Livewire\Booking\Kitchen;
 use App\Http\Livewire\CustomerAccount\CustomerAccountList;
 use App\Http\Livewire\FoodOrder\FoodOrderList;
 use App\Http\Livewire\FoodOrder\OrderRecord;
@@ -74,7 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/print-dishes', [PrintController::class, 'printDishes'])->name('print.dishes');
     Route::get('/print-order-dishes', [PrintController::class, 'printOrderDishes'])->name('print.order-dishes');
 
-
+    Route::get('kitchen', Kitchen::class);
 
     // 
     Route::get('booking_reports', BookingReport::class);

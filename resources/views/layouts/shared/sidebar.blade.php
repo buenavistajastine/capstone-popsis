@@ -18,12 +18,15 @@
 						</li>
 						@endhasrole
 
-						@hasrole(['admin', 'manager', 'staff'])
+						@hasrole(['admin', 'manager', 'Kitchen Staff'])
                         <li>
 							<a href="order"><span class="menu-side"><i class="fa-solid fa-basket-shopping"></i></span> <span>Food Order</span></a>
 						</li>
                         <li>
 							<a href="booking"><span class="menu-side"><i class="fa-solid fa-calendar-day"></i></i></span> <span>Booking</span></a>
+						</li>
+                        <li>
+							<a href="kitchen"><span class="menu-side"><i class="fa-solid fa-fire-burner"></i></i></span> <span>Kitchen</span></a>
 						</li>
 						@endhasrole
                         {{-- <li>
