@@ -78,6 +78,10 @@ class PrintController extends Controller
         return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
     }
 
+    public function claimSlip($id) {
+        $billing = Billing::where('');
+    }
+
     // public function printOrderDishes()
     // {
     //     $orderDishes = session('orderDishes', []);

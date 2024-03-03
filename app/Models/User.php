@@ -7,12 +7,34 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, LogsActivity;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->user_id = auth()->id();
+        });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $email = auth()->user()->email;
+    
+        return LogOptions::defaults()
+            ->setDescriptionForEvent(fn(string $eventName) => "A user was {$eventName} by {$email}.")
+            ->logOnly(['first_name', 'last_name', 'username', 'email',])
+            ->logOnlyDirty()
+            ->useLogName('user');
+    }
+    
     /**
      * The attributes that are mass assignable.
      *

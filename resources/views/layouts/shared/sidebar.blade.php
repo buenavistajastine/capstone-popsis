@@ -75,7 +75,11 @@
                                 </li>
                             </ul>
                         </li>
+						<li>
+							<a href="activity_logs"><span class="menu-side"><i class="fa-solid fa-chart-line"></i></i></span> <span>Activity Logs</span></a>
+						</li>
 						@endhasrole
+
                     </ul>
 					<div class="logout-btn">
 						<a href="{{ route('logout') }}"><span class="menu-side"><i class="fa-solid fa-right-from-bracket"></i></span> <span>Logout</span></a>

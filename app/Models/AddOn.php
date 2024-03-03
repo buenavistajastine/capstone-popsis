@@ -13,6 +13,7 @@ class AddOn extends Model
         'booking_id',
         'dish_id',
         'quantity',
+        'status_id',
     ];
 
     public function bookings()
