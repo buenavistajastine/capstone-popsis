@@ -188,7 +188,7 @@
     <div wire.ignore.self class="modal fade" id="customerAccountModal" tabindex="-1"
         aria-labelledby="customerAccountModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
-            <livewire:customer.customer-account-form />
+            <livewire:customer.register-account-form />
         </div>
     </div>
 

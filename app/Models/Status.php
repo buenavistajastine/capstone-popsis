@@ -3,11 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $email = auth()->user()->email;
+    
+        return LogOptions::defaults()
+            ->setDescriptionForEvent(fn(string $eventName) => "A status was {$eventName} by {$email}.")
+            ->logOnly(['name'])
+            ->logOnlyDirty()
+            ->useLogName('system');
+    }
 
     protected $fillable = ['name'];
 
@@ -23,6 +36,6 @@ class Status extends Model
 
     public function dishKey()
     {
-        return $this->hasOne(BookingServiceKey::class, 'status_id', 'id');
+        return $this->hasOne(BookingDishKey::class, 'status_id', 'id');
     }
 }

@@ -30,12 +30,12 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     Route::get('/logout',[UserController::class,'logout']);
 
     // Dish
-
+    Route::get('dishes', [DishController::class, 'dishList']);
+    Route::get('viewDish/{id}', [DishController::class, 'viewDish']);
+    Route::get('bookings', [UserController::class, 'booking']);
 
     // Package
     Route::get('packages', [DishController::class, 'packageList']);
     Route::get('viewPackage/{id}', [DishController::class, 'viewPackage']);
 });
 
-Route::get('dishes', [DishController::class, 'dishList']);
-Route::get('viewDish/{id}', [DishController::class, 'viewDish']);

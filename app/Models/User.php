@@ -15,15 +15,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, LogsActivity;
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->user_id = auth()->id();
-        });
-    }
-
     public function getActivitylogOptions(): LogOptions
     {
         $email = auth()->user()->email;
@@ -51,7 +42,7 @@ class User extends Authenticatable
 
     public function customers()
     {
-        return $this->belongsTo(Customer::class, 'user_id', 'id');
+        return $this->hasOne(Customer::class);
     }
 
     /**

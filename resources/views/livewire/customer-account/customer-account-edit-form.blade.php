@@ -1,11 +1,8 @@
 <div class="modal-content">
     <div class="modal-header">
         <h1 class="modal-title fs-5">
-            @if ($userId)
+
                 Edit Customer Account Details
-            @else
-                Add User
-            @endif
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
@@ -66,7 +63,6 @@
                             </div>
                         </div>
 
-                        @if ($userId)
                             <div class="col-md-6">
                                 <div class="form-group local-forms">
                                     <label>New Password</label>
@@ -80,21 +76,6 @@
                                         placeholder />
                                 </div>
                             </div>
-                        @else
-                            <div class="col-md-6">
-                                <div class="form-group local-forms">
-                                    <label>Password</label>
-                                    <input class="form-control" type="password" wire:model="password" placeholder />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group local-forms">
-                                    <label>Confirm Password</label>
-                                    <input class="form-control" type="password" wire:model="password_confirmation"
-                                        placeholder />
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>

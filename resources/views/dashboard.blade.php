@@ -97,6 +97,41 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            {{-- <div class="col-12 col-md-12  col-xl-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title d-inline-block">Most Popular Dishes</h4> <a href="dish"
+                            class="patient-views float-end">Show all</a>
+                    </div>
+                    <div class="card-body p-0 table-dash">
+                        <div class="table-responsive">
+                            <table class="table mb-0 border-0 datatable custom-table">
+                                <thead>
+                                    
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $counter = 1;
+                                    @endphp
+                                    @foreach ($dishes as $dish)
+                                        <tr>
+                                            <td>{{ $counter }}.</td>
+                                            <td>{{ $dish->name }}</td>
+                                        </tr>
+                                        @php
+                                            $counter++;
+                                        @endphp
+                                    @endforeach
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
         {{-- <div class="row">
             <div class="col-12 col-md-12 col-lg-6 col-xl-9">
                 <div class="card">

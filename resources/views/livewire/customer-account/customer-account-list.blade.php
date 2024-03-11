@@ -21,11 +21,6 @@
                                 <div class="doctor-table-blk">
                                     <h3>Customer Account Details</h3>
                                     <div class="doctor-search-blk">
-                                        {{-- <div class="add-group">
-                                                <a class="btn btn-primary ms-2" wire:click="createCustomer">
-                                                    <img alt src="{{ asset('assets/img/icons/plus.svg') }}">
-                                                </a>
-                                            </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -59,23 +54,20 @@
                                     </tr>
                                 @else
                                     @foreach ($customerAccounts as $cust_acc)
-                                        {{-- @php
-                                        $cust_addr = $customer->bookings;
-                                    @endphp --}}
                                         <tr>
-                                            @if (!is_null($cust_acc->users))
+                                            @if (!is_null($cust_acc->user))
                                             <td></td>
-                                            <td>{{ $cust_acc->users->last_name }}, {{ $cust_acc->users->first_name }}
-                                                {{ $cust_acc->users->middle_name }}</td>
+                                            <td>{{ ucfirst($cust_acc->user->last_name) }}, {{ ucfirst($cust_acc->user->first_name) }}
+                                                {{ ucfirst($cust_acc->user->middle_name) }}</td>
                                             
-                                            <td>{{ $cust_acc->users->username }}</td>
-                                            <td>{{ $cust_acc->users->email ?? '' }}</td>
+                                            <td>{{ $cust_acc->user->username }}</td>
+                                            <td>{{ $cust_acc->user->email ?? '' }}</td>
                                             
                                             <td>
 
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editCustomerAccount({{ $cust_acc->users->id }})"
+                                                        wire:click="editCustomerAccount({{ $cust_acc->user->id }})"
                                                         title="Edit">
                                                          <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>

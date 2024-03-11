@@ -240,6 +240,9 @@
                             readonly />
                     </div>
                 </div> --}}
+                <div class="col-md-12">
+                    <span style="font-size: small"><i>Note: {{ $this->packageDescription }}</i></span>
+                </div>
 
                 <div class="col-md-12">
                     <div class="card">

@@ -2,13 +2,11 @@
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($customerId)
-                Edit User
-            @else
-                Add User
+                Register User
             @endif
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
+    </div> 
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -18,6 +16,7 @@
             </ul>
         </div>
     @endif
+    <livewire:flash-message.flash-message />
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -68,21 +67,6 @@
                             </div>
                         </div>
 
-                        @if ($customerId)
-                            <div class="col-md-6">
-                                <div class="form-group local-forms">
-                                    <label>New Password<span class="login-danger">*</span></label>
-                                    <input class="form-control" type="password" wire:model="password" placeholder />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group local-forms">
-                                    <label>Confirm New Password<span class="login-danger">*</span></label>
-                                    <input class="form-control" type="password" wire:model="password_confirmation"
-                                        placeholder />
-                                </div>
-                            </div>
-                        @else
                             <div class="col-md-6">
                                 <div class="form-group local-forms">
                                     <label>Password<span class="login-danger">*</span></label>
@@ -96,7 +80,6 @@
                                         placeholder />
                                 </div>
                             </div>
-                        @endif
                     </div>
                 </div>
             </div>

@@ -56,11 +56,11 @@
                                         <td style="font-size: small">{{ $activity->log_name }}</td>
                                         <td style="font-size: small">{{ $activity->description }}</td>
                                         <td style="font-size: small">
-                                            @foreach ($activity->properties as $key => $value)
+                                            {{-- @foreach ($activity->properties as $key => $value)
                                             <p>{{ $key }}: {{ is_array($value) ? json_encode($value) : $value }}</p>
-                                        @endforeach
+                                        @endforeach --}}
                                         
-                                        {{-- @foreach ($activity->properties as $key => $value)
+                                        @foreach ($activity->properties as $key => $value)
                                             @if(is_array($value))
                                                 @foreach($value as $nestedKey => $nestedValue)
                                                     <p>{{ $nestedKey }}: {{ $nestedValue }}</p>
@@ -68,7 +68,7 @@
                                             @else
                                                 <p>{{ $key }}: {{ $value }}</p>
                                             @endif
-                                        @endforeach --}}
+                                        @endforeach
                                         </td>
                                         <td style="font-size: small">{{ $activity->created_at }}</td>
                                     </tr>

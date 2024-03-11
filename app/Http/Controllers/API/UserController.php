@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -39,7 +42,24 @@ class UserController extends Controller
         return response(['message' => 'Email or password wrong'], 401);
     }
 
+    public function booking(Request $request): JsonResponse
+    {
+        try {
+            // Fetch booking details associated with the authenticated user
+            $customer = $request->user()->customers;
 
+            // Check if the authenticated user is associated with a customer
+            if (!$customer) {
+                return response()->json(['error' => 'User is not associated with a customer'], 400);
+            }
+
+            $bookings = Booking::where('customer_id', $customer->id)->get();
+
+            return response()->json($bookings);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch booking data.'], 500);
+        }
+    }
 
     public function registerUser(Request $request): Response
     {
@@ -51,22 +71,35 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
+        // Check if validation fails
         if ($validator->fails()) {
-            return Response(['message' => $validator->errors()], 400);
+            return response(['message' => $validator->errors()], 400);
         }
 
-        $user = User::create([
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-        ]);
+        try {
+            // Create the user
+            $user = User::create([
+                'first_name' => $request->input('first_name'),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+            ]);
 
-        $token = $user->createToken('mobile')->plainTextToken;
+            // Generate token
+            $token = $user->createToken('mobile')->plainTextToken;
 
-        return Response(['token' => $token], 201);
+            // Return success response with token
+            return response(['token' => $token], 201);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('User registration failed: ' . $e->getMessage());
+
+            // Return error response
+            return response(['message' => 'An error occurred during registration.'], 500);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.

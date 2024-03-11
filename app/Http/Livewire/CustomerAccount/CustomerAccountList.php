@@ -47,7 +47,7 @@ class CustomerAccountList extends Component
 
     public function render()
     {
-        $customerAccounts = Customer::with('users')
+        $customerAccounts = Customer::with('user')
             ->where('first_name', 'LIKE', "%{$this->search}%")
             ->orWhere('last_name', 'LIKE', "%{$this->search}%")
             ->paginate(10);

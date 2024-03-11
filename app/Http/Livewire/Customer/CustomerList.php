@@ -10,7 +10,7 @@ class CustomerList extends Component
 {
     use WithPagination;
 
-    public $customerId, $user_id;
+    public $customerId;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
 
@@ -40,13 +40,13 @@ class CustomerList extends Component
         $this->emit('openCustomerAccountModal');
     }
 
-    public function editCustomerAccount($user_id)
-    {
-        $this->user_id = $user_id;
-        $this->emit('resetInputFields');
-        $this->emit('customerId', $this->user_id);
-        $this->emit('openCustomerAccountModal');
-    }
+    // public function editCustomerAccount($user_id)
+    // {
+    //     $this->user_id = $user_id;
+    //     $this->emit('resetInputFields');
+    //     $this->emit('customerId', $this->user_id);
+    //     $this->emit('openCustomerAccountModal');
+    // }
 
     public function editCustomer($customerId)
     {

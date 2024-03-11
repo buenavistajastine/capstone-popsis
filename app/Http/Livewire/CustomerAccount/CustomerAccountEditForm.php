@@ -75,7 +75,7 @@ class CustomerAccountEditForm extends Component
                     'email' => $this->email,
                 ];
 
-                $user = User::find($this->userId);
+                $user = User::whereId($this->userId)->first();
                 $user->update($data);
 
                 $cust = Customer::where('user_id', $this->userId)->first();
@@ -98,6 +98,7 @@ class CustomerAccountEditForm extends Component
                 $action = 'edit';
                 $message = 'Successfully Updated';
             } else {
+           
                 // For a new user
                 $user = User::create([
                     'first_name' => $this->first_name,

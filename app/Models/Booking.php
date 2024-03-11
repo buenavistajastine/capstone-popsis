@@ -25,6 +25,8 @@ class Booking extends Model
         'date_event',
         'call_time',
         'total_price',
+        'color',
+        'color2',
         'dt_booked',
         'status_id',
     ];

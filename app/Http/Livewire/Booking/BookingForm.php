@@ -6,15 +6,16 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Dish;
 use App\Models\Menu;
+use App\Models\User;
 use App\Models\AddOn;
+use App\Models\Motif;
+use App\Models\Venue;
 use App\Models\Billing;
 use App\Models\Booking;
 use App\Models\Package;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\BookingDishKey;
-use App\Models\Motif;
-use App\Models\Venue;
 use Illuminate\Support\Facades\DB;
 
 class BookingForm extends Component
@@ -56,7 +57,6 @@ class BookingForm extends Component
         $this->addOns = [];
 
         $booking = Booking::whereId($bookingId)->with('customers')->first();
-        $motif = Motif::where('booking_id', $this->bookingId)->first();
 
         if ($booking) {
             $this->customer_id = $booking->customer_id;
@@ -83,8 +83,8 @@ class BookingForm extends Component
             $this->dt_booked = $booking->dt_booked;
             $this->remarks = $booking->remarks;
             $this->status_id = $booking->status_id;
-            $this->color = $motif->color ?? null;
-            $this->color2 = $motif->color2 ?? null;
+            $this->color = $booking->color ?? null;
+            $this->color2 = $booking->color2 ?? null;
         } else {
             $this->package_id = null;
             $this->selectedVenue = null;
@@ -250,7 +250,23 @@ class BookingForm extends Component
                 $newCustomer = Customer::create($customer_data);
                 $booking_data['customer_id'] = $newCustomer->id;
             } else {
+               
                 $booking_data['customer_id'] = $this->customer_id;
+                $cust = Customer::whereId($this->customer_id)->first();
+                $user = User::whereId($cust->user_id)->first();
+                if ($user) {
+                    $user->update([
+                        'first_name' => $this->first_name,
+                        'middle_name' => $this->middle_name,
+                        'last_name' => $this->last_name,
+                    ]);
+                }
+
+                $cust->update([
+                    'first_name' => $this->first_name,
+                    'middle_name' => $this->middle_name,
+                    'last_name' => $this->last_name,
+                ]);
             }
 
             if (!$booking_data['total_price']) {
@@ -313,20 +329,6 @@ class BookingForm extends Component
                     ]);
                 }
 
-                $motif = Motif::where('booking_id', $this->bookingId)->first();
-                if ($motif) {
-                    $motif->update([
-                        'color' => $booking_data['color'],
-                        'color2' => $booking_data['color2'],
-                    ]);
-                } else {
-                    Motif::create([
-                        'booking_id' => $booking->id,
-                        'color' => $booking_data['color'],
-                        'color2' => $booking_data['color2'],
-                    ]);
-                }
-
                 foreach ($this->addOns as $key => $value) {
                     if ($this->addOns[$key]['id'] == null) {
                         AddOn::create([
@@ -363,14 +365,8 @@ class BookingForm extends Component
             } else {
 
                 $booking_data['status_id'] = 1;
-
                 $booking_data['dt_booked'] = Carbon::now();
-
-
-
-                // $booking_data['event_date'] = Carbon::parse($this->event_date);
-
-                // $booking_data['call_time'] = Carbon::parse($this->call_time);                
+               
                 $booking = Booking::create($booking_data);
 
                 $currentYear = "BKG";
@@ -392,12 +388,6 @@ class BookingForm extends Component
                     'advance_amt' => $advanceAmt,
                     'discount_amt' => $discountAmt,
                     'status_id' => 6,
-                ]);
-
-                Motif::create([
-                    'booking_id' => $booking->id,
-                    'color' => $booking_data['color'],
-                    'color2' => $booking_data['color2'],
                 ]);
 
                 // dd($billing->customer_id);

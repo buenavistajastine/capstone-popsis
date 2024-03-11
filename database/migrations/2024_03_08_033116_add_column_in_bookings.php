@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('motifs', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('booking_id');
-            $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->string('color');
-            $table->timestamps();
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->string('color')->nullable()->after('total_price');
+            $table->string('color2')->nullable()->after('color');
         });
     }
 
@@ -25,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('motifs');
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropColumn('color');
+            $table->dropColumn('color2');
+        });
     }
 };

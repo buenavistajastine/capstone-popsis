@@ -3,11 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $email = auth()->user()->email;
+    
+        return LogOptions::defaults()
+            ->setDescriptionForEvent(fn(string $eventName) => "A package was {$eventName} by {$email}.")
+            ->logOnly(['name', 'price'])
+            ->logOnlyDirty()
+            ->useLogName('system');
+    }
 
     protected $fillable = [
         'name',
