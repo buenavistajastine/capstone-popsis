@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->string('contact_no');
+            $table->string('contact_no')->nullable();
             $table->unsignedBigInteger('gender_id')->nullable();
             $table->foreign('gender_id')->references('id')->on('genders');
             $table->string('photo')->nullable();

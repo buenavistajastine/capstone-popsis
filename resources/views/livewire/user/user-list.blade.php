@@ -85,6 +85,7 @@
                                             <td>
                                                 {{ $user->email }}
                                             </td>
+                                            @can('edit-users')
                                             <td class="text-center">
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-primary btn-sm mx-1"
@@ -93,6 +94,7 @@
 
                                                 </div>
                                             </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 @endif

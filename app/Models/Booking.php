@@ -88,10 +88,15 @@ class Booking extends Model
     {
         return $this->belongsToMany(Dish::class, 'booking_dish_keys');
     }
-    
+
     public function dishess()
 
     {
         return $this->belongsToMany(Dish::class, 'add_ons');
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'booking_id', 'id');
     }
 }

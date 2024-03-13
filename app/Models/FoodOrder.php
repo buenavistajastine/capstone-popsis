@@ -48,6 +48,11 @@ class FoodOrder extends Model
         return $this->hasOne(Billing::class, 'foodOrder_id', 'id');
     }
 
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'order_id', 'id');
+    }
+
     // public function dishes()
     // {
     //     return $this->belongsToMany(Dish::class, 'food_order_dish_keys', 'order_id', 'dish_id')

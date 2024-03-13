@@ -7,6 +7,7 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -45,10 +46,8 @@ class UserController extends Controller
     public function booking(Request $request): JsonResponse
     {
         try {
-            // Fetch booking details associated with the authenticated user
             $customer = $request->user()->customers;
 
-            // Check if the authenticated user is associated with a customer
             if (!$customer) {
                 return response()->json(['error' => 'User is not associated with a customer'], 400);
             }
@@ -71,13 +70,13 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
-            return response(['message' => $validator->errors()], 400);
+            return response(['message' => $validator->errors()], 401);
         }
 
         try {
             // Create the user
+            DB::beginTransaction();
             $user = User::create([
                 'first_name' => $request->input('first_name'),
                 'middle_name' => $request->input('middle_name'),
@@ -86,16 +85,12 @@ class UserController extends Controller
                 'password' => bcrypt($request->input('password')),
             ]);
 
-            // Generate token
             $token = $user->createToken('mobile')->plainTextToken;
-
-            // Return success response with token
+            DB::commit();
             return response(['token' => $token], 201);
         } catch (\Exception $e) {
-            // Log the error
+            DB::rollBack();
             Log::error('User registration failed: ' . $e->getMessage());
-
-            // Return error response
             return response(['message' => 'An error occurred during registration.'], 500);
         }
     }

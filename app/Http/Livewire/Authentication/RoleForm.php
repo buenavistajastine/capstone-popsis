@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\Authentication;
 
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleForm extends Component
 {
@@ -39,6 +40,7 @@ class RoleForm extends Component
     //store
     public function store()
     {
+        // dd($this->permissions);
         if(empty($this->permissions)){
             $this->permissions = array_map('strval', $this->selectedPerms);
         }
@@ -72,6 +74,7 @@ class RoleForm extends Component
     public function render()
     {
         $perms = Permission::all();
+
         return view('livewire.authentication.role-form',[
             'perms' => $perms
         ]);

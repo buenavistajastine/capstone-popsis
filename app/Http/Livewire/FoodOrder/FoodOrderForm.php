@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
+use App\Models\Address;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Dish;
@@ -19,7 +20,8 @@ class FoodOrderForm extends Component
     // customer
     public $first_name, $middle_name, $last_name, $contact_no, $gender_id;
     // food order
-    public $customer_id, $quantity, $dish_id, $address, $ordered_by, $date_need, $call_time, $total_price, $transport_id, $status_id, $remarks;
+    public $customer_id, $quantity, $dish_id, $ordered_by, $date_need, $call_time, $total_price, $transport_id, $status_id, $remarks;
+    public $city, $barangay, $specific_address, $landmark;
     public $dishItems = [];
     public $action = '';
     public $message = '';
@@ -43,6 +45,7 @@ class FoodOrderForm extends Component
         $this->dishItems = [];
 
         $order = FoodOrder::whereId($orderId)->with('customers') ->first();
+        $address = Address::where('order_id', $order->id)->first();
 
         if ($order) {
             $this->customer_id = $order->customer_id;
@@ -55,22 +58,29 @@ class FoodOrderForm extends Component
             ]);
 
             $this->ordered_by = $order->ordered_by;
-            $this->address = $order->address;
             $this->date_need = $order->date_need;
             $this->call_time = $order->call_time;
             $this->total_price = number_format($order->total_price, 2);
             $this->transport_id = $order->transport_id;
             $this->status_id = $order->status_id;
             $this->remarks = $order->remarks;
+            $this->city = $address->city;
+            $this->barangay = $address->barangay;
+            $this->specific_address = $address->specific_address;
+            $this->landmark = $address->landmark;
+
         } else {
             $this->ordered_by = null;
-            $this->address = null;
             $this->date_need = null;
             $this->call_time = null;
             $this->total_price = null;
             $this->transport_id = null;
             $this->status_id = null;
             $this->remarks = null;
+            $this->city = null;
+            $this->barangay = null;
+            $this->specific_address = null;
+            $this->landmark = null;
         }
 
         $dishes = FoodOrderDishKey::where('order_id', $orderId)->get();
@@ -114,7 +124,6 @@ class FoodOrderForm extends Component
     
             $order_data = $this->validate([
                 'ordered_by' => 'nullable',
-                'address' => 'required',
                 'date_need' => 'required',
                 'call_time' => 'required',
                 'contact_no' => 'nullable',
@@ -122,6 +131,13 @@ class FoodOrderForm extends Component
                 'transport_id' => 'required',
                 'status_id' => 'nullable',
                 'remarks' => 'nullable',
+            ]);
+
+            $address_data = $this->validate([
+                'city' => 'nullable',
+                'barangay' => 'nullable',
+                'specific_address' => 'nullable',
+                'landmark' => 'nullable',
             ]);
     
             if (!$this->customer_id) {
@@ -136,7 +152,10 @@ class FoodOrderForm extends Component
     
             if ($this->orderId) {
                 $order = FoodOrder::find($this->orderId);
+                $address = Address::where('order_id', $order->id);
+
                 $order->update($order_data, ['status_id' => 2]);
+                $address->update($address_data);
     
                 foreach ($this->dishItems as $key => $value) {
                     if ($this->dishItems[$key]['id'] == null) {
@@ -191,6 +210,10 @@ class FoodOrderForm extends Component
             } else {
                 $order_data['status_id'] = 1;
                 $order = FoodOrder::create($order_data);
+
+                $address_data['order_id'] = $order->id;
+
+                Address::create($address_data);
     
                 $currentYear ="ORD";
                 $paddedRowId = str_pad($order->id, 6, '0', STR_PAD_LEFT);

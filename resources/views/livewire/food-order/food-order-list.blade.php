@@ -67,8 +67,8 @@
                                 <tr>
                                     <th style="width: 20%;">Customer</th>
                                     <th style="width: 20%;">Date and Call Time</th>
-                                    <th style="width: 30%;">Transport</th>
-                                    {{-- <th style="width: 20%;">Pax</th> --}}
+                                    <th style="width: 30%;">Address</th>
+                                    <th style="width: 10%;">Transport</th>
                                     <th style="width: 20%;">Action</th>
                                 </tr>
                             </thead>
@@ -86,6 +86,15 @@
                                             <td>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
                                                 at
                                                 <strong>{{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}</strong>
+                                            </td>
+                                 
+                                            <td>
+                                                <div>
+                                                    {{ ucfirst($order->address->barangay) }}, {{ ucfirst($order->address->city) }}
+                                                </div>
+                                                <div>
+                                                    <small>{{ ucfirst($order->address->specific_address) }} ({{ $order->address->landmark }})</small>
+                                                </div>
                                             </td>
                                             <td>{{ $order->transports->name }}</td>
                                             <td>

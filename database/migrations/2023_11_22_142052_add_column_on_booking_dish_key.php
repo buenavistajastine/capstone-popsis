@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('booking_dish_keys', function (Blueprint $table) {
-            $table->boolean('update')->default(false)->after('dt_completed');
+            $table->boolean('update')->default(false)->after('status_id');
         });
     }
 

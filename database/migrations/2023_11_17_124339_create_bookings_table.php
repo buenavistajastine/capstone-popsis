@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->string('booking_no')->nullable();
             $table->unsignedBigInteger('customer_id')->constrained()->onDelete('cascade');;
             $table->foreign('customer_id')->references('id')->on('customers');
 
@@ -22,7 +23,9 @@ return new class extends Migration
             $table->unsignedBigInteger('venue_id')->nullable();
             $table->foreign('venue_id')->references('id')->on('venues');
 
-            $table->string('venue_address');
+            $table->string('event_name')->nullable();
+
+            // $table->string('venue_address');
             $table->string('no_pax');
             $table->date('date_event')->nullable();
             $table->time('call_time')->nullable();

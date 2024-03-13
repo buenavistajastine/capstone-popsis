@@ -231,8 +231,18 @@
     </div>
 </div>
 
-<script>
+{{-- <script>
     document.getElementById('selectAll').addEventListener('change', function() {
         @this.set('selectAll', this.checked);
     });
+</script> --}}
+
+<script>
+    $('#selectAll').click(function(){
+        if ($(this).is(':checked')) {
+            $('input[ type= checkbox]').prop('checked', true);
+        } else {
+            $('input[ type= checkbox]').prop('checked', false);
+        }
+    }) ;
 </script>

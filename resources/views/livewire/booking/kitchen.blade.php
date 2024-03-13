@@ -14,7 +14,9 @@
                         <div class="dash-content">
                             @foreach ($booking->dish_keys as $dishKey)
                                 <div class="form-check">
+                                    @can('edit-kitchen')
                                     <input wire:change="updateStatus({{ $dishKey->id }})" class="form-check-input checkbox-class" type="checkbox" value="{{ $dishKey->dishes->id }}" id="dish_{{ $dishKey->dishes->id }}" {{ $dishKey->status_id == 6 ? 'checked' : '' }}>
+                                    @endcan
                                     <label class="form-check-label custom_check" for="dish_{{ $dishKey->dishes->id }}">
                                         <p style="color: #333548; font-size: 12px; font-weight: 600;">{{ $dishKey->dishes->name }}</p>
                                     </label>

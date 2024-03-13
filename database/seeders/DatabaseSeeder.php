@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             DishSeeder::class,
             ModeOfTransportationSeeder::class,
             ModeOfPaymentSeeder::class,
+            VenueSeeder::class,
             PackageSeeder::class,
         ]);
     }

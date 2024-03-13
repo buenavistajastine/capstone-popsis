@@ -8,6 +8,7 @@ use App\Models\Dish;
 use App\Models\Menu;
 use App\Models\User;
 use App\Models\AddOn;
+use App\Models\Address;
 use App\Models\Motif;
 use App\Models\Venue;
 use App\Models\Billing;
@@ -57,6 +58,7 @@ class BookingForm extends Component
         $this->addOns = [];
 
         $booking = Booking::whereId($bookingId)->with('customers')->first();
+        $address = Address::where('booking_id', $bookingId)->first();
 
         if ($booking) {
             $this->customer_id = $booking->customer_id;
@@ -70,12 +72,12 @@ class BookingForm extends Component
 
             $this->package_id = $booking->package_id;
             $this->selectedVenue = $booking->venue_id;
-            $this->city = $booking->city;
-            $this->barangay = $booking->barangay;
-            $this->specific_address = $booking->specific_address;
-            $this->landmark = $booking->landmark;
+            $this->city = $address->city;
+            $this->barangay = $address->barangay;
+            $this->specific_address = $address->specific_address;
+            $this->landmark = $address->landmark;
             $this->event_name = $booking->event_name;
-            $this->venue_address = $booking->venue_address;
+            $this->venue_address = $address->venue_address;
             $this->no_pax = $booking->no_pax;
             $this->date_event = $booking->date_event;
             $this->call_time = $booking->call_time;
@@ -151,12 +153,10 @@ class BookingForm extends Component
 
     public function addDish()
     {
-        // Calculate the total quantity of all dishes in dishItems
         $totalQuantity = array_reduce($this->dishItems, function ($carry, $item) {
             return $carry + (float) $item['quantity'];
         }, 0);
 
-        // Check if the total quantity exceeds the limitation of main dish
         $package = Package::find($this->package_id);
         if ($package && $package->limitation_of_maindish > 0 && $totalQuantity < $package->limitation_of_maindish) {
             $this->dishItems[] = [
@@ -219,12 +219,7 @@ class BookingForm extends Component
             $booking_data = $this->validate([
                 'package_id' => 'required',
                 'selectedVenue' => 'required',
-                'city' => 'nullable',
-                'barangay' => 'nullable',
-                'specific_address' => 'nullable',
-                'landmark' => 'nullable',
                 'event_name' => 'nullable',
-                'venue_address' => 'nullable',
                 'no_pax' => 'required',
                 'date_event' => 'nullable',
                 'call_time' => 'nullable',
@@ -232,11 +227,19 @@ class BookingForm extends Component
                 'dt_booked' => 'nullable',
                 'remarks' => 'nullable',
                 'status_id' => 'nullable',
-                'additional_amt' => 'nullable', // Add this line
-                'advance_amt' => 'nullable', // Add this line
-                'discount_amt' => 'nullable', // Add this line
-                'color' => 'nullable', // Add this line
-                'color2' => 'nullable', // Add this line
+                'additional_amt' => 'nullable',
+                'advance_amt' => 'nullable',
+                'discount_amt' => 'nullable',
+                'color' => 'nullable',
+                'color2' => 'nullable',
+            ]);
+
+            $address_data = $this->validate([
+                'city' => 'nullable',
+                'barangay' => 'nullable',
+                'specific_address' => 'nullable',
+                'landmark' => 'nullable',
+                'venue_address' => 'nullable',
             ]);
 
             $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
@@ -277,8 +280,10 @@ class BookingForm extends Component
 
 
                 $booking = Booking::find($this->bookingId);
+                $address = Address::where('booking_id', $booking->id);
 
                 $booking->update($booking_data, ['status_id' => 2]);
+                $address->update($address_data);
                 $booking_services = BookingDishKey::where('booking_id', $this->bookingId)->get();
 
                 // $billing = Billing::where('booking_id', $this->bookingId)->first();
@@ -368,6 +373,10 @@ class BookingForm extends Component
                 $booking_data['dt_booked'] = Carbon::now();
                
                 $booking = Booking::create($booking_data);
+
+                $address_data['booking_id'] = $booking->id;
+                Address::create($address_data);
+
 
                 $currentYear = "BKG";
                 $paddedRowId = str_pad($booking->id, 6, '0', STR_PAD_LEFT);

@@ -38,6 +38,7 @@
 
                                     </div>
                                 </div> --}}
+                <h4 class="mb-3">Customer Details</h4>
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
                         <label>Ordered by:<span class="login-danger">*</span></label>
@@ -87,15 +88,45 @@
                         @enderror
                     </div>
                 </div> --}}
+                <h4 class="mb-3">Address</h4>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Address<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="address" placeholder />
-                        @error('address')
+                        <label>City/Town<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="city" placeholder />
+                        @error('city')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Barangay<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="barangay" placeholder />
+                        @error('barangay')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Specific Address<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="specific_address" placeholder />
+                        @error('specific_address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group local-forms">
+                        <label>Landmark<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="landmark" placeholder />
+                        @error('landmark')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <h4 class="mb-3">Order Details</h4>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Transportation<span class="login-danger">*</span></label>
@@ -121,7 +152,7 @@
                     </div>
                 </div> --}}
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Date<span class="login-danger">*</span></label>
                         <input class="form-control" type="date" wire:model="date_need">
@@ -130,7 +161,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Call Time <span class="login-danger">*</span></label>
                         <input type="time" class="form-control" wire:model="call_time">
@@ -144,11 +175,10 @@
                         <label style="z-index: 1">Remarks
                             <span class="login-danger">*</span>
                         </label>
-                        <input type="text" wire:model="remarks" class="form-control" placeholder
-                            />
+                        <input type="text" wire:model="remarks" class="form-control" placeholder />
                     </div>
                 </div>
-                
+
 
                 <div class="col-md-12">
                     <div class="card">
@@ -169,8 +199,8 @@
                                         @foreach ($dishItems as $dishIndex => $dishItem)
                                             <tr>
                                                 <td>
-                                                    <select wire:model="dishItems.{{ $dishIndex }}.dish_id" wire:change="calculatePrice"
-                                                        id="dish_id_{{ $dishIndex }}"
+                                                    <select wire:model="dishItems.{{ $dishIndex }}.dish_id"
+                                                        wire:change="calculatePrice" id="dish_id_{{ $dishIndex }}"
                                                         name="dishItems[{{ $dishIndex }}][dish_id]"
                                                         class="form-control select">
                                                         <option selected value="">-- choose dish --</option>
@@ -186,8 +216,9 @@
                                                 </td>
                                                 <td>
                                                     <input class="form-control" type="text"
-                                                    name="dishItems[{{ $dishIndex }}][quantity]"
-                                                    wire:model="dishItems.{{ $dishIndex }}.quantity" wire:change="calculatePrice" placeholder />
+                                                        name="dishItems[{{ $dishIndex }}][quantity]"
+                                                        wire:model="dishItems.{{ $dishIndex }}.quantity"
+                                                        wire:change="calculatePrice" placeholder />
                                                 </td>
                                                 <td>
                                                     <div class="col-md-1 pt-1 mx-1">
@@ -235,8 +266,8 @@
                                 <div class="text-end">
                                     <h4>{{ $total_price }}</h4>
                                 </div>
-                            </div>     
-                            
+                            </div>
+
                             {{-- <div class="col-md-12 d-flex justify-content-between">
                                 <div>
                                     <h5>Additional Payment:</h5>
