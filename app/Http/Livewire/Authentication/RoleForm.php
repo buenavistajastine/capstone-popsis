@@ -40,36 +40,35 @@ class RoleForm extends Component
     //store
     public function store()
     {
-        // dd($this->permissions);
         if(empty($this->permissions)){
             $this->permissions = array_map('strval', $this->selectedPerms);
         }
-
+    
         $data = $this->validate([
             'name' => 'required'
         ]);
-
+    
         if ($this->roleId) {
             $role = Role::find($this->roleId);
             $role->update($data);
-            $role->syncPermissions($this->permissions);
-
+            $role->permissions()->sync($this->permissions, ['guard_name' => 'web']);
+    
             $action = 'edit';
             $message = 'Successfully Updated';
-
         } else {
             $role = Role::create($data);
-            $role->syncPermissions($this->permissions);
+            $role->permissions()->sync($this->permissions, ['guard_name' => 'web']);
             $action = 'store';
             $message = 'Successfully Created';
         }
-
+    
         $this->emit('flashAction', $action, $message);
         $this->resetInputFields();
         $this->emit('closeRoleModal');
         $this->emit('refreshParentRole');
         $this->emit('refreshTable');
     }
+    
 
     public function render()
     {

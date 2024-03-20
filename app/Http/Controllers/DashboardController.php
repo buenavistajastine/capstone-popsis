@@ -14,6 +14,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $currentTime = Carbon::now();
+        $startOfMonth = $currentTime->startOfMonth();
+        $endOfMonth = $currentTime->endOfMonth();
+
+        $customersMonth = Customer::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
+        $bookingsMonth = Booking::whereBetween('date_event', [$startOfMonth, $endOfMonth])->get();
+        $ordersMonth = FoodOrder::whereBetween('date_need', [$startOfMonth, $endOfMonth])->get();
+
+        $totalEarningsBook = $bookingsMonth->sum('total_price');
+        $totalEarningsOrder = $ordersMonth->sum('total_price');
+        $totalEarningsMonth = $totalEarningsBook + $totalEarningsOrder;
+
         $time = Carbon::now()->format('H');
         $customers = Customer::all();
         $bookings = Booking::all();
@@ -40,11 +52,11 @@ class DashboardController extends Controller
         }
 
         $totalEarnings = $totalEarningsBook + $totalEarningsOrder;
-        $dishes = Dish::select('dishes.*', DB::raw('(SELECT COUNT(*) FROM booking_dish_keys WHERE booking_dish_keys.dish_id = dishes.id) as dish_count'))
-            ->whereNotIn('menu_id', [1, 8, 9]) // Exclude dishes under menu IDs 1, 8, and 9
-            ->orderByDesc('dish_count')
-            ->limit(5)
-            ->get();
+        // $dishes = Dish::select('dishes.*', DB::raw('(SELECT COUNT(*) FROM booking_dish_keys WHERE booking_dish_keys.dish_id = dishes.id) as dish_count'))
+        //     ->whereNotIn('menu_id', [1, 8, 9])
+        //     ->orderByDesc('dish_count')
+        //     ->limit(5)
+        //     ->get();
 
 
         return view('dashboard', [
@@ -53,7 +65,10 @@ class DashboardController extends Controller
             'bookings' => $bookings,
             'orders' => $orders,
             'totalEarnings' => $totalEarnings,
-            'dishes' => $dishes,
+            'customersMonth' => $customersMonth,
+            'bookingsMonth' => $bookingsMonth,
+            'ordersMonth' => $ordersMonth,
+            'totalEarningsMonth' => $totalEarningsMonth,
         ]);
     }
 }

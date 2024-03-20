@@ -65,16 +65,18 @@ class CustomerList extends Component
         $this->emit('flashAction', $action, $message);
         $this->emit('refreshTable');
     }
-    
+
     public function render()
     {
-        $customers = Customer::where(function ($query) {
-            $query->where('first_name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('contact_no', 'LIKE', '%' . $this->search . '%');
-        })
-                ->paginate(10);
+        $searchableFields = ['first_name', 'middle_name', 'last_name', 'contact_no'];
+
+        $customers = Customer::where(function ($query) use ($searchableFields) {
+                foreach ($searchableFields as $field) {
+                    $query->orWhere($field, 'LIKE', '%' . $this->search . '%');
+                }
+            })
+            ->with('bookings')
+            ->paginate(10);
 
         return view('livewire.customer.customer-list', compact('customers'));
     }

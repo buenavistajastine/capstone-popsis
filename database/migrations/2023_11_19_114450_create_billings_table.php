@@ -22,9 +22,9 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers');
 
-            $table->float('total_amt')->nullable();
-            $table->float('payable_amt')->nullable();
-            $table->float('paid_amt')->nullable();
+            $table->decimal('total_amt', 10, 2)->default(0);
+            $table->decimal('payable_amt', 10, 2)->default(0);
+            $table->decimal('paid_amt', 10, 2)->default(0);
             
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');

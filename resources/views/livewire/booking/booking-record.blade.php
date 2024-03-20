@@ -21,8 +21,8 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Booking Records</h3>                                 
-                                   
+                                    <h3>Booking Records</h3>
+
                                 </div>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
@@ -59,13 +59,14 @@
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Customer</th>
-                                    <th style="width: 20%;">Event</th>
-                                    <th style="width: 20%;">Package</th>
-                                    <th style="width: 20%;">Status</th>
-                                    <th style="width: 10%;"></th>
-        
-                                   
+                                    <th>Customer</th>
+                                    <th>Event</th>
+                                    <th>Package</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th></th>
+
+
 
                                 </tr>
                             </thead>
@@ -84,7 +85,9 @@
                                                         {{ ucwords($record->customers->first_name) }}
                                                         {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
                                                     </div>
-                                                    <div class="col-12"><a href="#"><small>#<i>{{ $record->booking_no }}</i></small></a></div>
+                                                    <div class="col-12"><a
+                                                            href="#"><small>#<i>{{ $record->booking_no }}</i></small></a>
+                                                    </div>
                                                     {{-- <div class="col-md-12 mb-1 text-sm">
                                                         #{{ $record->record_no }}
                                                     </div> --}}
@@ -99,26 +102,25 @@
                                                         {{ $record['date_event'] ? \Carbon\Carbon::parse($record['date_event'])->format('F j, Y') : '' }}
                                                         at
                                                         <strong>{{ $record['call_time'] ? \Carbon\Carbon::parse($record['call_time'])->format('g:i A') : '' }}</strong>
-                                                        
+
                                                     </div>
-                                                    
+
                                                 </div>
-                                                
+
                                             </td>
                                             <td>{{ $record->packages->name }}</td>
-                                        
+
                                             <td>
-                                                @if ($record->status_id == 6)
                                                     <button
-                                                        class="custom-badge status-orange">{{ $record->status->name }}</button>
-                                                @elseif ($record->status_id == 5)
-                                                    <button
-                                                        class="custom-badge status-green">{{ $record->status->name }}</button>
-                                                @endif
+                                                        class="custom-badge status-pink">{{ $record->status->name }}</button>
                                             </td>
-                                           
-                                            <td><a href="">More details</a></td>
-   
+
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                    wire:click="bookingDetails({{ $record->id }})" title="View"> <i
+                                                        class="fa-solid fa-list-check"></i> View details</button>
+                                            </td>
+
                                         </tr>
                                     @endforeach
                                 @endif
@@ -171,8 +173,7 @@
 
                                 @if ($records->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage"
-                                            wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">
@@ -189,14 +190,14 @@
     </div>
 </div>
 {{-- Modal --}}
-{{-- <div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
+<div wire.ignore.self class="modal fade" id="bookingRecordModal" tabindex="-1" aria-labelledby="bookingRecordModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-top modal-lg">
-        <livewire:booking.booking-form />
+        <livewire:booking.booking-record-modal />
     </div>
 </div>
 
 
 @section('custom_script')
     @include('layouts.scripts.booking-scripts')
-@endsection --}}
+@endsection

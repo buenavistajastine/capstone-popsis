@@ -1,4 +1,15 @@
 <div class="content">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                    <li class="breadcrumb-item">Kitchen Dish List</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="row">
         @foreach ($bookings as $booking)
             <div class="col-12 col-md-6 col-xl-3 d-flex">
@@ -16,18 +27,26 @@
                                 <div class="form-check">
                                     @can('edit-kitchen')
                                     <input wire:change="updateStatus({{ $dishKey->id }})" class="form-check-input checkbox-class" type="checkbox" value="{{ $dishKey->dishes->id }}" id="dish_{{ $dishKey->dishes->id }}" {{ $dishKey->status_id == 6 ? 'checked' : '' }}>
-                                    @endcan
                                     <label class="form-check-label custom_check" for="dish_{{ $dishKey->dishes->id }}">
                                         <p style="color: #333548; font-size: 12px; font-weight: 600;">{{ $dishKey->dishes->name }}</p>
                                     </label>
+                                    @elsecannot('edit-kitchen')
+                                    <p style="color: #333548; font-size: 12px; font-weight: 600;">{{ $dishKey->dishes->name }}</p>
+                                    @endcan
+                                  
                                 </div>
                             @endforeach
                             @foreach ($booking->addOns as $addOn)
                                 <div class="form-check">
+                                    @can('edit-kitchen')
                                     <input wire:change="updateAddOns({{ $addOn->id }})" class="form-check-input checkbox-class" type="checkbox" value="{{ $addOn->dishss->id }}" id="addon_{{ $addOn->dishss->id }}" {{ $addOn->status_id == 6 ? 'checked' : '' }}>
                                     <label class="form-check-label custom_check" for="addon_{{ $addOn->dishss->id }}">
                                         <p style="color: #333548; font-size: 12px; font-weight: 600;">{{ $addOn->dishss->name }}</p>
                                     </label>
+                                    @elsecannot('edit-kitchen')
+                                        <p style="color: #333548; font-size: 12px; font-weight: 600;">{{ $addOn->dishss->name }}</p>
+                                    @endcan
+                                
                                 </div>
                             @endforeach
                         </div>

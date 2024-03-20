@@ -18,11 +18,6 @@ class RoleandPermissionSeeder extends Seeder
         Permission::create(['name' => 'edit-users']);
         Permission::create(['name' => 'delete-users']);
 
-        Permission::create(['name' => 'create-customer']);
-        Permission::create(['name' => 'edit-customer']);
-        Permission::create(['name' => 'delete-customer']);
-        Permission::create(['name' => 'register-customer']);
-
         Permission::create(['name' => 'create-system-config']);
         Permission::create(['name' => 'edit-system-config']);
         Permission::create(['name' => 'delete-system-config']);
@@ -32,14 +27,19 @@ class RoleandPermissionSeeder extends Seeder
         Permission::create(['name' => 'edit-booking']);
         Permission::create(['name' => 'delete-booking']);
 
-        Permission::create(['name' => 'create-billing']);
-        Permission::create(['name' => 'edit-billing']);
-        Permission::create(['name' => 'delete-billing']);
-        
         Permission::create(['name' => 'create-order']);
         Permission::create(['name' => 'edit-order']);
         Permission::create(['name' => 'delete-order']);
-        
+
+        Permission::create(['name' => 'create-billing']);
+        Permission::create(['name' => 'edit-billing']);
+        Permission::create(['name' => 'delete-billing']);
+
+        Permission::create(['name' => 'create-customer']);
+        Permission::create(['name' => 'edit-customer']);
+        Permission::create(['name' => 'delete-customer']);
+        Permission::create(['name' => 'register-customer']);
+
         Permission::create(['name' => 'edit-kitchen']);
         
         // Permission::create(['name' => 'create-reports']);

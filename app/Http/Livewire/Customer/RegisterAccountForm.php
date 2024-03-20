@@ -60,12 +60,15 @@ class RegisterAccountForm extends Component
                     $userData['password'] = Hash::make($this->password);
                 }
 
+                $userData['status_id'] = 12;
+
                 if ($this->customerId) {
                     $user = User::create($userData);
                     $user->assignRole('customer');
 
-                    $customer = Customer::find($this->customerId);
 
+                    $customer = Customer::find($this->customerId);
+                    $customer->update(['status_id' => 12]);
                     $customer->user_id = $user->id;
                     $customer->save();
                 }

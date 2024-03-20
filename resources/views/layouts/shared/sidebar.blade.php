@@ -9,8 +9,9 @@
 						<li class="submenu">
 							<a href="#"><span class="menu-side"><i class="fa-solid fa-users"></i></span> <span> Users </span> <span class="menu-arrow"></span></a>
 							<ul style="display: none;">
-								
+								@hasrole('admin')
 								<li><a href="/user">User Management</a></li>
+								@endhasrole
 								<li><a href="/list">Customer List</a></li>
 								<li><a href="/customer-account">Customer Account</a></li>
 								
@@ -51,8 +52,9 @@
 							</ul>
 						</li>
 						@endhasrole
-						@hasrole(['admin', 'manager'])
+
                         <li class="menu-title">Setup</li>
+						@hasrole(['admin', 'manager'])
                         <li class="submenu">
                             <a href="#"><i class="fa fa-columns"></i> <span>System</span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">

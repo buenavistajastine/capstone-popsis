@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 class BookingRecord extends Component
 {
     use WithPagination;
+    public $recordId;
     public $dateFrom;
     public $dateTo;
 
@@ -17,6 +18,13 @@ class BookingRecord extends Component
     {
         $this->dateFrom = Carbon::parse($this->dateFrom)->startOfMonth()->toDateString();
         $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
+    }
+
+    public function bookingDetails($recordId)
+    {
+        $this->recordId = $recordId;
+        $this->emit('recordId', $recordId);
+        $this->emit('openBookingRecordModal');
     }
 
     public function render()

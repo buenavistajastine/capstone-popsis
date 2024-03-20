@@ -24,7 +24,8 @@ class StatusSeeder extends Seeder
             ['name' => 'Inactive'], //ended
             ['name' => 'Billed'],
             ['name' => 'Accepted'],
-            ['name' => 'Collected'],
+            ['name' => 'Transaction Completed'],
+            ['name' => 'Registered'],
         ]);
     }
 }

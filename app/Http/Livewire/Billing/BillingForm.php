@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Billing;
 
 use Exception;
 use App\Models\Billing;
+use App\Models\Booking;
 use Livewire\Component;
 use App\Models\ModeOfPayment;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,7 @@ class BillingForm extends Component
             ]);
 
             $billing = Billing::find($this->billingId);
+            $booking = Booking::where('id', $billing->booking_id);
             $newPayableAmt = $billing->payable_amt - $this->paid_amt;
 
             if ($this->billingId) {
@@ -60,6 +62,7 @@ class BillingForm extends Component
 
                 if ($billing->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
+                    $booking->update(['status_id' => 11]);
                 }
 
                 $action = 'edit';

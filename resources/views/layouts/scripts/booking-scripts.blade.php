@@ -14,4 +14,12 @@
     window.livewire.on('openBookingModal', () => {
         $('#bookingModal').modal('show');
     });
+
+    window.livewire.on('closeBookingRecordModal', () => {
+        $('#bookingRecordModal').modal('hide');
+    });
+
+    window.livewire.on('openBookingRecordModal', () => {
+        $('#bookingRecordModal').modal('show');
+    });
 </script>

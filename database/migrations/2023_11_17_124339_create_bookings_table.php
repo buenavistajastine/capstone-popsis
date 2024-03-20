@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('no_pax');
             $table->date('date_event')->nullable();
             $table->time('call_time')->nullable();
-            $table->float('total_price');
+            $table->decimal('total_price', 10, 2);
             $table->dateTime('dt_booked');
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');

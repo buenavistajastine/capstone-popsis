@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password;
 
 class CustomerAccountForm extends Component
 {
-    public $customerId, $userId, $customerAccId, $customer_id, $user_id, $first_name, $middle_name, $last_name, $username, $email, $password, $password_confirmation;
+    public $customerId, $userId, $customerAccId, $customer_id, $user_id, $first_name, $middle_name, $last_name, $username, $email, $password, $status_id, $password_confirmation;
 
     protected $listeners = [
         'customerId',
@@ -72,6 +72,7 @@ class CustomerAccountForm extends Component
             'middle_name' => 'nullable',
             'last_name' => 'required',
             'username' => 'required',
+            'status_id' => 'nullable',
             'email' => ['required', 'email'],
         ];
     
@@ -124,7 +125,7 @@ class CustomerAccountForm extends Component
         ];
 
         $user = User::find($this->userId);
-        $user->update($data);
+        $user->update([$data, 'status_id' => 12]);
 
         if (!empty($this->password)) {
             $this->validate([
@@ -139,15 +140,18 @@ class CustomerAccountForm extends Component
 
     protected function createUser()
     {
-        // For a new user
+        dd('helloooo');
         $user = User::create([
             'first_name' => $this->first_name,
             'middle_name' => $this->middle_name,
             'last_name' => $this->last_name,
             'username' => $this->username,
             'email' => $this->email,
+            'status_id' => 12,
             'password' => Hash::make($this->password),
         ]);
+
+
 
         // Assign the 'customer' role to the user
         $user->assignRole('customer');

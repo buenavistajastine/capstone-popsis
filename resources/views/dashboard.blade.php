@@ -51,7 +51,7 @@
                     </div>
                     <div class="dash-content dash-count">
                         <h4>Bookings</h4>
-                        <h2><span class="counter-up">{{ $bookings->count() }}</span></h2>
+                        <h2><span class="counter-up fs-small">{{ $bookings->count() }}</span></h2>
                         {{-- <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>40%</span> vs last
                             month</p> --}}
                     </div>
@@ -89,7 +89,7 @@
                         <img src="assets/img/icons/empty-wallet.svg" alt="">
                     </div>
                     <div class="dash-content dash-count">
-                        <h4>Earnings</h4>
+                        <h4>Total Earnings</h4>
                         <h2>₱<span class="counter-up">{{ number_format($totalEarnings, 2) }}</span></h2>
                         {{-- <p><span class="passive-view"><i class="feather-arrow-up-right me-1"></i>30%</span> vs last
                             month</p> --}}

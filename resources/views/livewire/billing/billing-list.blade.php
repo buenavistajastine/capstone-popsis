@@ -74,7 +74,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (is_array($billings) && count($billings) === 0)
+                                @if ($billings->isEmpty())
                                     <tr>
                                         <td colspan="5" class="text-center">No data available in table.</td>
                                     </tr>

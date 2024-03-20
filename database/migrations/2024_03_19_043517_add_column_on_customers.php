@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('utensils', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('customers', function (Blueprint $table) {
+            $table->unsignedBigInteger('status_id')->default(7)->after('photo');
+            $table->foreign('status_id')->references('id')->on('statuses');
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('utensils');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropColumn('status_id');
+        });
     }
 };

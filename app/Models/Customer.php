@@ -16,6 +16,8 @@ class Customer extends Model
         'last_name',
         'contact_no',
         'gender_id',
+        'photo',
+        'status_id'
     ];
 
     // public function users(){
@@ -33,11 +35,17 @@ class Customer extends Model
 
     public function bookings()
     {
-        return $this->hasOne(Booking::class, 'booking_id', 'id');
+        return $this->hasMany(Booking::class, 'customer_id', 'id');
     }
 
     public function foodOrders()
     {
         return $this->hasOne(FoodOrder::class, 'customer_id', 'id');
     }
+
+    public function status() 
+    {
+        return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+
 }

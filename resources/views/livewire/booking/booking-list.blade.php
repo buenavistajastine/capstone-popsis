@@ -64,10 +64,10 @@
                             <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20%;">Customer</th>
-                                        <th style="width: 20%;">Event</th>
-                                        <th style="width: 30%;">Venue</th>
-                                        <th style="width: 20%;">Action</th>
+                                        <th>Customer</th>
+                                        <th>Event</th>
+                                        <th>Venue</th>
+                                        <th>Action</th>
 
                                     </tr>
                                 </thead>
@@ -108,18 +108,18 @@
                                                     
                                                 </td>
                                                 <td>
-                                                    @if ($booking->venue_address || $booking->barangay || $booking->city)
+                                                    @if ($booking->address->venue_address || $booking->address->barangay || $booking->address->city)
                                                     <div>
-                                                        {{ $booking->venue_address ? ucfirst($booking->venue_address) . ', ' : ''}}
-                                                        {{ $booking->barangay ? ucfirst($booking->barangay) . ', ' : ''}}
-                                                        {{ $booking->city ? ucfirst($booking->city) : ''}}
+                                                        {{ $booking->address->venue_address ? ucfirst($booking->address->venue_address) . ', ' : ''}}
+                                                        {{ $booking->address->barangay ? ucfirst($booking->address->barangay) . ', ' : ''}}
+                                                        {{ $booking->address->city ? ucfirst($booking->address->city) : ''}}
                                                     </div>
                                                     @endif
                                                 
-                                                    @if ($booking->specific_address || $booking->landmark)
+                                                    @if ($booking->address->specific_address || $booking->address->landmark)
                                                     <div>
-                                                        {{ $booking->specific_address ? ucfirst($booking->specific_address) . ' ' : ''}}
-                                                        ({{ $booking->landmark ? ($booking->landmark) : '' }})
+                                                        {{ $booking->address->specific_address ? ucfirst($booking->address->specific_address) . ' ' : ''}}
+                                                        ({{ $booking->address->landmark ? ($booking->address->landmark) : '' }})
                                                     </div>
                                                     @endif
                                                 </td>

@@ -38,12 +38,11 @@
 
                                     </div>
                                 </div> --}}
-                                <h4 class="mb-3">Customer Details</h4>
+                <h4 class="mb-3">Customer Details</h4>
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
                         <label>First Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="first_name" placeholder
-                             />
+                        <input class="form-control" type="text" wire:model="first_name" placeholder />
                         @error('first_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -52,8 +51,7 @@
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Last Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="last_name" placeholder
-                            />
+                        <input class="form-control" type="text" wire:model="last_name" placeholder />
                         @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -74,13 +72,15 @@
                     <div class="form-group">
                         @foreach ($venues as $venue)
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="venue_id" id="venue_{{ $venue->id }}" wire:change="updatePackages" wire:model="selectedVenue" value="{{ $venue->id }}">
+                                <input class="form-check-input" type="radio" name="venue_id"
+                                    id="venue_{{ $venue->id }}" wire:change="updatePackages"
+                                    wire:model="selectedVenue" value="{{ $venue->id }}">
                                 <label class="form-check-label" for="venue_{{ $venue->id }}">
                                     {{ $venue->name }}
                                 </label>
                             </div>
                         @endforeach
-                
+
                         <!-- Display error message for selectedVenue -->
                         {{-- <div class="text-danger">
                             @error('selectedVenue')
@@ -89,7 +89,7 @@
                         </div> --}}
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>City/Town<span class="login-danger">*</span></label>
@@ -137,7 +137,7 @@
                 </div>
 
                 <h4 class="mb-3">Booking Details</h4>
-                
+
                 <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>Date of Event <span class="login-danger">*</span></label>
@@ -169,7 +169,8 @@
                 <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>No. of Guests<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="no_pax" wire:change="calculateTotalPrice" placeholder />
+                        <input class="form-control" type="text" wire:model="no_pax"
+                            wire:change="calculateTotalPrice" placeholder />
                         @error('no_pax')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -178,10 +179,11 @@
                 <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Package<span class="login-danger">*</span></label>
-                        <select wire:model="package_id"  class="form-control select">
+                        <select wire:model="package_id" class="form-control select">
                             <option selected value="">--select--</option>
                             @foreach ($packages as $package)
-                                <option value="{{ $package->id }}">{{ $package->name }} (₱ {{ $package->price }} /person)</option>
+                                <option value="{{ $package->id }}">{{ $package->name }} (₱ {{ $package->price }}
+                                    /person)</option>
                             @endforeach
                         </select>
                         @error('package_id')
@@ -190,7 +192,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="col-md-3">
                     <div class="form-group local-forms">
                         <label>Motif (color 1)<span class="login-danger">*</span></label>
@@ -212,22 +214,25 @@
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Additional Payment<span class="login-danger">*</span></label>
-                        <input class="form-control text-end" type="text" wire:model="additional_amt" wire:change="calculateTotalPrice" placeholder />
-                        
+                        <input class="form-control text-end" type="text" wire:model="additional_amt"
+                            wire:change="calculateTotalPrice" placeholder />
+
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Advance Payment<span class="login-danger">*</span></label>
-                        <input class="form-control text-end" type="text" wire:model="advance_amt" wire:change="calculateTotalPrice" placeholder />
-                        
+                        <input class="form-control text-end" type="text" wire:model="advance_amt"
+                            wire:change="calculateTotalPrice" placeholder />
+
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Discount Amount<span class="login-danger">*</span></label>
-                        <input class="form-control text-end" type="text" wire:model="discount_amt" wire:change="calculateTotalPrice" placeholder />
-                        
+                        <input class="form-control text-end" type="text" wire:model="discount_amt"
+                            wire:change="calculateTotalPrice" placeholder />
+
                     </div>
                 </div>
 
@@ -272,7 +277,9 @@
                                                             <optgroup label="{{ $type }}">
                                                                 @foreach ($typeDishes as $dish)
                                                                     <option value="{{ $dish->id }}">
-                                                                        <b class="custom-badge status-green fw-bold">({{ $dish->menu->name }})</b> {{ $dish->name }}
+                                                                        <b
+                                                                            class="custom-badge status-green fw-bold">({{ $dish->menu->name }})</b>
+                                                                        {{ $dish->name }}
                                                                     </option>
                                                                 @endforeach
                                                             </optgroup>
@@ -282,7 +289,8 @@
                                                 <td>
                                                     <input class="form-control" type="text"
                                                         name="dishItems[{{ $dishIndex }}][quantity]"
-                                                        wire:model="dishItems.{{ $dishIndex }}.quantity" placeholder />
+                                                        wire:model="dishItems.{{ $dishIndex }}.quantity"
+                                                        placeholder />
                                                 </td>
                                                 <td>
                                                     <div class="col-md-1 pt-1 mx-1">
@@ -308,18 +316,19 @@
                         </div>
                     </div>
                 </div>
-                
-                    
+
+
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div class="d-flex justify-content-left align-items-center">
                                     <div>
-                                        <h6 class="fs-6">Add-on Dishes <i style="font-size: small;" class="text-danger">(Prices are not included in the package.)</i></h6>
+                                        <h6 class="fs-6">Add-on Dishes <i style="font-size: small;"
+                                                class="text-danger">(Prices are not included in the package.)</i></h6>
                                     </div>
                                 </div>
-                                
+
                                 <table class="table border-0 custom-table comman-table mb-0">
                                     <thead>
                                         <tr>
@@ -332,30 +341,36 @@
                                         @foreach ($addOns as $addOnIndex => $dishItem)
                                             <tr>
                                                 <td>
-                                                    <select wire:model="addOns.{{ $addOnIndex }}.dish_id" wire:change="calculateTotalPrice" id="dish_id_{{ $addOnIndex }}" name="addOns[{{ $addOnIndex }}][dish_id]" class="form-control select">
+                                                    <select wire:model="addOns.{{ $addOnIndex }}.dish_id"
+                                                        wire:change="calculateTotalPrice"
+                                                        id="dish_id_{{ $addOnIndex }}"
+                                                        name="addOns[{{ $addOnIndex }}][dish_id]"
+                                                        class="form-control select">
                                                         <option selected value="">--select--</option>
                                                         @foreach ($dishes->groupBy('menu.name') as $menu => $menuDishes)
                                                             <optgroup label="{{ $menu }}">
                                                                 @foreach ($menuDishes as $dish)
-                                                                    <option value="{{ $dish->id }}">{{ $dish->name }} - <strong>₱{{ number_format($dish->price_full, 2) }}</strong></option>
+                                                                    <option value="{{ $dish->id }}">
+                                                                        {{ $dish->name }} -
+                                                                        <strong>₱{{ number_format($dish->price_full, 2) }}</strong>
+                                                                    </option>
                                                                 @endforeach
                                                             </optgroup>
                                                         @endforeach
                                                     </select>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <input class="form-control" type="text"
-                                                    name="addOns[{{ $addOnIndex }}][quantity]"
-                                                    wire:model="addOns.{{ $addOnIndex }}.quantity" 
-                                                    wire:change="calculateTotalPrice"
-                                                    placeholder />
+                                                        name="addOns[{{ $addOnIndex }}][quantity]"
+                                                        wire:model="addOns.{{ $addOnIndex }}.quantity"
+                                                        wire:change="calculateTotalPrice" placeholder />
                                                 </td>
                                                 <td>
                                                     <button type="button" title="Delete Item"
-                                                    class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteAddOnDish({{ $addOnIndex }})">
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        class="btn btn-danger btn-sm mx-1"
+                                                        wire:click="deleteAddOnDish({{ $addOnIndex }})">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -374,12 +389,12 @@
                     </div>
                 </div>
 
-              
+
                 <div class="row mb-3">
                     <h6 class="fs-6">Additional Request:</h6>
                     <div class="col-12 col-sm-12">
                         <div class="input-block local-forms">
-                            
+
                             <textarea class="form-control" rows="3" cols="30" wire:model="remarks" placeholder="Write here..."></textarea>
                         </div>
                     </div>
@@ -398,7 +413,7 @@
                             <div class="col-md-12 pe-4 d-flex justify-content-end">
                                 <h3 class="text-end">Total Price: {{ $total_price }}</h3>
                             </div>
-                             
+
                         </div>
                     </div>
                 </div>

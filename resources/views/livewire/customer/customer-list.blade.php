@@ -45,11 +45,12 @@
                             <table class="table border-0 custom-table comman-table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 3%;"></th>
-                                        <th style="width: 30%;">Name</th>
-                                        <th style="width: 20%;">Contact No.</th>
-                                        <th style="width: 25%;">Address</th>
-                                        <th style="width: 20%;">Action</th>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Contact No.</th>
+                                        <th>Address</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,34 +63,35 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    {{ ucfirst($customer->last_name) }}, {{ ucfirst($customer->first_name) }}
+                                                    {{ ucfirst($customer->last_name) }},
+                                                    {{ ucfirst($customer->first_name) }}
                                                     {{ $customer->middle_name ? ucfirst($customer->middle_name) : '' }}
-                                                    
-                                                    @if (!is_null($customer->user_id))
-                                                        <span class="custom-badge status-green">Registered</span>
-                                                    @endif
                                                 </td>
-                                                
+
                                                 <td>{{ $customer->contact_no }}</td>
-                                                <td>{{ $cust_addr->venue_address ?? '' }}</td>
+                                                @foreach ($customer->bookings as $booking)
+                                                    <td>{{ ucfirst($booking->address->city) ?? '' }},
+                                                        {{ ucfirst($booking->address->barangay) ?? '' }}</td>
+                                                @endforeach
+                                                <td><button
+                                                        class="custom-badge status-green">{{ $customer->status->name }}</button>
+                                                </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-sm mx-1"
+                                                        <button type="button" class="btn btn-primary btn-sm mx-1"
                                                             wire:click="editCustomer({{ $customer->id }})"
                                                             title="Edit">
-                                                             <i class="fa-solid fa-pen-to-square"></i>
+                                                            <i class="fa-solid fa-pen-to-square"></i>
                                                         </button>
                                                         @hasrole(['admin', 'manager'])
-                                                        @if (is_null($customer->user_id))
-                                                            <button type="button"
-                                                                class="btn btn-primary btn-sm mx-1"
-                                                                wire:click="createCustomerAccount({{ $customer->id }})"
-                                                                title="Create Account">
-                                                                Register <i class="fa-regular fa-square-plus"></i>
-                                                            </button>
-                                                        @else
-                                                        @endif
+                                                            @if (is_null($customer->user_id))
+                                                                <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                                    wire:click="createCustomerAccount({{ $customer->id }})"
+                                                                    title="Create Account">
+                                                                    Register <i class="fa-solid fa-user-plus"></i>
+                                                                </button>
+                                                            @else
+                                                            @endif
                                                         @endhasrole
                                                         {{-- @else
                                                             <button type="button"
@@ -100,11 +102,11 @@
                                                             </button>
                                                         @endif --}}
                                                         @hasrole('admin')
-                                                        <a class="btn btn-danger btn-sm mx-1"
-                                                            wire:click="deleteCustomer({{ $customer->id }})"
-                                                            title="Delete">
-                                                             <i class="fa-solid fa-trash"></i>
-                                                        </a>
+                                                            <a class="btn btn-danger btn-sm mx-1"
+                                                                wire:click="deleteCustomer({{ $customer->id }})"
+                                                                title="Delete">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </a>
                                                         @endhasrole
                                                     </div>
                                                 </td>

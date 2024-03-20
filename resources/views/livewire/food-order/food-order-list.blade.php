@@ -65,11 +65,11 @@
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Customer</th>
-                                    <th style="width: 20%;">Date and Call Time</th>
-                                    <th style="width: 30%;">Address</th>
-                                    <th style="width: 10%;">Transport</th>
-                                    <th style="width: 20%;">Action</th>
+                                    <th>Customer</th>
+                                    <th>Date and Call Time</th>
+                                    <th>Address</th>
+                                    <th>Transport</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

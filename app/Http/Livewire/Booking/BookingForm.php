@@ -87,6 +87,7 @@ class BookingForm extends Component
             $this->status_id = $booking->status_id;
             $this->color = $booking->color ?? null;
             $this->color2 = $booking->color2 ?? null;
+            $this->packageDescription = optional($booking->packages)->description;
         } else {
             $this->package_id = null;
             $this->selectedVenue = null;
@@ -468,7 +469,6 @@ class BookingForm extends Component
                 $add = Dish::find($addOn['dish_id']);
     
                 if ($add) {
-                    // Ensure that price_full is numeric before multiplying
                     $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
                 }
             }
