@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
             RoleandPermissionSeeder::class,
             UserSeeder::class,
             StatusSeeder::class,
-            DiscountSeeder::class,
             MenuSeeder::class,
             DishSeeder::class,
             ModeOfTransportationSeeder::class,
