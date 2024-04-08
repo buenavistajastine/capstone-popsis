@@ -1,10 +1,11 @@
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("livewire.navigated", () => {
         Livewire.hook('message.processed', (component) => {
             setTimeout(function() {
                 $('#alert').fadeOut('fast');
             }, 5000);
         });
+        initFlowbite();
     });
 
     window.livewire.on('closeBookingModal', () => {

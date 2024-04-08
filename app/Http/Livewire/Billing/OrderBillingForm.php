@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Billing;
 
 use Exception;
 use App\Models\Billing;
+use App\Models\FoodOrder;
 use Livewire\Component;
 use App\Models\ModeOfPayment;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,7 @@ class OrderBillingForm extends Component
             ]);
 
             $billing = Billing::find($this->orderBillingId);
+            $order = FoodOrder::whereId($this->orderBillingId);
             $newPayableAmt = $billing->payable_amt - $this->paid_amt;
 
             if ($this->orderBillingId) {
@@ -58,6 +60,7 @@ class OrderBillingForm extends Component
 
                 if ($billing->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
+                    $order->update(['status_id' => 11]);
                 }
 
                 $action = 'edit';

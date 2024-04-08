@@ -71,13 +71,15 @@ class CustomerList extends Component
         $searchableFields = ['first_name', 'middle_name', 'last_name', 'contact_no'];
 
         $customers = Customer::where(function ($query) use ($searchableFields) {
-                foreach ($searchableFields as $field) {
-                    $query->orWhere($field, 'LIKE', '%' . $this->search . '%');
-                }
-            })
-            ->with('bookings')
-            ->paginate(10);
+            foreach ($searchableFields as $field) {
+                $query->orWhere($field, 'LIKE', '%' . $this->search . '%');
+            }
+        })
+        ->with('bookings', 'address')
+        ->paginate(10);
+    
 
+            // dd($customers->bookings);
         return view('livewire.customer.customer-list', compact('customers'));
     }
 }

@@ -19,7 +19,9 @@
             <h5><strong>CATERING INFORMATION SHEET</strong></h5>
             <div>Name of Client: <strong> {{ ucwords($customer->last_name) }},
                     {{ ucwords($customer->first_name) }}</strong></div>
-            <div>Venue Address: <strong>{{ $booking->venue_address }}</strong></div>
+            <div>Venue Address: <strong>{{ $booking->address->venue_address }} {{ $booking->address->specific_address }},
+                    {{ $booking->address->barangay }}, {{ $booking->address->city }}
+                    ({{ $booking->address->landmark }})</strong></div>
             <div>Date of Event:
                 <strong>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}</strong>
             </div>
@@ -40,8 +42,8 @@
             <div>
 
                 Motif:
-                @if ($motifs)
-                    <strong>{{ $motifs->color }} & {{ $motifs->color2 }}</strong>
+                @if ($booking->color && $booking->color2)
+                    <strong>{{ $booking->color }} & {{ $booking->color2 }}</strong>
                 @else
                 @endif
             </div>
@@ -65,7 +67,7 @@
                         @endforeach
                         @foreach ($addons as $addon)
                             @if ($addon->type_id == $type->id)
-                                <div class="row ps-5 fw-bold">{{ $addon->name }}</div>
+                                <div class="row ps-5">{{ $addon->name }} / Add-on</div>
                             @endif
                         @endforeach
                     </div>
@@ -130,9 +132,9 @@
                         
                         ?>
                         <div class="mt-1">Drop 2.5: <strong>{{ $numTables }}</strong></div>
-                        <div class="mt-1">Chair Lace: @if ($motifs)
+                        <div class="mt-1">Chair Lace: @if ($booking)
                                 <strong>{{ $chairLace }}
-                                    {{ $motifs->color }} & {{ $chairLace }} {{ $motifs->color2 }}</strong>
+                                    {{ $booking->color }} & {{ $chairLace }} {{ $booking->color2 }}</strong>
                             @else
                                 <strong>{{ $lace }}</strong>
                             @endif
@@ -140,12 +142,13 @@
                         <div class="mt-1">Canopy Lace: <strong>{{ $canopyLace }}</strong></div>
                         <div class="mt-1">Goblet: <strong>{{ $booking->no_pax }}</strong></div>
                         <div class="mt-1">Highball Glass: </div>
-                        <div class="mt-1">Hanky: 
-                                @if ($motifs)
-                                    <strong>{{ $numHanky }} {{ $motifs->color }} & {{ $numHanky }} {{ $motifs->color2 }}</strong>
-                                @else 
-                                    <strong>{{ $hanky }}</strong> 
-                                @endif
+                        <div class="mt-1">Hanky:
+                            @if ($booking->color && $booking->color2)
+                                <strong>{{ $numHanky }} {{ $booking->color }} & {{ $numHanky }}
+                                    {{ $booking->color2 }}</strong>
+                            @else
+                                <strong>{{ $hanky }}</strong>
+                            @endif
                         </div>
                         <div class="mt-1">Plate: <strong>{{ $booking->no_pax }}</strong></div>
                         <div class="mt-1">Spoon and Fork:

@@ -1,11 +1,11 @@
 <div class="modal-content">
-    @foreach ($bookings as $booking)
-        <div class="modal-header">
-            <h1 class="modal-title fs-5">
-                Booking Information
-            </h1>
-        </div>
-        <div class="modal-body fs-small">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5">
+            Booking Information
+        </h1>
+    </div>
+    <div class="modal-body fs-small">
+        @if ($booking)
             <div class="row">
                 <div class="col-md-12 mb-2">
                     <span>Name: <strong>{{ $booking->customers->first_name }},
@@ -14,6 +14,9 @@
                 <div class="col-md-12 mb-2">
                     <span>Address: {{ $booking->address->city }}, {{ $booking->address->barangay }}
                         <small>({{ $booking->venues->name }})</small></span>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <span>Event: {{ $booking->event_name }}</span>
                 </div>
                 <div class="col-md-12 mb-2">
                     <span>
@@ -29,6 +32,9 @@
                 <div class="col-md-12 mb-2">
                     <span>Package: {{ $booking->packages->name }}
                         <small>(₱{{ number_format($booking->packages->price, 2) }})</small></span>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <span>Total Amount: ₱{{ number_format($booking->total_price, 2) }} / {{ $booking->billing->statuses->name }}</span>
                 </div>
                 <div class="col-md-6 mb-2">
                     <div>Dishes: </div>
@@ -46,12 +52,15 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-md-12 mb-2">
-                    <span>Total Amount: ₱{{ number_format($booking->total_price, 2) }}</span>
+            </div>
+        @else
+            <div class="row">
+                <div class="col-md-12">
+                    <p>No booking details found.</p>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endif
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
     </div>

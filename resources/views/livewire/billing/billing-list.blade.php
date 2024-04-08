@@ -139,6 +139,10 @@
                                                         wire:click="editBilling({{ $billing->id }})" title="Edit">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>
+                                                    <a class="btn btn-primary btn-sm mx-1" href="{{ route('print.claim-slip', $billing->id) }}"
+                                                        target="_blank" title="View Booking">
+                                                        <i class="fa-solid fa-print"></i>
+                                                    </a>
                                                     <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteBilling({{ $billing->id }})" title="Delete">
                                                         <i class="fa-solid fa-trash"></i>

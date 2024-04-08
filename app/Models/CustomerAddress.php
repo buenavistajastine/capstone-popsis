@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Address extends Model
+class CustomerAddress extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'booking_id',
+        'customer_id',
         'city',
         'barangay',
         'venue_address',
@@ -18,11 +18,7 @@ class Address extends Model
         'landmark',
     ];
 
-    public function bookings() {
-        return $this->belongsTo(Booking::class, 'booking_id', 'id');
-    }
-
-    public function orders() {
-        return $this->belongsTo(FoodOrder::class, 'order_id', 'id');
+    public function customer() {
+        return $this->belongsTo(Customer::class);
     }
 }

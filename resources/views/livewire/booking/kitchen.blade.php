@@ -16,10 +16,10 @@
                 <div class="card report-blk">
                     <div class="card-body">
                         <div class="report-head card-header">
-                            <h4 class="me-2 text-center mb-3">Call Time: {{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}</h4>
-                            <h4 class="card-title mb-0">{{ ucfirst(optional($booking->customers)->last_name) }}, {{ ucfirst(optional($booking->customers)->first_name) }}</h4>
+                            <h4 class="me-2 text-center mb-3 fw-bold">Call Time: {{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}</h4>
+                            <h4 class="card-title mb-0 fs-6">{{ ucfirst(optional($booking->customers)->last_name) }}, {{ ucfirst(optional($booking->customers)->first_name) }}</h4>
                             <div class="ps-4">
-                                <p style="color: #333548; font-size: 12px; font-weight: 600;">Loc: {{ ucfirst(optional($booking)->barangay) }}</p>
+                                <p style="color: #333548; font-size: 12px; font-weight: 600;">Loc: {{ ucfirst(optional($booking->address)->barangay) }}, {{ ucfirst(optional($booking->address)->city) }}</p>
                             </div>
                         </div>
                         <div class="dash-content">

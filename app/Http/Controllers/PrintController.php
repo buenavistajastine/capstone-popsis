@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddOn;
 use PDF;
 use Carbon\Carbon;
 use App\Models\Dish;
@@ -26,9 +27,8 @@ class PrintController extends Controller
         $dishes = $booking->dishes;
         $addons = $booking->dishess;
         $customer = Customer::where('id', $booking->customer_id)->first();
-        $motifs = Motif::where('booking_id', $booking->id)->first();
 
-        return view('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types', 'motifs', 'billing'));
+        return view('layouts.prints.module', compact('booking', 'dishes', 'customer', 'addons', 'types', 'billing'));
     }
 
     // Print dishes for kitchen staff
@@ -79,19 +79,14 @@ class PrintController extends Controller
     }
 
     public function claimSlip($id) {
-        $billing = Billing::where('');
+        $date = Carbon::now()->format('F d, Y');
+        $billing = Billing::find($id);
+        $booking_dish_key = BookingDishKey::where('booking_id', $billing->booking_id)->get();
+        $add_ons = AddOn::where('booking_id', $billing->booking_id)->get();
+        $booking = Booking::where('id', $billing->booking_id)->first();
+
+        // dd($add_ons);
+        return view('layouts.prints.claim-slip', compact('billing', 'booking_dish_key', 'booking', 'date', 'add_ons'));
     }
 
-    // public function printOrderDishes()
-    // {
-    //     $orderDishes = session('orderDishes', []);
-
-    //     $groupedOrderDishes = collect($orderDishes)->groupBy('dish.menu.name');
-
-    //     $pdf = PDF::loadView('layouts.prints.print-order-dishes', compact('groupedOrderDishes'))->setPaper('letter', 'portrait')->output();
-    //     return response()->streamDownload(
-    //         fn () => print($pdf),
-    //         "order-dishes.pdf"
-    //     );
-    // }
 }

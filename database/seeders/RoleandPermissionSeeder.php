@@ -14,6 +14,17 @@ class RoleandPermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        // For Sidebar
+        Permission::create(['name' => 'user-management-access']);
+        Permission::create(['name' => 'food-order-access']);
+        Permission::create(['name' => 'booking-access']);
+        Permission::create(['name' => 'kitchen-access']);
+        Permission::create(['name' => 'billing-access']);
+        Permission::create(['name' => 'report-access']);
+        Permission::create(['name' => 'system-access']);
+        Permission::create(['name' => 'authentication-access']);
+        Permission::create(['name' => 'activity-logs-access']);
+
         Permission::create(['name' => 'create-users']);
         Permission::create(['name' => 'edit-users']);
         Permission::create(['name' => 'delete-users']);
@@ -41,11 +52,10 @@ class RoleandPermissionSeeder extends Seeder
         Permission::create(['name' => 'register-customer']);
 
         Permission::create(['name' => 'edit-kitchen']);
-        
+        Permission::create(['name' => 'print']);
         // Permission::create(['name' => 'create-reports']);
         // Permission::create(['name' => 'edit-reports']);
-        Permission::create(['name' => 'print-reports']);
-
+        
         $adminRole = Role::create(['name' => 'admin']);
         $managerRole = Role::create(['name' => 'manager']);
         $staffRole = Role::create(['name' => 'staff']);
@@ -72,13 +82,17 @@ class RoleandPermissionSeeder extends Seeder
             'create-billing',
             'edit-billing',
             'delete-billing',
-            // 'create-assignment',
             'edit-kitchen',
-            'print-reports',
-            'delete-system-logs'
-            // 'create-reports',
-            // 'edit-reports',
-            // 'delete-reports'
+            'print',
+            'delete-system-logs',
+            'user-management-access',
+            'food-order-access',
+            'booking-access',
+            'billing-access',
+            'report-access',
+            'system-access',
+            'authentication-access',
+            'activity-logs-access'
         ]);
 
         $managerRole->givePermissionTo([
@@ -89,9 +103,9 @@ class RoleandPermissionSeeder extends Seeder
             'delete-booking',
             'create-order',
             'edit-order',
-            'delete-order', 
+            'delete-order',
             'register-customer',
-            'print-reports'
+            'print'
         ]);
 
         $staffRole->givePermissionTo([
@@ -101,7 +115,7 @@ class RoleandPermissionSeeder extends Seeder
             'edit-booking',
             'edit-kitchen',
         ]);
-        
+
         $kitchenstaffRole->givePermissionTo([
             'edit-kitchen',
         ]);

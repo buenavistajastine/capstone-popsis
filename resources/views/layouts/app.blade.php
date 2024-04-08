@@ -74,6 +74,7 @@
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/custom-select.js') }}"></script>
     <script src="{{ asset('assets/js/select2.init.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>

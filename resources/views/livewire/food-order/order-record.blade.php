@@ -1,14 +1,17 @@
 <div class="content">
     <div class="page-header">
-        <div class="row">
-            <div class="col-sm-12">
+        <div class="row justify-content-space-between">
+            <div>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item"><a href="booking">All Bookings</a></li>
+                    <li class="breadcrumb-item"><a href="order">All Orders</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item">Booking Records</li>
+                    <li class="breadcrumb-item">Food Order Records</li>
                 </ul>
+            </div>
+            <div>
+
             </div>
         </div>
     </div>
@@ -21,10 +24,11 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Booking Records</h3>                                 
-                                   
+                                    <h3>Order Records</h3>
                                 </div>
+                                <a onclick="goBack()" href="order" style="position: relative;"><small><i class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
+
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
                                     <form>
@@ -59,13 +63,12 @@
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Customer</th>
-                                    <th style="width: 20%;">Event</th>
-                                    {{-- <th style="width: 20%;">Package</th> --}}
-                                    <th style="width: 20%;">Status</th>
-                                    <th style="width: 10%;"></th>
-        
-                                   
+                                    <th>Customer</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+
 
                                 </tr>
                             </thead>
@@ -84,7 +87,9 @@
                                                         {{ ucwords($record->customers->first_name) }}
                                                         {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
                                                     </div>
-                                                    <div class="col-12"><a href="#"><small>#<i>{{ $record->order_no }}</i></small></a></div>
+                                                    <div class="col-12"><a
+                                                            href="#"><small>#<i>{{ $record->order_no }}</i></small></a>
+                                                    </div>
                                                     {{-- <div class="col-md-12 mb-1 text-sm">
                                                         #{{ $record->record_no }}
                                                     </div> --}}
@@ -93,32 +98,34 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-md-12 mb-1 text-justify">
-                                                        {{ ucfirst($record->address) }}
+                                                        @php
+                                                            $address = $record->customers->address;
+                                                        @endphp
+                                                        {{ ucfirst($address->specific_address) }},
+                                                        {{ ucfirst($address->barangay) }}, {{ ucfirst($address->city) }}
+                                                        ({{ ucfirst($address->landmark) }})
                                                     </div>
                                                     <div class="col-md-12 mb-1">
                                                         {{ $record['date_need'] ? \Carbon\Carbon::parse($record['date_need'])->format('F j, Y') : '' }}
                                                         at
                                                         <strong>{{ $record['call_time'] ? \Carbon\Carbon::parse($record['call_time'])->format('g:i A') : '' }}</strong>
-                                                        
+
                                                     </div>
-                                                    
+
                                                 </div>
-                                                
+
                                             </td>
-                                            {{-- <td>{{ $record->packages->name }}</td> --}}
-                                        
                                             <td>
-                                                @if ($record->status_id == 6)
-                                                    <button
-                                                        class="custom-badge status-orange">{{ $record->status->name }}</button>
-                                                @elseif ($record->status_id == 5)
-                                                    <button
-                                                        class="custom-badge status-green">{{ $record->status->name }}</button>
-                                                @endif
+                                                <button
+                                                    class="custom-badge status-orange">{{ $record->statuses->name }}</button>
                                             </td>
-                                           
-                                            <td><a href="">More details</a></td>
-   
+
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                    wire:click="orderDetails({{ $record->id }})" title="View"> <i
+                                                        class="fa-solid fa-list-check"></i> View details</button>
+                                            </td>
+
                                         </tr>
                                     @endforeach
                                 @endif
@@ -171,8 +178,7 @@
 
                                 @if ($records->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage"
-                                            wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">
@@ -188,15 +194,20 @@
         </div>
     </div>
 </div>
+<script>
+    function goBack() {
+        window.history.back(); // Go back to the previous page
+    }
+</script>
 {{-- Modal --}}
-{{-- <div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
+<div wire.ignore.self class="modal fade" id="orderRecordModal" tabindex="-1" aria-labelledby="orderRecordModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-top modal-lg">
-        <livewire:booking.booking-form />
+        <livewire:food-order.order-record-modal/>
     </div>
 </div>
 
 
 @section('custom_script')
-    @include('layouts.scripts.booking-scripts')
-@endsection --}}
+    @include('layouts.scripts.food-order-scripts')
+@endsection

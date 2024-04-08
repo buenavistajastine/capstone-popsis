@@ -6,17 +6,26 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use Livewire\Component;
 use App\Models\BookingDishKey;
+use App\Models\Customer;
 
 class BookingRecordModal extends Component
 {
     public $recordId;
 
+    protected $listeners = ['recordId' => 'setRecordId'];
+
+    public function setRecordId($recordId)
+    {
+        $this->recordId = $recordId;
+    }
+
     public function render()
     {
-        $bookings = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu'])
+        $booking = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu', 'customers'])
+            ->whereId($this->recordId)
             ->orderBy('date_event', 'asc')
-            ->paginate(10);
+            ->first();
 
-        return view('livewire.booking.booking-record-modal', compact('bookings'));
+        return view('livewire.booking.booking-record-modal', compact('booking'));
     }
 }

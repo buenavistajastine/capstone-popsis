@@ -39,7 +39,7 @@
                                     </div>
                                 </div> --}}
                 <h4 class="mb-3">Customer Details</h4>
-                <div class="col-md-4 mb-2">
+                {{-- <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
                         <label>Ordered by:<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="ordered_by" placeholder
@@ -48,12 +48,12 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
+                {{-- @if ($customer_id) readonly @endif  --}}
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
                         <label>First Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="first_name" placeholder
-                            @if ($customer_id) readonly @endif />
+                        <input class="form-control" type="text" wire:model="first_name" placeholder />
                         @error('first_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -62,8 +62,7 @@
                 <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Last Name<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="last_name" placeholder
-                            @if ($customer_id) readonly @endif />
+                        <input class="form-control" type="text" wire:model="last_name" placeholder />
                         @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -109,7 +108,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Specific Address<span class="login-danger">*</span></label>
+                        <label>Street No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="specific_address" placeholder />
                         @error('specific_address')
                             <span class="text-danger">{{ $message }}</span>
@@ -223,6 +222,7 @@
                                                 <td>
                                                     <div class="col-md-1 pt-1 mx-1">
                                                         <button type="button" title="Delete Item"
+                                                            wire:change="calculatePrice"
                                                             class="btn btn-danger btn-sm mx-1"
                                                             wire:click="deleteDish({{ $dishIndex }})">
                                                             <i class="fa fa-trash" aria-hidden="true"></i>

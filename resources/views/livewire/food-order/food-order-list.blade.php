@@ -90,10 +90,10 @@
                                  
                                             <td>
                                                 <div>
-                                                    {{ ucfirst($order->address->barangay) }}, {{ ucfirst($order->address->city) }}
+                                                    {{ ucfirst($order->customers->address->barangay) }}, {{ ucfirst($order->customers->address->city) }}
                                                 </div>
                                                 <div>
-                                                    <small>{{ ucfirst($order->address->specific_address) }} ({{ $order->address->landmark }})</small>
+                                                    <small>{{ ucfirst($order->customers->address->specific_address) }} ({{ $order->customers->address->landmark }})</small>
                                                 </div>
                                             </td>
                                             <td>{{ $order->transports->name }}</td>

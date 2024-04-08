@@ -23,6 +23,7 @@ use App\Http\Livewire\CustomerAccount\CustomerAccountList;
 use App\Http\Livewire\FoodOrder\FoodOrderList;
 use App\Http\Livewire\FoodOrder\OrderRecord;
 use App\Http\Livewire\FoodOrder\OrderReport;
+use App\Http\Livewire\OrderRecordModal;
 use App\Http\Livewire\Package\PackageList;
 use App\Http\Livewire\Status\StatusList;
 
@@ -61,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::get('position', PositionList::class)->name('position');
     Route::get('dish', DishList::class)->name('dish');
     Route::get('booking', BookingList::class)->name('booking');
+    Route::get('booking_form', BookingForm::class)->name('booking_form');
+     
     // Route::get('booking-form', BookingForm::class)->name('booking-form');
     Route::get('order', FoodOrderList::class)->name('order');
     Route::get('list', CustomerList::class)->name('customer');
@@ -75,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print/module/{id}', [PrintController::class, 'PrintModule'])->name('module_print');
     Route::get('/print-dishes', [PrintController::class, 'printDishes'])->name('print.dishes');
     Route::get('/print-order-dishes', [PrintController::class, 'printOrderDishes'])->name('print.order-dishes');
+    Route::get('claim-slip/{id}', [PrintController::class, 'claimSlip'])->name('print.claim-slip');
 
     Route::get('kitchen', Kitchen::class);
 

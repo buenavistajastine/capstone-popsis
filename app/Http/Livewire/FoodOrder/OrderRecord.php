@@ -12,6 +12,8 @@ class OrderRecord extends Component
     use WithPagination;
     public $dateFrom;
     public $dateTo;
+    public $search = '';
+    public $orderRecordId;
 
     public function mount()
     {
@@ -19,6 +21,14 @@ class OrderRecord extends Component
         $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
     }
     
+    public function orderDetails($orderRecordId)
+    {
+        $this->orderRecordId = $orderRecordId;
+        // dd($this->recordId);
+        $this->emit('orderRecordId', $orderRecordId);
+        $this->emit('openOrderRecordModal');
+    }
+
     public function render()
     {
         $records = FoodOrder::with('orderDish_keys')

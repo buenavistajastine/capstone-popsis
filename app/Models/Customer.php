@@ -40,12 +40,16 @@ class Customer extends Model
 
     public function foodOrders()
     {
-        return $this->hasOne(FoodOrder::class, 'customer_id', 'id');
+        return $this->hasMany(FoodOrder::class, 'customer_id', 'id');
     }
 
     public function status() 
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');
     }
-
+    
+    public function address()
+    {
+        return $this->hasOne(CustomerAddress::class, 'customer_id');
+    }
 }

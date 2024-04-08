@@ -53,6 +53,11 @@ class FoodOrder extends Model
         return $this->hasOne(Address::class, 'order_id', 'id');
     }
 
+    public function dishes()
+    {
+        return $this->belongsToMany(Dish::class, 'food_order_dish_keys');
+    }
+
     // public function dishes()
     // {
     //     return $this->belongsToMany(Dish::class, 'food_order_dish_keys', 'order_id', 'dish_id')

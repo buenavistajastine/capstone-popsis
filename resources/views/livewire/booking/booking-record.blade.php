@@ -24,6 +24,7 @@
                                     <h3>Booking Records</h3>
 
                                 </div>
+                                <a onclick="goBack()" href="booking" style="position: relative;"><small><i class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -197,7 +198,11 @@
     </div>
 </div>
 
-
+<script>
+    function goBack() {
+        window.history.back(); // Go back to the previous page
+    }
+</script>
 @section('custom_script')
     @include('layouts.scripts.booking-scripts')
 @endsection

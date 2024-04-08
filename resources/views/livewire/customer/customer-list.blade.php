@@ -69,12 +69,19 @@
                                                 </td>
 
                                                 <td>{{ $customer->contact_no }}</td>
-                                                @foreach ($customer->bookings as $booking)
-                                                    <td>{{ ucfirst($booking->address->city) ?? '' }},
-                                                        {{ ucfirst($booking->address->barangay) ?? '' }}</td>
-                                                @endforeach
-                                                <td><button
-                                                        class="custom-badge status-green">{{ $customer->status->name }}</button>
+                                                {{-- @php
+                                                    dd($customer);
+                                                @endphp --}}
+                                                <td>
+                                                    @if ($customer->address)
+                                                        {{ ucfirst($customer->address->city ?? '') }},
+                                                        {{ ucfirst($customer->address->barangay ?? '') }}
+                                                    @else
+                                                        <i><small>No address available</small></i>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <button class="custom-badge status-green">{{ $customer->status->name }}</button>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">

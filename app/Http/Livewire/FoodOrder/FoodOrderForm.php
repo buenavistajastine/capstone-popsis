@@ -2,14 +2,16 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
-use App\Models\Address;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Dish;
+use App\Models\User;
+use App\Models\Address;
 use App\Models\Billing;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\FoodOrder;
+use App\Models\CustomerAddress;
 use App\Models\FoodOrderDishKey;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModeOfTransportation;
@@ -45,7 +47,7 @@ class FoodOrderForm extends Component
         $this->dishItems = [];
 
         $order = FoodOrder::whereId($orderId)->with('customers') ->first();
-        $address = Address::where('order_id', $order->id)->first();
+        $address = CustomerAddress::where('customer_id', $order->customer_id)->first();
 
         if ($order) {
             $this->customer_id = $order->customer_id;
@@ -120,13 +122,13 @@ class FoodOrderForm extends Component
                 'last_name' => 'required',
                 'contact_no' => 'nullable',
                 'gender_id' => 'nullable',
+                'contact_no' => 'nullable',
             ]);
-    
+
             $order_data = $this->validate([
                 'ordered_by' => 'nullable',
                 'date_need' => 'required',
                 'call_time' => 'required',
-                'contact_no' => 'nullable',
                 'total_price' => 'required',
                 'transport_id' => 'required',
                 'status_id' => 'nullable',
@@ -145,6 +147,22 @@ class FoodOrderForm extends Component
                 $order_data['customer_id'] = $newCustomer->id;
             } else {
                 $order_data['customer_id'] = $this->customer_id;
+
+                $cust = Customer::whereId($this->customer_id)->first();
+                $user = User::whereId($cust->user_id)->first();
+                if ($user) {
+                    $user->update([
+                        'first_name' => $this->first_name,
+                        'middle_name' => $this->middle_name,
+                        'last_name' => $this->last_name,
+                    ]);
+                }
+
+                $cust->update([
+                    'first_name' => $this->first_name,
+                    'middle_name' => $this->middle_name,
+                    'last_name' => $this->last_name,
+                ]);
             }
     
             // Assign the result of str_replace to 'total_price'
@@ -152,7 +170,7 @@ class FoodOrderForm extends Component
     
             if ($this->orderId) {
                 $order = FoodOrder::find($this->orderId);
-                $address = Address::where('order_id', $order->id);
+                $address = CustomerAddress::where('customer_id', $order->customer_id);
 
                 $order->update($order_data, ['status_id' => 2]);
                 $address->update($address_data);
@@ -163,6 +181,7 @@ class FoodOrderForm extends Component
                             'order_id' => $this->orderId,
                             'dish_id' => $this->dishItems[$key]['dish_id'],
                             'quantity' => $this->dishItems[$key]['quantity'],
+                            'status_id' => 1,
                             'update' => true
                         ]);
                     } else {
@@ -171,6 +190,7 @@ class FoodOrderForm extends Component
                             'order_id' => $this->orderId,
                             'dish_id' => $this->dishItems[$key]['dish_id'],
                             'quantity' => $this->dishItems[$key]['quantity'],
+                            'status_id' => 1,
                             'update' => true
                         ]);
                     }
@@ -211,9 +231,9 @@ class FoodOrderForm extends Component
                 $order_data['status_id'] = 1;
                 $order = FoodOrder::create($order_data);
 
-                $address_data['order_id'] = $order->id;
+                $address_data['customer_id'] = $newCustomer->id;
 
-                Address::create($address_data);
+                CustomerAddress::create($address_data);
     
                 $currentYear ="ORD";
                 $paddedRowId = str_pad($order->id, 6, '0', STR_PAD_LEFT);
@@ -296,6 +316,8 @@ class FoodOrderForm extends Component
     {
         unset($this->dishItems[$dishIndex]);
         $this->dishItems = array_values($this->dishItems);
+
+        $this->calculatePrice();
     }
 
     public function render()
