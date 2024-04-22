@@ -5,7 +5,9 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item">Food Order Billing</li>
+                    <li class="breadcrumb-item"><a href="booking_billing">Booking Billing List</a></li>
+                    <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                    <li class="breadcrumb-item">Booking Billing Record</li>
                 </ul>
             </div>
         </div>
@@ -19,7 +21,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Food Order Billing</h3>
+                                    <h3>Booking Billing Records</h3>
                                     {{-- <div class="doctor-search-blk">
                                         <div class="add-group">
                                             <a class="btn btn-primary ms-2" wire:click="createDish">
@@ -28,8 +30,8 @@
                                         </div>
                                     </div> --}}
                                 </div>
-                                <a href="order_billing_record" class="ps-3"
-                                    style="position: relative; top: -5px;"><small><i>Records</i></small></a>
+                                <a onclick="goBack()" href="booking_billing" style="position: relative;"><small><i
+                                            class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -41,9 +43,7 @@
                                     </form>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="row mt-3">
@@ -69,16 +69,16 @@
                                 <tr>
 
                                     {{-- <th style="width: 3%"></th> --}}
-                                    <th>Customer</th>
-                                    <th>Total Amount</th>
-                                    <th>Paid Amount</th>
-                                    <th>Balance</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th style="width: 20%">Name</th>
+                                    <th style="width: 20%">Event Package </th>
+                                    <th style="width: 20%">Paid Amount</th>
+                                    <th style="width: 20%">Balance</th>
+                                    <th style="width: 10%">Status</th>
+                                    <th style="width: 10%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (is_array($billings) && count($billings) === 0)
+                                @if ($billings->isEmpty())
                                     <tr>
                                         <td colspan="5" class="text-center">No data available in table.</td>
                                     </tr>
@@ -94,14 +94,45 @@
                                                         {{ $billing->customers->middle_name ? ucfirst($billing->customers->middle_name) : '' }}
                                                     </div>
                                                     <div class="col-12">
-                                                        <small>#{{ optional($billing->foodOrders)->order_no }}</small>
+                                                        <small>#{{ $billing->bookings->booking_no }}</small>
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td>
+                                                @if ($billing->bookings)
+                                                    {{ optional($billing->bookings->packages)->name }} <span
+                                                        style="font-size: small">(₱
+                                                        {{ optional($billing->bookings->packages)->price }} /pax)</span>
+                                                    <div class="col-12 fw-bold">
+                                                        <small>{{ ucfirst($billing->bookings->event_name) }}
+                                                        </small>
+                                                    </div>
+                                                @endif
+                                                @if (optional($billing->bookings)->dishess && count($billing->bookings->dishess) > 0)
+                                                    <div class="row">
+                                                        <small>
+                                                            <span class="text-success">Add-ons:</span>
+                                                            <div class="row ps-3">
+                                                                @foreach ($billing->bookings->dishess as $addon)
+                                                                    {{-- @foreach ($addon as $dish) --}}
+                                                                    <div class="ps-3 text-success">{{ $addon->name }}
+                                                                    </div>
+                                                                    {{-- @endforeach --}}
+                                                                @endforeach
+                                                            </div>
+                                                        </small>
+                                                    </div>
+                                                @endif
+                                                <div class="col-12 fw-bold">
+                                                    <small>Total Amount:
+                                                    </small>
+                                                    ₱ {{ number_format($billing->total_amt, 2) }}
+                                                </div>
+                                            </td>
 
-                                            <td class="text-center">₱ {{ number_format($billing->total_amt, 2) }}</td>
                                             <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
-                                            <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}</td>
+                                            <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}
+                                            </td>
                                             <td>
                                                 @if ($billing->status_id == 6)
                                                     <button
@@ -118,13 +149,16 @@
 
                                                 <div class="btn-group btn-group-xs" role="group">
                                                     <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editOrderBilling({{ $billing->id }})"
-                                                        title="Edit">
+                                                        wire:click="editBilling({{ $billing->id }})" title="Edit">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>
+                                                    <a class="btn btn-primary btn-sm mx-1"
+                                                        href="{{ route('print.claim-slip', $billing->id) }}"
+                                                        target="_blank" title="View Booking">
+                                                        <i class="fa-solid fa-print"></i>
+                                                    </a>
                                                     {{-- <a class="btn btn-danger btn-sm mx-1"
-                                                        wire:click="deleteOrderBilling({{ $billing->id }})"
-                                                        title="Delete">
+                                                        wire:click="deleteBilling({{ $billing->id }})" title="Delete">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </a> --}}
                                                 </div>
@@ -198,10 +232,10 @@
     </div>
 </div>
 
-<div wire.ignore.self class="modal fade" id="orderBillingModal" tabindex="-1" aria-labelledby="orderBillingModal"
+<div wire.ignore.self class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-        <livewire:billing.order-billing-form />
+        <livewire:billing.billing-form />
     </div>
 </div>
 

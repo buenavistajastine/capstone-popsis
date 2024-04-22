@@ -28,7 +28,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="order_records" class="ps-3" style="position: relative; top: -10px;"><small><i>Records</i></small></a>
+                                <a href="order_records" class="ps-3"
+                                    style="position: relative; top: -10px;"><small><i>Records</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -69,6 +70,7 @@
                                     <th>Date and Call Time</th>
                                     <th>Address</th>
                                     <th>Transport</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -80,34 +82,63 @@
                                 @else
                                     @foreach ($orders as $order)
                                         <tr>
-                                            <td>{{ ucfirst($order->customers->last_name) }},
-                                                {{ ucfirst($order->customers->first_name) }}
-                                                {{ $order->customers->middle_name ? ucfirst($order->customers->middle_name) : ''}}</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-1 text-justify fw-bold">
+                                                        {{ ucwords($order->customers->last_name) }},
+                                                        {{ ucwords($order->customers->first_name) }}
+                                                        {{ $order->customers->middle_name ? ucfirst($order->customers->middle_name) : '' }}
+                                                    </div>
+                                                    <div class="col-12"><small>#{{ $order->order_no }}</small>
+                                                    </div>
+                                                    {{-- <div class="col-md-12 mb-1 text-sm">
+                                                        #{{ $record->record_no }}
+                                                    </div> --}}
+                                                </div>
+                                            </td>
                                             <td>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('M j, Y') : '' }}
                                                 at
                                                 <strong>{{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}</strong>
                                             </td>
-                                 
+
                                             <td>
                                                 <div>
-                                                    {{ ucfirst($order->customers->address->barangay) }}, {{ ucfirst($order->customers->address->city) }}
+                                                    {{ ucfirst($order->customers->address->barangay) }},
+                                                    {{ ucfirst($order->customers->address->city) }}
                                                 </div>
                                                 <div>
-                                                    <small>{{ ucfirst($order->customers->address->specific_address) }} ({{ $order->customers->address->landmark }})</small>
+                                                    <small>{{ ucfirst($order->customers->address->specific_address) }}
+                                                        ({{ $order->customers->address->landmark }})
+                                                    </small>
                                                 </div>
                                             </td>
                                             <td>{{ $order->transports->name }}</td>
                                             <td>
+                                                @if (!empty($order->status_id))
+                                                @if ($order->status_id == 1)
+                                                    <button
+                                                        class="custom-badge status-orange">{{ $order->statuses->name }}</button>
+                                                @elseif ($order->status_id == 2)
+                                                    <button
+                                                        class="custom-badge status-green">{{ $order->statuses->name }}</button>
+                                                @endif
+                                                @endif
+                                            </td>
+                                            <td>
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editOrder({{ $order->id }})"
-                                                        title="Edit"> <i
+                                                    <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                        wire:click="editOrder({{ $order->id }})" title="Edit"> <i
                                                             class="fa-solid fa-pen-to-square"></i></button>
-
-                                                    <a class="btn btn-danger btn-sm mx-1"
-                                                        wire:click="deleteOrder({{ $order->id }})"
-                                                        title="Delete"> <i class="fa-solid fa-trash"></i></a>
+                                                    @if ($order->status_id == 1)
+                                                        <button type="button" class="btn btn-success btn-sm mx-1"
+                                                            onclick="confirmAcceptance({{ $order->id }})"
+                                                            title="Accept Order">
+                                                            <i class="fa-solid fa-check-to-slot"></i>
+                                                        </button>
+                                                    @endif
+                                                    {{-- <a class="btn btn-danger btn-sm mx-1"
+                                                        wire:click="deleteOrder({{ $order->id }})" title="Delete">
+                                                        <i class="fa-solid fa-trash"></i></a> --}}
                                                 </div>
                                             </td>
                                         </tr>
@@ -162,8 +193,7 @@
 
                                 @if ($orders->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage"
-                                            wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">
@@ -187,6 +217,15 @@
     </div>
 </div>
 
+@push('scripts')
+    <script>
+        function confirmAcceptance(orderId) {
+            if (confirm('Are you sure you want to accept this food order?')) {
+                Livewire.emit('acceptOrder', orderId);
+            }
+        }
+    </script>
+@endpush
 
 @section('custom_script')
     @include('layouts.scripts.food-order-scripts')

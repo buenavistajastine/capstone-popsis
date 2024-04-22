@@ -15,7 +15,9 @@ use App\Http\Livewire\Activity\ActivityLog;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\Billing\BillingList;
+use App\Http\Livewire\Billing\BookingBillingRecord;
 use App\Http\Livewire\Billing\OrderBilling;
+use App\Http\Livewire\Billing\OrderBillingRecord;
 use App\Http\Livewire\Booking\BookingRecord;
 use App\Http\Livewire\Booking\BookingReport;
 use App\Http\Livewire\Booking\Kitchen;
@@ -62,7 +64,6 @@ Route::middleware('auth')->group(function () {
     Route::get('position', PositionList::class)->name('position');
     Route::get('dish', DishList::class)->name('dish');
     Route::get('booking', BookingList::class)->name('booking');
-    Route::get('booking_form', BookingForm::class)->name('booking_form');
      
     // Route::get('booking-form', BookingForm::class)->name('booking-form');
     Route::get('order', FoodOrderList::class)->name('order');
@@ -72,7 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::get('customer-account', CustomerAccountList::class)->name('customer_account');
 
     Route::get('booking_billing', BillingList::class);
+    Route::get('booking_billing_record', BookingBillingRecord::class);
     Route::get('order_billing', OrderBilling::class);
+    Route::get('order_billing_record', OrderBillingRecord::class);
 
     // printables
     Route::get('print/module/{id}', [PrintController::class, 'PrintModule'])->name('module_print');

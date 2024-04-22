@@ -126,7 +126,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'User is not associated with a customer'], 400);
             }
 
-            $bookings = Booking::where('customer_id', $customer->id)->get();
+            $bookings = Booking::where('customer_id', $customer->id)->with('status')->get();
 
             return response()->json($bookings);
         } catch (\Exception $e) {
@@ -137,16 +137,19 @@ class UserController extends Controller
     public function order(Request $request): JsonResponse
     {
         try {
-            $customer = $request->user()->customers;
-
+            // Get the customer associated with the authenticated user
+            $customer = $request->user()->customers()->first();
+    
             if (!$customer) {
                 return response()->json(['error' => 'User is not associated with a customer'], 400);
             }
-
-            $orders = FoodOrder::where('customer_id', $customer->id)->get();
-
+    
+            // Fetch orders associated with the customer and eager load the transports relationship
+            $orders = FoodOrder::where('customer_id', $customer->id)->with('transports', 'statuses')->get();
+    
             return response()->json($orders);
         } catch (\Exception $e) {
+            // Return an error response if an exception occurs
             return response()->json(['error' => 'Failed to fetch order data.'], 500);
         }
     }

@@ -2,13 +2,11 @@
 
 namespace App\Http\Livewire\Billing;
 
-use App\Models\AddOn;
 use App\Models\Billing;
-use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class BillingList extends Component
+class BookingBillingRecord extends Component
 {
     use WithPagination;
 
@@ -55,27 +53,21 @@ class BillingList extends Component
 
     public function render()
     {
-        $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
-
         $query = Billing::with(['bookings.packages', 'bookings.dishess'])
-            ->whereNotNull('booking_id')
-            ->whereHas('bookings', function ($query) use ($tomorrow) {
-                $query->whereNotNull('date_event') // Ensure date_event is not null
-                    ->where('date_event', '>=', $tomorrow); // Filter bookings with date event greater than or equal to tomorrow
-            });
+            ->whereNotNull('booking_id');
 
-            if (!empty($this->search)) {
-                $query->whereHas('customers', function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('first_name', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
-                    });
+        if (!empty($this->search)) {
+            $query->whereHas('customers', function ($query) {
+                $query->where(function ($query) {
+                    $query->where('first_name', 'LIKE', '%' . $this->search . '%')
+                        ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
                 });
-            }            
+            });
+        }
 
         $billings = $query->paginate(10);
 
-        return view('livewire.billing.billing-list', compact('billings'));
+        return view('livewire.billing.booking-billing-record', compact('billings'));
     }
 }

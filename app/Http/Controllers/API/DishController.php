@@ -6,25 +6,74 @@ use App\Models\Dish;
 use App\Models\Package;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AdditionalRequest;
 use App\Models\Address;
 use App\Models\Billing;
 use App\Models\Booking;
 use App\Models\BookingDishKey;
 use App\Models\FoodOrder;
 use App\Models\FoodOrderDishKey;
+use App\Models\Menu;
+use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Validator;
 
 class DishController extends Controller
 {
 
+    public function dish()
+    {
+        $dishes = Dish::with('menu')->get(); // Change 'all()' to 'get()'
+    
+        return response()->json(['data' => $dishes], 200);
+    }
+
+    public function menu()
+    {
+        $menus = Menu::all();
+
+        return response()->json(['data' => $menus], 200);
+    }
+
+    public function venue()
+    {
+        $venues = Venue::all();
+
+        return response()->json(['data' => $venues], 200);
+    }
+    
     // Dish Methods
     public function dishList()
     {
         $dishes = Dish::all();
 
-        return response()->json(['data' => $dishes], 200);
+        // Initialize an empty array to store modified dish data
+        $modifiedDishes = [];
+
+        // Iterate over each dish to include additional information
+        foreach ($dishes as $dish) {
+            // Access attributes of each dish
+            $dishType = $dish->type;
+            $dishMenu = $dish->menu;
+
+            // Construct an array with desired attributes
+            $modifiedDish = [
+                'id' => $dish->id,
+                'name' => $dish->name,
+                'type' => $dishType,
+                'menu' => $dishMenu,
+                // Include other attributes as needed
+            ];
+
+            // Push the modified dish data to the array
+            $modifiedDishes[] = $modifiedDish;
+        }
+
+        // Return the modified dish data as JSON response
+        return response()->json(['data' => $modifiedDishes], 200);
     }
+
 
     public function viewDish(Request $request, $id)
     {
@@ -36,6 +85,29 @@ class DishController extends Controller
 
         return response()->json(['data' => $dish], 200);
     }
+
+    public function viewOrder(Request $request, $id)
+    {
+        $order = FoodOrder::with('customers.address', 'statuses', 'transports', 'address', 'orderDish_keys')->find($id);
+    
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+    
+        return response()->json(['data' => $order], 200);
+    }
+
+    public function viewBooking(Request $request, $id)
+    {
+        $order = Booking::with('customers', 'status', 'address', 'dish_keys', 'packages', 'addOns', 'billing.statuses')->find($id);
+    
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+    
+        return response()->json(['data' => $order], 200);
+    }
+    
 
 
     // Package Methods
@@ -105,6 +177,7 @@ class DishController extends Controller
             'foodOrder_id' => $order->id,
             'customer_id' => $request->customer_id,
             'total_amt' => $request->total_amount,
+            'payable_amt' => $request->total_amount,
             'status_id' => 6,
         ]);
 
@@ -130,22 +203,23 @@ class DishController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "customer_id" => 'required',
-            "package_id" => 'required',
-            "venue_id" => 'required',
-            "event_name" => 'required',
-            "no_pax" => 'required',
-            "date_event" => 'required',
-            "call_time" => 'required',
-            "total_price" => 'required',
-            "color" => 'required',
-            "color2" => 'required',
-            "remarks" => 'nullable',
-            'dishIds' => 'required|array',
-            'dishIds.*' => 'required',
+            "selectedPackage" => 'required',
+            "selectedVenueId" => 'required',
+            "eventName" => 'required',
+            "noPax" => 'required',
+            "date" => 'required',
+            "time" => 'required',
+            "totalPrice" => 'required',
+            "color1" => 'nullable',
+            "color2" => 'nullable',
+            "remark" => 'nullable',
+            "addRequest" => 'nullable',
+            'selected' => 'required|array',
+            'selected.*' => 'required',
             'city' => 'required',
             'barangay' => 'required',
-            'venue_address' => 'required',
-            'specific_address' => 'nullable',
+            'venueAddress' => 'required',
+            'specificAddress' => 'nullable',
             'landmark' => 'nullable',
         ]);
 
@@ -159,25 +233,31 @@ class DishController extends Controller
 
         $booking = Booking::create([
             'customer_id' => $request->customer_id,
-            'package_id' => $request->package_id,
-            'venue_id' => $request->venue_id,
-            'event_name' => $request->event_name,
-            'no_pax' => $request->no_pax,
-            'date_event' => $request->date_event,
-            'call_time' => $request->call_time,
-            'total_price' => $request->total_price,
-            'color' => $request->color,
+            'package_id' => $request->selectedPackage,
+            'venue_id' => $request->selectedOption,
+            'event_name' => $request->eventName,
+            'no_pax' => $request->noPax,
+            'date_event' => $request->date,
+            'call_time' => $request->time,
+            'total_price' => $request->totalPrice,
+            'color' => $request->color1,
             'color2' => $request->color2,
-            'remarks' => $request->remarks,
+            'remarks' => $request->remark,
+            'dt_booked' => Carbon::now(),
+            'status_id' => 1
+        ]);
 
+        AdditionalRequest::create([
+            'booking_id' => $booking->id,
+            'request' => $request->addRequest
         ]);
 
         Address::create([
             'booking_id' => $booking->id,
             'city' => $request->city,
             'barangay' => $request->barangay,
-            'venue_address' => $request->venue_address,
-            'specific_address' => $request->specific_address,
+            'venue_address' => $request->venueAddress,
+            'specific_address' => $request->specificAddress,
             'landmark' => $request->landmark,
         ]);
 
@@ -192,14 +272,15 @@ class DishController extends Controller
         Billing::create([
             'booking_id' => $booking->id,
             'customer_id' => $request->customer_id,
-            'total_amt' => $request->total_price,
+            'total_amt' => $request->totalPrice,
+            'payable_amt' => $request->totalPrice,
             'status_id' => 6,
         ]);
 
-        foreach ($request->dishIds as $index => $dishId) {
+        foreach ($request->selected as $index => $selected) {
             BookingDishKey::create([
                 'booking_id' => $booking->id,
-                'dish_id' => $dishId,
+                'dish_id' => $selected,
                 'quantity' => 1,
                 'status_id' => 1,
             ]);

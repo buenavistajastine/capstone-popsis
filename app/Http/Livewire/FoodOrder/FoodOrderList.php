@@ -17,7 +17,8 @@ class FoodOrderList extends Component
         'refreshParentFoodOrder' => '$refresh',
         'deleteOrder',
         'editOrder',
-        'deleteConfirmBooking'
+        'deleteConfirmBooking',
+        'acceptOrder' => 'acceptOrder'
     ];
 
     public function updatingSearch()
@@ -30,6 +31,7 @@ class FoodOrderList extends Component
         $this->emit('resetInputFields');
         $this->emit('openFoodOrderModal');
     }
+
 
 
     public function editOrder($orderId)
@@ -55,6 +57,21 @@ class FoodOrderList extends Component
         // $this->dateFrom = now()->toDateString();
         $this->dateFrom = Carbon::parse($this->dateFrom)->startOfWeek()->toDateString();
         $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+    }
+
+    public function acceptOrder($orderId)
+    {
+        $order = FoodOrder::find($orderId);
+    
+        if ($order) {
+            $order->update(['status_id' => 2]);
+    
+            $this->emit('flashAction', 'store', 'Order accepted successfully.');
+        } else {
+            $this->emit('flashAction', 'error', 'Order not found.');
+        }
+    
+        $this->emit('refreshTable');
     }
 
     public function render()

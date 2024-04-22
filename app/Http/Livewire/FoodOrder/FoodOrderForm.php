@@ -228,7 +228,7 @@ class FoodOrderForm extends Component
                 $action = "edit";
                 $message = 'Successfully Updated';
             } else {
-                $order_data['status_id'] = 1;
+                $order_data['status_id'] = 2;
                 $order = FoodOrder::create($order_data);
 
                 $address_data['customer_id'] = $newCustomer->id;

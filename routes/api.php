@@ -31,9 +31,14 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
 
     // Dish
     Route::get('dishes', [DishController::class, 'dishList']);
+    Route::get('dish', [DishController::class, 'dish']);
+    Route::get('menu', [DishController::class, 'menu']);
+    Route::get('venue', [DishController::class, 'venue']);
     Route::get('viewDish/{id}', [DishController::class, 'viewDish']);
     Route::get('bookings', [UserController::class, 'booking']);
+    Route::get('viewBooking/{id}', [DishController::class, 'viewBooking']);
     Route::get('orders', [UserController::class, 'order']);
+    Route::get('viewOrder/{id}', [DishController::class, 'viewOrder']);
     Route::get('populars', [UserController::class, 'popular']);
 
     // Package

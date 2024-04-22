@@ -5,7 +5,7 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item">Billing</li>
+                    <li class="breadcrumb-item">Booking Billing</li>
                 </ul>
             </div>
         </div>
@@ -19,7 +19,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Billing</h3>
+                                    <h3>Booking Billing List</h3>
                                     {{-- <div class="doctor-search-blk">
                                         <div class="add-group">
                                             <a class="btn btn-primary ms-2" wire:click="createDish">
@@ -28,6 +28,8 @@
                                         </div>
                                     </div> --}}
                                 </div>
+                                <a href="booking_billing_record" class="ps-3"
+                                    style="position: relative; top: -5px;"><small><i>Records</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -65,12 +67,13 @@
                                 <tr>
 
                                     {{-- <th style="width: 3%"></th> --}}
-                                    <th style="width: 20%">Name</th>
-                                    <th style="width: 20%">Package </th>
-                                    <th style="width: 20%">Paid Amount</th>
-                                    <th style="width: 20%">Balance</th>
-                                    <th style="width: 10%">Status</th>
-                                    <th style="width: 10%">Action</th>
+                                    <th>Name</th>
+                                    <th>Event Package </th>
+                                    <th>Paid Amount</th>
+                                    <th>Balance</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,13 +87,13 @@
                                             {{-- <td></td> --}}
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-12 mb-1 text-justify">
+                                                    <div class="col-md-12 mb-1 text-justify fw-bold">
                                                         {{ ucwords($billing->customers->last_name) }},
                                                         {{ ucwords($billing->customers->first_name) }}
                                                         {{ $billing->customers->middle_name ? ucfirst($billing->customers->middle_name) : '' }}
                                                     </div>
                                                     <div class="col-12">
-                                                        <small>#<i>{{ $billing->bookings->booking_no }}</i></small>
+                                                        <small>#{{ $billing->bookings->booking_no }}</small>
                                                     </div>
                                                 </div>
                                             </td>
@@ -99,9 +102,10 @@
                                                     {{ optional($billing->bookings->packages)->name }} <span
                                                         style="font-size: small">(₱
                                                         {{ optional($billing->bookings->packages)->price }} /pax)</span>
-                                                        <div class="col-12 fw-bold"><small>{{ $billing->bookings->no_pax }}
-                                                                Pax</small>
-                                                        </div>
+                                                    <div class="col-12 fw-bold">
+                                                        <small>{{ ucfirst($billing->bookings->event_name) }}
+                                                        </small>
+                                                    </div>
                                                 @endif
                                                 @if (optional($billing->bookings)->dishess && count($billing->bookings->dishess) > 0)
                                                     <div class="row">
@@ -118,11 +122,22 @@
                                                         </small>
                                                     </div>
                                                 @endif
+                                                <div class="col-12 fw-bold">
+                                                    <small>Total Amount:
+                                                    </small>
+                                                    ₱ {{ number_format($billing->total_amt, 2) }}
+                                                </div>
                                             </td>
 
                                             <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
                                             <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}
                                             </td>
+                                            <td class="text-center">
+                                                @if (!empty($billing->payment_id))
+                                                    {{ $billing->payments->name ?: '' }}
+                                                @endif
+                                            </td>
+
                                             <td>
                                                 @if ($billing->status_id == 6)
                                                     <button
@@ -130,6 +145,9 @@
                                                 @elseif ($billing->status_id == 5)
                                                     <button
                                                         class="custom-badge status-green">{{ $billing->statuses->name }}</button>
+                                                @elseif ($billing->status_id == 13)
+                                                    <button
+                                                        class="custom-badge status-pink">{{ $billing->statuses->name }}</button>
                                                 @endif
                                             </td>
                                             <td>
@@ -139,14 +157,15 @@
                                                         wire:click="editBilling({{ $billing->id }})" title="Edit">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>
-                                                    <a class="btn btn-primary btn-sm mx-1" href="{{ route('print.claim-slip', $billing->id) }}"
+                                                    <a class="btn btn-primary btn-sm mx-1"
+                                                        href="{{ route('print.claim-slip', $billing->id) }}"
                                                         target="_blank" title="View Booking">
                                                         <i class="fa-solid fa-print"></i>
                                                     </a>
-                                                    <a class="btn btn-danger btn-sm mx-1"
+                                                    {{-- <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteBilling({{ $billing->id }})" title="Delete">
                                                         <i class="fa-solid fa-trash"></i>
-                                                    </a>
+                                                    </a> --}}
                                                 </div>
                                             </td>
                                         </tr>

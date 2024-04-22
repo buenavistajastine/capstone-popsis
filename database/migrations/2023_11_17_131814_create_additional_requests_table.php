@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('additional_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
-            $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->longText('request');
+            $table->foreign('booking_id')->references('id')->on('bookings')->constrained()->onDelete('cascade');
+            $table->longText('request')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
+    /** 
      * Reverse the migrations.
      */
     public function down(): void

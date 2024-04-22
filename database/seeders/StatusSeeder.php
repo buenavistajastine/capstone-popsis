@@ -26,6 +26,7 @@ class StatusSeeder extends Seeder
             ['name' => 'Accepted'],
             ['name' => 'Transaction Completed'],
             ['name' => 'Registered'],
+            ['name' => 'Partially Paid'],
         ]);
     }
 }

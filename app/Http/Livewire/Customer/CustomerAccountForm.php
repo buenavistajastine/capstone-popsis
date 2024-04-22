@@ -140,7 +140,7 @@ class CustomerAccountForm extends Component
 
     protected function createUser()
     {
-        dd('helloooo');
+        // dd('helloooo');
         $user = User::create([
             'first_name' => $this->first_name,
             'middle_name' => $this->middle_name,

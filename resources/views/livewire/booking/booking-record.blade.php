@@ -86,8 +86,7 @@
                                                         {{ ucwords($record->customers->first_name) }}
                                                         {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
                                                     </div>
-                                                    <div class="col-12"><a
-                                                            href="#"><small>#<i>{{ $record->booking_no }}</i></small></a>
+                                                    <div class="col-12"><small>#{{ $record->booking_no }}</small>
                                                     </div>
                                                     {{-- <div class="col-md-12 mb-1 text-sm">
                                                         #{{ $record->record_no }}

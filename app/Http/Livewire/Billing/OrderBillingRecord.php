@@ -3,11 +3,10 @@
 namespace App\Http\Livewire\Billing;
 
 use App\Models\Billing;
-use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class OrderBilling extends Component
+class OrderBillingRecord extends Component
 {
     use WithPagination;
 
@@ -52,9 +51,9 @@ class OrderBilling extends Component
         $this->emit('refreshTable');
     }
 
+
     public function render()
     {
-        $tomorrow = Carbon::tomorrow();
 
         $billings = Billing::whereHas('customers', function ($query) {
             $query->where('first_name', 'LIKE', '%' . $this->search . '%')
@@ -62,15 +61,10 @@ class OrderBilling extends Component
                 ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
         })
             ->whereNotNull('foodOrder_id')
-            ->whereHas('foodOrders', function ($query) use ($tomorrow) {
-                $query->whereNotNull('date_need') // Ensure date_need is not null
-                    ->where('date_need', '>=', $tomorrow); // Filter bookings with date need greater than or equal to tomorrow
-            })
             ->whereNull('booking_id')
             ->with('foodOrders', 'bookings.dishess')
             ->paginate(10);
 
-
-        return view('livewire.billing.order-billing', compact('billings'));
+        return view('livewire.billing.order-billing-record', compact('billings'));
     }
 }

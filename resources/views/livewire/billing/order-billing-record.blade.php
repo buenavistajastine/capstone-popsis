@@ -5,7 +5,7 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item">Food Order Billing</li>
+                    <li class="breadcrumb-item">Billing</li>
                 </ul>
             </div>
         </div>
@@ -19,7 +19,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Food Order Billing</h3>
+                                    <h3>Billing</h3>
                                     {{-- <div class="doctor-search-blk">
                                         <div class="add-group">
                                             <a class="btn btn-primary ms-2" wire:click="createDish">
@@ -28,8 +28,8 @@
                                         </div>
                                     </div> --}}
                                 </div>
-                                <a href="order_billing_record" class="ps-3"
-                                    style="position: relative; top: -5px;"><small><i>Records</i></small></a>
+                                <a onclick="goBack()" href="order_billing" style="position: relative;"><small><i
+                                            class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -41,9 +41,7 @@
                                     </form>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="row mt-3">

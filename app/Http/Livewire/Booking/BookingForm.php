@@ -168,12 +168,12 @@ class BookingForm extends Component
         }
     }
 
-    
+
 
     public function updatedPackageId()
     {
         $package = Package::find($this->package_id);
-        
+
         if ($package) {
             $this->packageDescription = $package->description;
         }
@@ -182,15 +182,15 @@ class BookingForm extends Component
         $this->calculateTotalPrice();
     }
 
-    
+
     public function updatePackages()
     {
 
-        $this->reset('package_id'); 
+        $this->reset('package_id');
         $this->calculateTotalPrice();
     }
 
-    
+
     public function addOnDish()
     {
         $this->addOns[] = [
@@ -249,12 +249,19 @@ class BookingForm extends Component
             $additionalAmt = str_replace(',', '', $booking_data['additional_amt'] ?? 0);
             $advanceAmt = str_replace(',', '', $booking_data['advance_amt'] ?? 0);
             $discountAmt = str_replace(',', '', $booking_data['discount_amt'] ?? 0);
+            $totalPrice = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
+
+            // Set the status_id based on advance_amt
+            $billingStatusId = $advanceAmt != 0 ? 13 : 6;
+
+            // $totalAdvanceAmt = str_replace(',', '', $booking_data['advance_amt'] ?? 0);
+            // $booking_data['status_id'] = $totalAdvanceAmt != 0 ? 13 : 6;
 
             if (!$this->customer_id) {
                 $newCustomer = Customer::create($customer_data);
                 $booking_data['customer_id'] = $newCustomer->id;
             } else {
-               
+
                 $booking_data['customer_id'] = $this->customer_id;
                 $cust = Customer::whereId($this->customer_id)->first();
                 $user = User::whereId($cust->user_id)->first();
@@ -316,10 +323,11 @@ class BookingForm extends Component
                 if ($billing) {
                     $billing->update([
                         'total_amt' => $booking_data['total_price'],
-                        'payable_amt' => $booking_data['total_price'],
+                        // 'payable_amt' => $booking_data['total_price'],
                         'additional_amt' => $additionalAmt,
                         'advance_amt' => $advanceAmt,
                         'discount_amt' => $discountAmt,
+                        'status_id' => $billingStatusId,
                     ]);
                 } else {
                     // Create billing if it does not exist
@@ -331,7 +339,7 @@ class BookingForm extends Component
                         'additional_amt' => $additionalAmt,
                         'advance_amt' => $advanceAmt,
                         'discount_amt' => $discountAmt,
-                        'status_id' => 6,
+                        'status_id' => $billingStatusId,
                     ]);
                 }
 
@@ -364,15 +372,15 @@ class BookingForm extends Component
                         ->update(['update' => 0]);
                 }
 
-                
-                
+
+
                 $action = "edit";
                 $message = 'Successfully Updated';
             } else {
 
-                $booking_data['status_id'] = 1;
+                $booking_data['status_id'] = 2;
                 $booking_data['dt_booked'] = Carbon::now();
-               
+
                 $booking = Booking::create($booking_data);
 
                 $address_data['booking_id'] = $booking->id;
@@ -388,7 +396,7 @@ class BookingForm extends Component
                     'booking_no' => $result
                 ]);
 
-                
+
                 Billing::create([
                     'customer_id' => $booking->customer_id,
                     'booking_id' => $booking->id,
@@ -443,7 +451,6 @@ class BookingForm extends Component
             $this->emit('closeBookingModal');
             $this->emit('refreshParentBooking');
             $this->emit('refreshTable');
-
         } catch (Exception $e) {
             DB::rollBack();
             $errorMessage = $e->getMessage();
@@ -455,36 +462,36 @@ class BookingForm extends Component
     {
         $packagePrice = 0;
         $addOnPrice = 0;
-    
+
         if (!empty($this->package_id)) {
             $package = Package::find($this->package_id);
-    
+
             if ($package) {
                 $packagePrice = $package->price ?? 0;
             }
         }
-    
+
         foreach ($this->addOns as $addOn) {
             if (!empty($addOn['dish_id'])) {
                 $add = Dish::find($addOn['dish_id']);
-    
+
                 if ($add) {
                     $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
                 }
             }
         }
-    
+
         // Ensure that no_pax is set and is a numeric value
         $noPax = is_numeric($this->no_pax) ? $this->no_pax : 0;
-    
+
         if ($this->total_price < 0) {
             $this->total_price = 0;
         }
-    
+
         $total = $packagePrice * $noPax;
         $overallPrice = $total + $addOnPrice;
 
-            // Ensure that additional_amt, advance_amt, and discount_amt are numeric
+        // Ensure that additional_amt, advance_amt, and discount_amt are numeric
         $additionalAmt = is_numeric(str_replace(',', '', $this->additional_amt)) ? str_replace(',', '', $this->additional_amt) : 0;
         $advanceAmt = is_numeric(str_replace(',', '', $this->advance_amt)) ? str_replace(',', '', $this->advance_amt) : 0;
         $discountAmt = is_numeric(str_replace(',', '', $this->discount_amt)) ? str_replace(',', '', $this->discount_amt) : 0;
@@ -492,11 +499,11 @@ class BookingForm extends Component
         $addedOverallPrice = $overallPrice + $additionalAmt;
         $advanceOverallPrice = $addedOverallPrice - $advanceAmt;
         $discountOverallPrice = $advanceOverallPrice - $discountAmt;
-    
+
         // Format the overall price with two decimal places and commas
         $this->total_price = '₱ ' . number_format($discountOverallPrice, 2);
     }
-    
+
     public function deleteDish($dishIndex)
     {
         unset($this->dishItems[$dishIndex]);
@@ -527,7 +534,7 @@ class BookingForm extends Component
         $menus = Menu::all();
         $venues = Venue::all();
         $selectedVenue = Venue::find($this->selectedVenue);
-    
+
         $packages = [];
         if ($selectedVenue) {
             $packages = Package::where('venue_id', $selectedVenue->id)->get();

@@ -19,7 +19,7 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <div class="doctor-table-blk">
-                                        <h3>Booking List</h3>                                 
+                                        <h3>Booking List</h3>
                                         <div class="doctor-search-blk">
                                             <div class="add-group">
                                                 <a class="btn btn-primary ms-2" wire:click="createBooking">
@@ -28,7 +28,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="booking_records" class="ps-4" style="position: relative; top: -10px;"><small><i>Records</i></small></a>
+                                    <a href="booking_records" class="ps-4"
+                                        style="position: relative; top: -10px;"><small><i>Records</i></small></a>
                                 </div>
                                 <div class="col-auto text-end float-end ms-auto download-grp">
                                     <div class="top-nav-search table-search-blk">
@@ -52,7 +53,7 @@
                                     <input type="date" class="form-control" wire:model="dateFrom" id="dateFrom">
                                 </div>
                             </div>
-    
+
                             <div class="col-md-2">
                                 <div class="form-group local-forms">
                                     <label for="dateTo">Date To:</label>
@@ -67,6 +68,7 @@
                                         <th>Customer</th>
                                         <th>Event</th>
                                         <th>Venue</th>
+                                        <th>Status</th>
                                         <th>Action</th>
 
                                     </tr>
@@ -81,12 +83,14 @@
                                             <tr>
                                                 <td>
                                                     <div class="row">
-                                                        <div class="col-md-12 mb-1 text-justify">
+                                                        <div class="col-md-12 mb-1 text-justify fw-bold">
                                                             {{ ucwords($booking->customers->last_name) }},
                                                             {{ ucwords($booking->customers->first_name) }}
                                                             {{ $booking->customers->middle_name ? ucfirst($booking->customers->middle_name) : '' }}
                                                         </div>
-                                                        <div class="col-12"><small>#<i>{{ $booking->booking_no }}</i></small></div>
+                                                        <div class="col-12">
+                                                            <small>#{{ $booking->booking_no }}</small>
+                                                        </div>
                                                         {{-- <div class="col-md-12 mb-1 text-sm">
                                                             #{{ $booking->booking_no }}
                                                         </div> --}}
@@ -95,51 +99,70 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-12 mb-1 text-justify">
-                                                            {{ $booking->event_name }} - <i>{{ $booking->no_pax }} Pax</i>
+                                                            {{ $booking->event_name }} - <i>{{ $booking->no_pax }}
+                                                                Pax</i>
                                                         </div>
                                                         <div class="col-md-12 mb-1">
                                                             {{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
                                                             at
                                                             <strong>{{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}</strong>
-                                                            
+
                                                         </div>
-                                                        
+
                                                     </div>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     @if ($booking->address->venue_address || $booking->address->barangay || $booking->address->city)
-                                                    <div>
-                                                        {{ $booking->address->venue_address ? ucfirst($booking->address->venue_address) . ', ' : ''}}
-                                                        {{ $booking->address->barangay ? ucfirst($booking->address->barangay) . ', ' : ''}}
-                                                        {{ $booking->address->city ? ucfirst($booking->address->city) : ''}}
-                                                    </div>
+                                                        <div>
+                                                            {{ $booking->address->venue_address ? ucfirst($booking->address->venue_address) . ', ' : '' }}
+                                                            {{ $booking->address->barangay ? ucfirst($booking->address->barangay) . ', ' : '' }}
+                                                            {{ $booking->address->city ? ucfirst($booking->address->city) : '' }}
+                                                        </div>
                                                     @endif
-                                                
+
                                                     @if ($booking->address->specific_address || $booking->address->landmark)
-                                                    <div>
-                                                        {{ $booking->address->specific_address ? ucfirst($booking->address->specific_address) . ' ' : ''}}
-                                                        ({{ $booking->address->landmark ? ($booking->address->landmark) : '' }})
-                                                    </div>
+                                                        <div>
+                                                            {{ $booking->address->specific_address ? ucfirst($booking->address->specific_address) . ' ' : '' }}
+                                                            ({{ $booking->address->landmark ? $booking->address->landmark : '' }})
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    @if ($booking->status_id == 1)
+                                                        <button
+                                                            class="custom-badge status-orange">{{ $booking->status->name }}</button>
+                                                    @elseif ($booking->status_id == 2)
+                                                        <button
+                                                            class="custom-badge status-green">{{ $booking->status->name }}</button>
+                                                    @endif
+
+                                                </td>
+                                                <td>
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-sm mx-1"
+                                                        <button type="button" class="btn btn-primary btn-sm mx-1"
                                                             wire:click="editBooking({{ $booking->id }})"
                                                             title="Edit"> <i
                                                                 class="fa-solid fa-pen-to-square"></i></button>
-
+                                                        @if ($booking->status_id == 1)
+                                                            <button type="button" class="btn btn-success btn-sm mx-1"
+                                                                onclick="confirmAcceptance({{ $booking->id }})"
+                                                                title="Accept Booking">
+                                                                <i class="fa-solid fa-check-to-slot"></i>
+                                                            </button>
+                                                        @elseif($booking->status_id !== 1)
+                                                            <a class="btn btn-primary btn-sm mx-1"
+                                                                href="{{ route('module_print', $booking->id) }}"
+                                                                target="_blank" title="View Booking">
+                                                                <i class="fa-solid fa-print"></i>
+                                                            </a>
+                                                        @endif
                                                         {{-- <a href="{{ route('module_print', $booking->id) }} target="_blank">Module</a> --}}
-                                                        <a class="btn btn-primary btn-sm mx-1" href="{{ route('module_print', $booking->id) }}"
-                                                            target="_blank" title="View Booking">
-                                                            <i class="fa-solid fa-print"></i>
-                                                        </a>
 
+                                                        {{-- 
                                                         <a class="btn btn-danger btn-sm mx-1"
                                                             wire:click="deleteBooking({{ $booking->id }})"
-                                                            title="Delete"> <i class="fa-solid fa-trash"></i></a>
+                                                            title="Delete"> <i class="fa-solid fa-trash"></i></a> --}}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -219,6 +242,15 @@
         </div>
     </div>
 
+    @push('scripts')
+        <script>
+            function confirmAcceptance(bookingId) {
+                if (confirm('Are you sure you want to accept this booking?')) {
+                    Livewire.emit('acceptBooking', bookingId);
+                }
+            }
+        </script>
+    @endpush
 
     @section('custom_script')
         @include('layouts.scripts.booking-scripts')

@@ -21,7 +21,8 @@ class BookingList extends Component
         'deleteBooking',
         'editBooking',
         'printDishesByDate',
-        'deleteConfirmBooking'
+        'deleteConfirmBooking',
+        'acceptBooking' => 'acceptBooking'
     ];
 
     public function updatingSearch()
@@ -68,12 +69,28 @@ class BookingList extends Component
             Carbon::parse($this->dateFrom)->startOfDay(),
             Carbon::parse($this->dateTo)->endOfDay(),
         ])->get();
-    
+
         $this->emit('printDishesByDate', ['filteredBookings' => $filteredBookings]);
     }
 
+    public function acceptBooking($bookingId)
+    {
+        $booking = Booking::find($bookingId);
+    
+        if ($booking) {
+            $booking->update(['status_id' => 2]);
+    
+            $this->emit('flashAction', 'store', 'Booking accepted successfully.');
+        } else {
+            $this->emit('flashAction', 'error', 'Booking not found.');
+        }
+    
+        $this->emit('refreshTable');
+    }
+    
     public function render()
     {
+        $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
         $bookings = Booking::whereHas('customers', function ($query) {
             $query->where(function ($subquery) {
                 $subquery->where('first_name', 'like', '%' . $this->search . '%')
@@ -82,6 +99,7 @@ class BookingList extends Component
                     ->orWhere('event_name', 'like', '%' . $this->search . '%');
             });
         })
+            ->where('date_event', '>=', $tomorrow) // Filter bookings with date event greater than or equal to tomorrow
             ->whereBetween('date_event', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
             ->paginate(10);
 

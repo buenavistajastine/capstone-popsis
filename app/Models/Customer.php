@@ -4,10 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+// use Spatie\Activitylog\Traits\LogsActivity;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $email = auth()->user()->email;
+    
+        return LogOptions::defaults()
+            ->setDescriptionForEvent(fn(string $eventName) => "A customer was {$eventName} by {$email}.")
+            ->logOnly(['first_name', 'last_name', 'username', 'email', 'contact_no'])
+            ->logOnlyDirty()
+            ->useLogName('customer');
+    }
 
     protected $fillable = [
         'user_id',

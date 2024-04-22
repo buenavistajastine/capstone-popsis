@@ -26,7 +26,8 @@
                                 <div class="doctor-table-blk">
                                     <h3>Order Records</h3>
                                 </div>
-                                <a onclick="goBack()" href="order" style="position: relative;"><small><i class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
+                                <a onclick="goBack()" href="order" style="position: relative;"><small><i
+                                            class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
 
                             <div class="col-auto text-end float-end ms-auto download-grp">
@@ -82,13 +83,12 @@
                                         <tr>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-12 mb-1 text-justify">
+                                                    <div class="col-md-12 mb-1 text-justify fw-bold">
                                                         {{ ucwords($record->customers->last_name) }},
                                                         {{ ucwords($record->customers->first_name) }}
                                                         {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
                                                     </div>
-                                                    <div class="col-12"><a
-                                                            href="#"><small>#<i>{{ $record->order_no }}</i></small></a>
+                                                    <div class="col-12"><small>#{{ $record->order_no }}</small>
                                                     </div>
                                                     {{-- <div class="col-md-12 mb-1 text-sm">
                                                         #{{ $record->record_no }}
@@ -203,7 +203,7 @@
 <div wire.ignore.self class="modal fade" id="orderRecordModal" tabindex="-1" aria-labelledby="orderRecordModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-top modal-lg">
-        <livewire:food-order.order-record-modal/>
+        <livewire:food-order.order-record-modal />
     </div>
 </div>
 

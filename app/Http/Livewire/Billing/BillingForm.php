@@ -63,6 +63,8 @@ class BillingForm extends Component
                 if ($billing->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
                     $booking->update(['status_id' => 11]);
+                } elseif ($billing->paid_amt !== 0) {
+                    $billing->update(['status_id' => 13]);
                 }
 
                 $action = 'edit';

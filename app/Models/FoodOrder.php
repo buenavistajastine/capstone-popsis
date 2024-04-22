@@ -50,7 +50,7 @@ class FoodOrder extends Model
 
     public function address()
     {
-        return $this->hasOne(Address::class, 'order_id', 'id');
+        return $this->hasOne(Address::class, 'id');
     }
 
     public function dishes()

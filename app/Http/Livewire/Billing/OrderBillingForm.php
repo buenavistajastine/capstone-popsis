@@ -34,7 +34,6 @@ class OrderBillingForm extends Component
         $this->payable_amt = $billing->payable_amt;
         $this->payment_id = $billing->payment_id;
         $this->paid_amt = 0;
-
     }
 
     public function store()
@@ -61,6 +60,8 @@ class OrderBillingForm extends Component
                 if ($billing->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
                     $order->update(['status_id' => 11]);
+                } elseif ($billing->paid_amt !== 0) {
+                    $billing->update(['status_id' => 13]);
                 }
 
                 $action = 'edit';
@@ -69,7 +70,7 @@ class OrderBillingForm extends Component
 
             DB::commit();
 
-            $this->emit('flashAction', $action, $message);  
+            $this->emit('flashAction', $action, $message);
             $this->resetInputFields();
             $this->emit('closeOrderBillingModal');
             $this->emit('refreshOrderBillingList');
@@ -84,7 +85,7 @@ class OrderBillingForm extends Component
     public function render()
     {
         $payments = ModeOfPayment::all();
-        
+
         return view('livewire.billing.order-billing-form', compact('payments'));
     }
 }
