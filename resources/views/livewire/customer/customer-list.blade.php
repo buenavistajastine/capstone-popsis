@@ -109,11 +109,11 @@
                                                             </button>
                                                         @endif --}}
                                                         @hasrole('admin')
-                                                            <a class="btn btn-danger btn-sm mx-1"
+                                                            {{-- <a class="btn btn-danger btn-sm mx-1"
                                                                 wire:click="deleteCustomer({{ $customer->id }})"
                                                                 title="Delete">
                                                                 <i class="fa-solid fa-trash"></i>
-                                                            </a>
+                                                            </a> --}}
                                                         @endhasrole
                                                     </div>
                                                 </td>

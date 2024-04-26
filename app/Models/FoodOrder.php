@@ -45,7 +45,7 @@ class FoodOrder extends Model
 
     public function billing()
     {
-        return $this->hasOne(Billing::class, 'foodOrder_id', 'id');
+        return $this->hasMany(Billing::class, 'foodOrder_id', 'id');
     }
 
     public function address()

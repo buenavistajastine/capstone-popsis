@@ -15,6 +15,7 @@ use App\Models\CustomerAddress;
 use App\Models\FoodOrderDishKey;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModeOfTransportation;
+use App\Models\PaidAmount;
 
 class FoodOrderForm extends Component
 {
@@ -200,22 +201,24 @@ class FoodOrderForm extends Component
                 if ($billing) {
                     $billing->update([
                         'total_amt' => $order_data['total_price'],
-                        'payable_amt' => $order_data['total_price'],
-                        // 'additional_amt' => $additionalAmt,
-                        // 'advance_amt' => $advanceAmt,
-                        // 'discount_amt' => $discountAmt,
+                    ]);
+
+                    PaidAmount::create([
+                        'billing_id' => $billing->id,
+                        'payable_amt' => $order_data['total_price'], 
                     ]);
                 } else {
                     // Create billing if it does not exist
-                    Billing::create([
+                    $billed = Billing::create([
                         'customer_id' => $order->customer_id,
                         'foodOrder_id' => $order->id,
                         'total_amt' => $order_data['total_price'],
-                        'payable_amt' => $order_data['total_price'],
-                        // 'additional_amt' => $additionalAmt,
-                        // 'advance_amt' => $advanceAmt,
-                        // 'discount_amt' => $discountAmt,
                         'status_id' => 6,
+                    ]);
+
+                    PaidAmount::create([
+                        'billing_id' => $billed->id,
+                        'payable_amt' => $order_data['total_price'], 
                     ]);
                 }
     
@@ -243,15 +246,19 @@ class FoodOrderForm extends Component
                     'order_no' => $result
                 ]);
 
-                Billing::create([
+                $bills = Billing::create([
                     'customer_id' => $order->customer_id,
                     'foodOrder_id' => $order->id,
                     'total_amt' => $order_data['total_price'],
-                    'payable_amt' => $order_data['total_price'],
                     // 'additional_amt' => $additionalAmt,
                     // 'advance_amt' => $advanceAmt,
                     // 'discount_amt' => $discountAmt,
                     'status_id' => 6,
+                ]);
+
+                PaidAmount::create([
+                    'billing_id' => $bills->id,
+                    'payable_amt' => $order_data['total_price'],
                 ]);
     
                 foreach ($this->dishItems as $key => $value) {

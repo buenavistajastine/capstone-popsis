@@ -139,13 +139,12 @@ class DishController extends Controller
             'total_amount' => 'required',
             'transport_id' => 'required',
             'remarks' => 'nullable',
-            'dishIds' => 'required|array', // Ensure dishIds is present and an array
-            'quantities' => 'required|array', // Ensure quantities is present and an array
-            'dishIds.*' => 'required', // Ensure each dish ID is present
-            'quantities.*' => 'required', // Ensure each quantity is present Jastine Earl Buenavista
+            'dishIds' => 'required|array',
+            'quantities' => 'required|array',
+            'dishIds.*' => 'required',
+            'quantities.*' => 'required',
         ]);
 
-        // Return validation errors if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,

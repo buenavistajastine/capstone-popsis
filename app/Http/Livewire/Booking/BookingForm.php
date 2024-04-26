@@ -17,6 +17,7 @@ use App\Models\Package;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\BookingDishKey;
+use App\Models\PaidAmount;
 use Illuminate\Support\Facades\DB;
 
 class BookingForm extends Component
@@ -331,15 +332,19 @@ class BookingForm extends Component
                     ]);
                 } else {
                     // Create billing if it does not exist
-                    Billing::create([
+                    $billing = Billing::create([
                         'customer_id' => $booking->customer_id,
                         'booking_id' => $booking->id,
                         'total_amt' => $booking_data['total_price'],
-                        'payable_amt' => $booking_data['total_price'],
                         'additional_amt' => $additionalAmt,
                         'advance_amt' => $advanceAmt,
                         'discount_amt' => $discountAmt,
                         'status_id' => $billingStatusId,
+                    ]);
+
+                    PaidAmount::create([
+                        'billing_id' => $billing->id,
+                        'payable_amt' => $booking_data['total_price'],
                     ]);
                 }
 
@@ -397,15 +402,19 @@ class BookingForm extends Component
                 ]);
 
 
-                Billing::create([
+                $billing = Billing::create([
                     'customer_id' => $booking->customer_id,
                     'booking_id' => $booking->id,
                     'total_amt' => $booking_data['total_price'],
-                    'payable_amt' => $booking_data['total_price'],
                     'additional_amt' => $additionalAmt,
                     'advance_amt' => $advanceAmt,
                     'discount_amt' => $discountAmt,
                     'status_id' => 6,
+                ]);
+
+                PaidAmount::create([
+                    'billing_id' => $billing->id,
+                    'payable_amt' => $booking_data['total_price'],
                 ]);
 
                 // dd($billing->customer_id);

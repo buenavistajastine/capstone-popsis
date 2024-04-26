@@ -43,6 +43,8 @@ class ActivityLog extends Component
                     ->orWhere('event', 'like', '%' . $this->search . '%')
                     ->orWhere('properties', 'like', '%' . $this->search . '%');
             })
+            
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
 

@@ -17,8 +17,6 @@ class Billing extends Model
         'advance_amt',
         'discount_amt',
         'total_amt',
-        'payable_amt',
-        'paid_amt',
         'payment_id',
         'status_id'
     ];
@@ -51,5 +49,10 @@ class Billing extends Model
     public function addons()
     {
         return $this->hasMany(AddOn::class, 'booking_id', 'booking_id');
+    }
+
+    public function paidAmount()
+    {
+        return $this->hasOne(PaidAmount::class)->latest();
     }
 }

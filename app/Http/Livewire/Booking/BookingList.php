@@ -101,6 +101,7 @@ class BookingList extends Component
         })
             ->where('date_event', '>=', $tomorrow) // Filter bookings with date event greater than or equal to tomorrow
             ->whereBetween('date_event', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            ->orderBy('date_event', 'asc')
             ->paginate(10);
 
         return view('livewire.booking.booking-list', compact('bookings'));

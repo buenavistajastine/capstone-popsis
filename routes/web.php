@@ -27,6 +27,7 @@ use App\Http\Livewire\FoodOrder\OrderRecord;
 use App\Http\Livewire\FoodOrder\OrderReport;
 use App\Http\Livewire\OrderRecordModal;
 use App\Http\Livewire\Package\PackageList;
+use App\Http\Livewire\Sales\SalesReport;
 use App\Http\Livewire\Status\StatusList;
 
 /*
@@ -84,6 +85,8 @@ Route::middleware('auth')->group(function () {
     Route::get('claim-slip/{id}', [PrintController::class, 'claimSlip'])->name('print.claim-slip');
 
     Route::get('kitchen', Kitchen::class);
+
+    Route::get('sales-report', SalesReport::class);
 
     Route::get('activity_logs', ActivityLog::class);
 

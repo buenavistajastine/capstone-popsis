@@ -14,10 +14,10 @@ class Customer extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        $email = auth()->user()->email;
+        // $email = auth()->user()->email;
     
         return LogOptions::defaults()
-            ->setDescriptionForEvent(fn(string $eventName) => "A customer was {$eventName} by {$email}.")
+            ->setDescriptionForEvent(fn(string $eventName) => "A customer was {$eventName}.")
             ->logOnly(['first_name', 'last_name', 'username', 'email', 'contact_no'])
             ->logOnlyDirty()
             ->useLogName('customer');

@@ -100,8 +100,11 @@
                                             </td>
 
                                             <td class="text-center">₱ {{ number_format($billing->total_amt, 2) }}</td>
-                                            <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
-                                            <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}</td>
+                                            <td class="text-center">₱
+                                                {{ number_format($billing->paidAmount()->where('billing_id', $billing->id)->sum('paid_amt'),2) }}
+                                            </td>
+                                            <td class="text-center">₱
+                                                {{ number_format($billing->paidAmount->payable_amt, 2) }}</td>
                                             <td>
                                                 @if ($billing->status_id == 6)
                                                     <button

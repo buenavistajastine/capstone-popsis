@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('billings', function (Blueprint $table) {
-            $table->unsignedBigInteger('payment_id')->nullable()->after('paid_amt');
+            $table->unsignedBigInteger('payment_id')->nullable()->after('total_amt');
             $table->foreign('payment_id')->references('id')->on('mode_of_payments');
         });
     }

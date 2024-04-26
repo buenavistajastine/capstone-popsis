@@ -7,6 +7,7 @@ use App\Models\Billing;
 use App\Models\FoodOrder;
 use Livewire\Component;
 use App\Models\ModeOfPayment;
+use App\Models\PaidAmount;
 use Illuminate\Support\Facades\DB;
 
 class OrderBillingForm extends Component
@@ -48,19 +49,29 @@ class OrderBillingForm extends Component
 
             $billing = Billing::find($this->orderBillingId);
             $order = FoodOrder::whereId($this->orderBillingId);
-            $newPayableAmt = $billing->payable_amt - $this->paid_amt;
+            $latestPaidAmount = PaidAmount::where('billing_id', $this->orderBillingId)
+                ->latest('created_at')
+                ->first();
+
+            $newPayableAmt = $latestPaidAmount
+                ? ($latestPaidAmount->payable_amt - $this->paid_amt)
+                : (0 - $this->paid_amt);
 
             if ($this->orderBillingId) {
                 $billing->update([
-                    'payable_amt' => max(0, $newPayableAmt),
-                    'paid_amt' => $billing->paid_amt + $this->paid_amt,
                     'payment_id' => $this->payment_id,
                 ]);
 
-                if ($billing->payable_amt == 0) {
+                PaidAmount::create([
+                    'billing_id' => $billing->id,
+                    'payable_amt' => max(0, $newPayableAmt),
+                    'paid_amt' => $this->paid_amt,
+                ]);
+
+                if ($latestPaidAmount->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
                     $order->update(['status_id' => 11]);
-                } elseif ($billing->paid_amt !== 0) {
+                } elseif ($latestPaidAmount->paid_amt !== 0) {
                     $billing->update(['status_id' => 13]);
                 }
 

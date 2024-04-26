@@ -80,7 +80,7 @@ class Booking extends Model
 
     public function billing()
     {
-        return $this->hasOne(Billing::class, 'booking_id', 'id');
+        return $this->hasMany(Billing::class, 'booking_id', 'id');
     }
 
     public function dishes()

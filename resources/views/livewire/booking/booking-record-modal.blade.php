@@ -13,7 +13,9 @@
                 </div>
                 <div class="col-md-12 mb-2">
                     <span>Address: {{ $booking->address->city }}, {{ $booking->address->barangay }}
-                        <small>({{ $booking->venues->name }})</small></span>
+                        @if (!empty($booking->venues))
+                        <small>({{ $booking->venues->name ?: '' }})</small></span>
+                        @endif
                 </div>
                 <div class="col-md-12 mb-2">
                     <span>Event: {{ $booking->event_name }}</span>

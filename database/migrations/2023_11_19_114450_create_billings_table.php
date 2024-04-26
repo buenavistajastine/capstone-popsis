@@ -23,8 +23,6 @@ return new class extends Migration
             $table->foreign('customer_id')->references('id')->on('customers');
 
             $table->decimal('total_amt', 10, 2)->default(0);
-            $table->decimal('payable_amt', 10, 2)->default(0);
-            $table->decimal('paid_amt', 10, 2)->default(0);
             
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');

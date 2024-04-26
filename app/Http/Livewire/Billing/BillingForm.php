@@ -7,6 +7,7 @@ use App\Models\Billing;
 use App\Models\Booking;
 use Livewire\Component;
 use App\Models\ModeOfPayment;
+use App\Models\PaidAmount;
 use Illuminate\Support\Facades\DB;
 
 class BillingForm extends Component
@@ -34,9 +35,6 @@ class BillingForm extends Component
         $this->payable_amt = $billing->payable_amt;
         $this->payment_id = $billing->payment_id;
         $this->paid_amt = 0;
-     
-        
-
     }
 
     public function store()
@@ -50,20 +48,32 @@ class BillingForm extends Component
             ]);
 
             $billing = Billing::find($this->billingId);
+
             $booking = Booking::where('id', $billing->booking_id);
-            $newPayableAmt = $billing->payable_amt - $this->paid_amt;
+            $latestPaidAmount = PaidAmount::where('billing_id', $this->billingId)
+                ->latest('created_at')
+                ->first();
+
+            $newPayableAmt = $latestPaidAmount
+                ? ($latestPaidAmount->payable_amt - $this->paid_amt)
+                : (0 - $this->paid_amt);
 
             if ($this->billingId) {
                 $billing->update([
-                    'payable_amt' => max(0, $newPayableAmt),
-                    'paid_amt' => $billing->paid_amt + $this->paid_amt,
+
                     'payment_id' => $this->payment_id,
                 ]);
 
-                if ($billing->payable_amt == 0) {
+                PaidAmount::create([
+                    'billing_id' => $billing->id,
+                    'payable_amt' => max(0, $newPayableAmt),
+                    'paid_amt' => $this->paid_amt,
+                ]);
+
+                if ($latestPaidAmount->payable_amt == 0) {
                     $billing->update(['status_id' => 5]);
                     $booking->update(['status_id' => 11]);
-                } elseif ($billing->paid_amt !== 0) {
+                } elseif ($latestPaidAmount->paid_amt !== 0) {
                     $billing->update(['status_id' => 13]);
                 }
 
@@ -73,7 +83,7 @@ class BillingForm extends Component
 
             DB::commit();
 
-            $this->emit('flashAction', $action, $message);  
+            $this->emit('flashAction', $action, $message);
             $this->resetInputFields();
             $this->emit('closeBillingModal');
             $this->emit('refreshBillingList');

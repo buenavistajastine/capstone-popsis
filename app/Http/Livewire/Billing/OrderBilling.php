@@ -56,11 +56,12 @@ class OrderBilling extends Component
     {
         $tomorrow = Carbon::tomorrow();
 
-        $billings = Billing::whereHas('customers', function ($query) {
-            $query->where('first_name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
-        })
+        $billings = Billing::with('paidAmount')
+            ->whereHas('customers', function ($query) {
+                $query->where('first_name', 'LIKE', '%' . $this->search . '%')
+                    ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
+            })
             ->whereNotNull('foodOrder_id')
             ->whereHas('foodOrders', function ($query) use ($tomorrow) {
                 $query->whereNotNull('date_need') // Ensure date_need is not null

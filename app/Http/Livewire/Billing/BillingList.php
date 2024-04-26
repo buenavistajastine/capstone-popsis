@@ -57,12 +57,13 @@ class BillingList extends Component
     {
         $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
 
-        $query = Billing::with(['bookings.packages', 'bookings.dishess'])
+        $query = Billing::with(['bookings.packages', 'bookings.dishess', 'paidAmount'])
             ->whereNotNull('booking_id')
             ->whereHas('bookings', function ($query) use ($tomorrow) {
                 $query->whereNotNull('date_event') // Ensure date_event is not null
                     ->where('date_event', '>=', $tomorrow); // Filter bookings with date event greater than or equal to tomorrow
-            });
+            })
+            ->orderBy('created_at', 'desc');
 
             if (!empty($this->search)) {
                 $query->whereHas('customers', function ($query) {
@@ -75,7 +76,7 @@ class BillingList extends Component
             }            
 
         $billings = $query->paginate(10);
-
+// dd($billings);
         return view('livewire.billing.billing-list', compact('billings'));
     }
 }

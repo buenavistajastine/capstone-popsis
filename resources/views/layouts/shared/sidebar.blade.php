@@ -55,12 +55,18 @@
 
                 @can('report-access')
                     <li class="submenu">
-                        <a href="#"><i class="fa fa-flag"></i> <span> Reports </span> <span
+                        <a href="#"><i class="fa-solid fa-print"></i> <span> Printables </span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="booking_reports"> Booking Report </a></li>
-                            <li><a href="order_reports"> Food Order Report </a></li>
+                            <li><a href="booking_reports"> Booking </a></li>
+                            <li><a href="order_reports"> Food Order </a></li>
                         </ul>
+                    </li>
+                @endcan
+                @can('sales_report')
+                    <li>
+                        <a href="sales-report"><span class="menu-side"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Sales Report</span></a>
                     </li>
                 @endcan
 
