@@ -73,6 +73,7 @@
                                     <th>Total Amount</th>
                                     <th>Paid Amount</th>
                                     <th>Balance</th>
+                                    <th>Payment Method</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -105,6 +106,13 @@
                                             </td>
                                             <td class="text-center">₱
                                                 {{ number_format($billing->paidAmount->payable_amt, 2) }}</td>
+                                                <td class="text-center">
+                                                    @if (!empty($billing->payment_id))
+                                                        {{ $billing->payments->name ?: '' }}
+                                                    @else
+                                                        <small><i>Not selected</i></small>
+                                                    @endif
+                                                </td>
                                             <td>
                                                 @if ($billing->status_id == 6)
                                                     <button

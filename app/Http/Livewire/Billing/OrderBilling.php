@@ -63,10 +63,7 @@ class OrderBilling extends Component
                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
             })
             ->whereNotNull('foodOrder_id')
-            ->whereHas('foodOrders', function ($query) use ($tomorrow) {
-                $query->whereNotNull('date_need') // Ensure date_need is not null
-                    ->where('date_need', '>=', $tomorrow); // Filter bookings with date need greater than or equal to tomorrow
-            })
+            ->where('status_id', '!=', 5)
             ->whereNull('booking_id')
             ->with('foodOrders', 'bookings.dishess')
             ->paginate(10);

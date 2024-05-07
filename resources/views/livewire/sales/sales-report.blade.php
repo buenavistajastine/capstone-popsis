@@ -12,7 +12,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
                 <label>Year<span class="login-danger">*</span></label>
                 <select class="form-control" wire:model="selectedYear">
@@ -22,7 +22,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
                 <label>Month<span class="login-danger">*</span></label>
                 <select class="form-control" wire:model="selectedMonth">
@@ -33,7 +33,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
                 <label>Filter<span class="login-danger">*</span></label>
                 <select class="form-control" wire:model="filterType">
@@ -52,22 +52,31 @@
             <div class="dash-widget">
                 <div class="dash-content dash-count">
                     <h4>Yearly Total</h4>
-                    <h2 id="yearlyTotal">₱{{ number_format($transactions->sum('total_amt'), 2) }}</h2>
+                    @php
+                        $yearlyTotal = $transacs->sum('total_amt');
+                    @endphp
+                    <h2>₱{{ number_format($yearlyTotal, 2) }}</h2>
                 </div>
             </div>
         </div>
+        
+        
         <!-- Monthly total -->
         <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
             <div class="dash-widget">
                 <div class="dash-content dash-count">
                     <h4>Monthly Total</h4>
+                    @php
+                        $monthlyTotal = $transactions->sum('total_amt');
+                    @endphp
                     <h2 id="monthlyTotal">
-                        ₱{{ number_format($transactions->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])->sum('total_amt'), 2) }}
+                        ₱{{ number_format($monthlyTotal, 2) }}
                     </h2>
                 </div>
             </div>
         </div>
-        <!-- Weekly total -->
+        
+        {{-- <!-- Weekly total -->
         <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
             <div class="dash-widget">
                 <div class="dash-content dash-count">
@@ -96,7 +105,7 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
 

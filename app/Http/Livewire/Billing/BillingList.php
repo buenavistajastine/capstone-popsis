@@ -59,10 +59,7 @@ class BillingList extends Component
 
         $query = Billing::with(['bookings.packages', 'bookings.dishess', 'paidAmount'])
             ->whereNotNull('booking_id')
-            ->whereHas('bookings', function ($query) use ($tomorrow) {
-                $query->whereNotNull('date_event') // Ensure date_event is not null
-                    ->where('date_event', '>=', $tomorrow); // Filter bookings with date event greater than or equal to tomorrow
-            })
+            ->where('status_id', '!=', 5)
             ->orderBy('created_at', 'desc');
 
             if (!empty($this->search)) {

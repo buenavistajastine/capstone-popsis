@@ -69,12 +69,13 @@
                                 <tr>
 
                                     {{-- <th style="width: 3%"></th> --}}
-                                    <th style="width: 20%">Name</th>
-                                    <th style="width: 20%">Event Package </th>
-                                    <th style="width: 20%">Paid Amount</th>
-                                    <th style="width: 20%">Balance</th>
-                                    <th style="width: 10%">Status</th>
-                                    <th style="width: 10%">Action</th>
+                                    <th>Name</th>
+                                    <th>Event Package </th>
+                                    <th>Paid Amount</th>
+                                    <th>Balance</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,8 +131,17 @@
                                                 </div>
                                             </td>
 
-                                            <td class="text-center">₱ {{ number_format($billing->paid_amt, 2) }}</td>
-                                            <td class="text-center">₱ {{ number_format($billing->payable_amt, 2) }}
+                                            <td class="text-center">₱
+                                                {{ number_format($billing->paidAmount()->where('billing_id', $billing->id)->sum('paid_amt'),2) }}
+                                            </td>
+                                            <td class="text-center">₱ {{ number_format($billing->paidAmount->payable_amt, 2) }}
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!empty($billing->payment_id))
+                                                    {{ $billing->payments->name ?: '' }}
+                                                @else
+                                                    <small><i>Not selected</i></small>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($billing->status_id == 6)

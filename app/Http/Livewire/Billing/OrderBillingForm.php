@@ -64,13 +64,13 @@ class OrderBillingForm extends Component
                     'payment_id' => $this->payment_id,
                 ]);
 
-                PaidAmount::create([
+                $payAmount = PaidAmount::create([
                     'billing_id' => $billing->id,
                     'payable_amt' => max(0, $newPayableAmt),
                     'paid_amt' => $this->paid_amt,
                 ]);
 
-                if ($latestPaidAmount->payable_amt == 0) {
+                if ($payAmount->payable_amt === 0) {
                     $billing->update(['status_id' => 5]);
                     $order->update(['status_id' => 11]);
                 } elseif ($latestPaidAmount->paid_amt !== 0) {

@@ -18,7 +18,7 @@ class Customer extends Model
     
         return LogOptions::defaults()
             ->setDescriptionForEvent(fn(string $eventName) => "A customer was {$eventName}.")
-            ->logOnly(['first_name', 'last_name', 'username', 'email', 'contact_no'])
+            ->logOnly(['first_name', 'last_name', 'username', 'email', 'contact_no', 'photo'])
             ->logOnlyDirty()
             ->useLogName('customer');
     }

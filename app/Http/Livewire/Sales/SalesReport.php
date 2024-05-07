@@ -43,30 +43,41 @@ class SalesReport extends Component
     {
         $transactions = Billing::query();
     
-        // Apply filter based on transaction type
         if ($this->filterType == 'booking') {
             $transactions->whereNotNull('booking_id');
         } elseif ($this->filterType == 'order') {
             $transactions->whereNotNull('foodOrder_id');
         }
     
-        // Filter by year
         $transactions->whereYear('created_at', $this->selectedYear);
-        $this->yearlyTotal = $transactions->sum('total_amt');
+        $yearlyTotal = $transactions->sum('total_amt');
     
-        // Filter by month if selected
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
-            // Recalculate yearly total after applying month filter
-            $this->yearlyTotal = $transactions->sum('total_amt');
-            // Recalculate monthly total after applying month filter
-            $this->monthlyTotal = $transactions->sum('total_amt');
         }
     
-        // Paginate the transactions
-        $transactions = $transactions->paginate(20);
+        $monthlyTotal = $transactions->sum('total_amt');
+            $transactions = $transactions->paginate(20);
     
-        return view('livewire.sales.sales-report', compact('transactions'));
+
+        $transacs = Billing::query();
+        if ($this->filterType == 'booking') {
+            $transacs->whereNotNull('booking_id');
+        } elseif ($this->filterType == 'order') {
+            $transacs->whereNotNull('foodOrder_id');
+        }
+
+        $transacs->whereYear('created_at', $this->selectedYear);
+        $yearlyTotals = $transacs->sum('total_amt');
+
+        // dd($yearlyTotals);
+        return view('livewire.sales.sales-report', [
+            'transactions' => $transactions,
+            'transacs' => $transacs,
+            'yearlyTotal' => $yearlyTotal, // Pass the yearly total to the view
+            'monthlyTotal' => $monthlyTotal, // Also pass the monthly total if needed
+        ]);
     }
+    
     
 }
