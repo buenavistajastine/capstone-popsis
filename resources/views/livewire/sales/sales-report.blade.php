@@ -33,6 +33,17 @@
                 </select>
             </div>
         </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="form-group local-forms">
+                <label>Filter<span class="login-danger">*</span></label>
+                <select class="form-control" wire:model="filterType">
+                    <option value="all">All</option>
+                    <option value="booking">Booking</option>
+                    <option value="order">Order</option>
+                </select>
+            </div>
+        </div>
+        
 
     </div>
     <div class="row">
@@ -155,9 +166,9 @@
                                             </td>
                                             <td>
                                                 @if ($transaction->bookings)
-                                                    {{ $transaction->bookings['date_event'] ? \Carbon\Carbon::parse($transaction->bookings['date_event'])->format('F j, Y') : '' }}
+                                                    {{ $transaction->bookings['date_event'] ? \Carbon\Carbon::parse($transaction->bookings['created_at'])->format('F j, Y') : '' }}
                                                 @elseif ($transaction->foodOrders)
-                                                    {{ $transaction->foodOrders['date_need'] ? \Carbon\Carbon::parse($transaction->foodOrders['date_need'])->format('F j, Y') : '' }}
+                                                    {{ $transaction->foodOrders['date_need'] ? \Carbon\Carbon::parse($transaction->foodOrders['created_at'])->format('F j, Y') : '' }}
                                                 @endif
 
                                             </td>

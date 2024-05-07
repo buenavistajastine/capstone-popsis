@@ -29,6 +29,7 @@ class SalesReport extends Component
     public $selectedMonth;
     public $selectedWeek;
     public $weeksInMonth;
+    public $filterType = 'all';
 
     public function mount()
     {
@@ -40,37 +41,32 @@ class SalesReport extends Component
 
     public function render()
     {
-
-
-        $this->yearlyTotal = Billing::whereYear('created_at', $this->selectedYear)->sum('total_amt');
-
-        $this->monthlyTotal = Billing::whereYear('created_at', $this->selectedYear)
-            ->whereMonth('created_at', $this->selectedMonth)
-            ->sum('total_amt');
-
-        $this->weeklyTotal = Billing::whereYear('created_at', $this->selectedYear)
-            ->whereRaw('WEEK(created_at) = ?', [$this->selectedWeek])
-            ->sum('total_amt');
-
-        $this->dailyTotal = Billing::whereDate('created_at', Carbon::today())->sum('total_amt');
-
-        $transactions = Billing::whereYear('created_at', $this->selectedYear);
-
+        $transactions = Billing::query();
+    
+        // Apply filter based on transaction type
+        if ($this->filterType == 'booking') {
+            $transactions->whereNotNull('booking_id');
+        } elseif ($this->filterType == 'order') {
+            $transactions->whereNotNull('foodOrder_id');
+        }
+    
+        // Filter by year
+        $transactions->whereYear('created_at', $this->selectedYear);
+        $this->yearlyTotal = $transactions->sum('total_amt');
+    
+        // Filter by month if selected
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
+            // Recalculate yearly total after applying month filter
+            $this->yearlyTotal = $transactions->sum('total_amt');
+            // Recalculate monthly total after applying month filter
+            $this->monthlyTotal = $transactions->sum('total_amt');
         }
-        
-
-        if ($this->selectedWeek) {
-            $startDate = now()->setISODate($this->selectedYear, $this->selectedWeek)->startOfWeek();
-            $endDate = now()->setISODate($this->selectedYear, $this->selectedWeek)->endOfWeek();
-
-            $transactions = $transactions->whereBetween('created_at', [$startDate, $endDate]);
-        }
-
-
+    
+        // Paginate the transactions
         $transactions = $transactions->paginate(20);
-
+    
         return view('livewire.sales.sales-report', compact('transactions'));
     }
+    
 }

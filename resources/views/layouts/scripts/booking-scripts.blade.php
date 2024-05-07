@@ -23,4 +23,12 @@
     window.livewire.on('openBookingRecordModal', () => {
         $('#bookingRecordModal').modal('show');
     });
+
+    window.livewire.on('closeQRModal', () => {
+        $('#qrModal').modal('hide');
+    });
+
+    window.livewire.on('openQRModal', () => {
+        $('#qrModal').modal('show');
+    });
 </script>

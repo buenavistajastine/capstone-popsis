@@ -29,13 +29,13 @@
 		<a id="mobile_btn" class="mobile_btn float-start" href="#sidebar"><img
 				src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
 	@endif
-	<div class="top-nav-search mob-view">
+	{{-- <div class="top-nav-search mob-view">
 		<form>
 			<input type="text" class="form-control" placeholder="Search here">
 			<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
 		</form>
 
-	</div>
+	</div> --}}
 	<a href="#top" id="back-to-top-button" alt>
 		<i class="fa-solid fa-arrow-up"></i> <!-- Use the appropriate icon class here -->
 	</a>
@@ -50,7 +50,7 @@
 					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
 				</div>
 				<span class="user-img">
-					<img src="{{ asset('assets/img/user-06.jpg') }}" alt="Admin">
+					<img src="{{ auth()->user()->photo ? 'storage/images/' . auth()->user()->photo : asset('assets/img/user-06.jpg') }}" alt="User Photo">
 				</span>
 			</a>
 			<div class="dropdown-menu">

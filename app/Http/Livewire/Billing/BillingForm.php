@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class BillingForm extends Component
 {
-    public $billingId, $total_amt, $payable_amt, $paid_amt, $payment_id;
+    public $billingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts;
     public $message = '';
     public $action = '';
 
@@ -35,6 +35,8 @@ class BillingForm extends Component
         $this->payable_amt = $billing->payable_amt;
         $this->payment_id = $billing->payment_id;
         $this->paid_amt = 0;
+
+        $this->paid_amounts = PaidAmount::where('billing_id', $billing->id)->get();
     }
 
     public function store()

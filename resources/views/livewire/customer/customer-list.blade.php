@@ -61,7 +61,16 @@
                                     @else
                                         @foreach ($customers as $customer)
                                             <tr>
-                                                <td></td>
+                                                <td>
+                                                    @if ($customer->photo)
+                                                        <img src="{{ asset('storage/images/' . $customer->photo) }}"
+                                                            alt="Customer Photo" class="rounded-circle" width="50"
+                                                            height="50">
+                                                    @else
+                                                        <span><small><i>No photo available</i></small></span>
+                                                    @endif
+    
+                                                </td>
                                                 <td>
                                                     {{ ucfirst($customer->last_name) }},
                                                     {{ ucfirst($customer->first_name) }}

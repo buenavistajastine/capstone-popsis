@@ -14,6 +14,7 @@ use App\Models\BookingDishKey;
 use App\Models\FoodOrder;
 use App\Models\FoodOrderDishKey;
 use App\Models\Menu;
+use App\Models\PaidAmount;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Validated;
@@ -88,7 +89,17 @@ class DishController extends Controller
 
     public function viewOrder(Request $request, $id)
     {
-        $order = FoodOrder::with('customers.address', 'statuses', 'transports', 'address', 'orderDish_keys')->find($id);
+        $order = FoodOrder::with([
+            'customers:id,first_name,last_name',
+            'customers.address:id,customer_id,city,barangay,specific_address,landmark',
+            'statuses:id,name',
+            'transports:id,name',
+            'address',
+            'orderDish_keys:id,order_id,dish_id,quantity,status_id,created_at,updated_at',
+            'billing.statuses',
+            'billing.paidAmount',
+            'billing.paidAmounts'
+        ])->find($id);
     
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
@@ -96,17 +107,29 @@ class DishController extends Controller
     
         return response()->json(['data' => $order], 200);
     }
-
+    
     public function viewBooking(Request $request, $id)
     {
-        $order = Booking::with('customers', 'status', 'address', 'dish_keys', 'packages', 'addOns', 'billing.statuses')->find($id);
+        $booking = Booking::with([
+            'customers:id,first_name,last_name',
+            'status:id,name',
+            'address',
+            'dish_keys:id,booking_id,dish_id,quantity,status_id,created_at,updated_at',
+            'packages',
+            'addOns',
+            'billing.statuses:id,name',
+            'billing.statuses',
+            'billing.paidAmount',
+            'billing.paidAmounts'
+        ])->find($id);
     
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
         }
     
-        return response()->json(['data' => $order], 200);
+        return response()->json(['data' => $booking], 200);
     }
+    
     
 
 
@@ -172,12 +195,16 @@ class DishController extends Controller
             'order_no' => $result
         ]);
 
-        Billing::create([
+        $billing = Billing::create([
             'foodOrder_id' => $order->id,
             'customer_id' => $request->customer_id,
-            'total_amt' => $request->total_amount,
-            'payable_amt' => $request->total_amount,
+            'total_amt' => $request->total_amount,         
             'status_id' => 6,
+        ]);
+
+        PaidAmount::create([
+            'billing_id' => $billing->id,
+            'payable_amt' => $request->total_amount,
         ]);
 
         // Create food order dish keys
@@ -268,12 +295,16 @@ class DishController extends Controller
             'booking_no' => $result
         ]);
 
-        Billing::create([
+        $billing = Billing::create([
             'booking_id' => $booking->id,
             'customer_id' => $request->customer_id,
             'total_amt' => $request->totalPrice,
-            'payable_amt' => $request->totalPrice,
             'status_id' => 6,
+        ]);
+
+        PaidAmount::create([
+            'billing_id' => $billing->id,
+            'payable_amt' => $request->totalPrice,
         ]);
 
         foreach ($request->selected as $index => $selected) {

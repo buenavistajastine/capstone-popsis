@@ -21,12 +21,13 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group local-forms">
                                 <label class="form-label">Amount to Pay<span class="login-danger">*</span></label>
-                                <input class="form-control text-end" type="text" wire:model="paid_amt" placeholder="0.00" />
+                                <input class="form-control text-end" type="text" wire:model="paid_amt"
+                                    placeholder="0.00" />
                             </div>
                         </div>
                         <div class="col-md-6 ">
@@ -36,9 +37,9 @@
                                 <select class="form-control form-select" wire:model="payment_id">
                                     <option selected value="">--select--</option>
                                     @foreach ($payments as $payment)
-                                    <option value="{{ $payment->id }}">
-                                        {{ $payment->name }}
-                                    </option>
+                                        <option value="{{ $payment->id }}">
+                                            {{ $payment->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -58,9 +59,28 @@
                             </div>
                         </div> --}}
                     </div>
-                       
+                    
+                    @if (!empty($paid_amounts))
+                    <hr>
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-4 text-center fw-bold"><small>Date</small></div>
+                                <div class="col-md-4 text-center fw-bold"><small>Amount Paid</small></div>
+                                <div class="col-md-4 text-center fw-bold"><small>Balance</small></div>
+                            </div>
+                            @foreach ($paid_amounts as $paid_amount)
+                                <div class="col-md-4 text-center">
+                                    <small>{{ $paid_amount['created_at'] ? \Carbon\Carbon::parse($paid_amount['created_at'])->format('F j, Y') : '' }}</small>
+                                </div>
+                                <div class="col-md-4 text-end"><small>{{ number_format($paid_amount->paid_amt, 2) }}</small>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <small>{{ number_format($paid_amount->payable_amt, 2) }}</small>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
-    
             </div>
         </div>
         <div class="modal-footer">

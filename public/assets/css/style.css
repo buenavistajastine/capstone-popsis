@@ -816,7 +816,8 @@ textarea.form-control {
 }
 .header .user-img img {
     width: 40px;
-    border-radius: 14px;
+    height: 40px;
+    border-radius: 20px;
 }
 .user-img .status {
     border: 2px solid #fff;

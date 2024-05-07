@@ -61,7 +61,15 @@
                                 @else
                                     @foreach ($users as $user)
                                         <tr>
-                                            <td></td>
+                                            <td>
+                                                @if ($user->photo)
+                                                <img src="{{ asset('storage/images/' . $user->photo) }}" alt="User Photo" class="rounded-circle" width="50" height="50">
+
+                                                @else
+                                                    <span>No photo available</span>
+                                                @endif
+
+                                            </td>
                                             <td class="text-capitalize">
                                                 {{ $user->first_name }} {{ $user->middle_name ?? '' }}
                                                 {{ $user->last_name }}
@@ -69,7 +77,8 @@
                                             <td>
                                                 @if ($user->roles->isNotEmpty())
                                                     @foreach ($user->roles as $role)
-                                                            <button class="custom-badge status-green fw-bold">{{ ucfirst($role->name) }}</button>
+                                                        <button
+                                                            class="custom-badge status-green fw-bold">{{ ucfirst($role->name) }}</button>
                                                         @if (!$loop->last)
                                                             ,
                                                         @endif
@@ -86,14 +95,14 @@
                                                 {{ $user->email }}
                                             </td>
                                             @can('edit-users')
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editUser({{ $user->id }})" title="Edit"> <i
-                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                <td class="text-center">
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                            wire:click="editUser({{ $user->id }})" title="Edit"> <i
+                                                                class="fa-solid fa-pen-to-square"></i></button>
 
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
                                             @endcan
                                         </tr>
                                     @endforeach

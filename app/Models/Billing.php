@@ -55,4 +55,9 @@ class Billing extends Model
     {
         return $this->hasOne(PaidAmount::class)->latest();
     }
+
+    public function paidAmounts()
+    {
+        return $this->hasMany(PaidAmount::class);
+    }
 }

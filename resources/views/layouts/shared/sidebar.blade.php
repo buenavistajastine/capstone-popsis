@@ -78,6 +78,7 @@
                         <ul style="display: none;">
                             <li><a href="dish"> Dish </a></li>
                             <li><a href="package"> Packages </a></li>
+                            <li><a href="qr-code"> QR Code for payment </a></li>
 							@hasrole('admin')
                             <li><a href="status"> Status </a></li>
 							@endhasrole
