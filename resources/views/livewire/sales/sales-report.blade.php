@@ -118,6 +118,11 @@
                             <div class="col">
                                 <div class="doctor-table-blk">
                                     <h3>Sales Report</h3>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-success btn-sm mx-1"
+                                        wire:click="export" title="Export"> <i class="fa-solid fa-download"></i> Excel Report</button>
+
+                                    </div>
                                     {{-- <div class="doctor-search-blk">
                                         <div class="add-group">
                                             <a class="btn btn-primary ms-2" wire:click="createBooking">
