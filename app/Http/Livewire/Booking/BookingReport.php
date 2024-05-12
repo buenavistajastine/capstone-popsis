@@ -97,7 +97,8 @@ class BookingReport extends Component
 
         session(['dishes' => $dishes, 'selectedBookings' => $selectedBookings]);
         
-        return redirect()->route('print.dishes', compact('dishes', 'selectedBookings'));
+        // return redirect()->route('print.dishes', compact('dishes', 'selectedBookings'));
+        $this->emit('openPrintPage');
     }
 
     public function render()

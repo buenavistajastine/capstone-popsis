@@ -31,13 +31,13 @@
                                             title="export to Excel">
                                             Report <i class="fa-solid fa-file-export"></i>
                                         </a> --}}
-                                        <a class="btn btn-danger ms-2" title="print dishes" wire:click="printOrderDishes"
-                                            target="_blank">
-                                            PDF <i class="fa-solid fa-print"></i>
+                                        <a class="btn btn-danger ms-2" title="print dishes"
+                                            wire:click="printOrderDishes" target="_blank">
+                                            Print <i class="fa-solid fa-print"></i>
                                         </a>
-                                        <div wire:loading wire:target="printDishes" class="text-dark">
+                                        {{-- <div wire:loading wire:target="printDishes" class="text-dark">
                                             Exporting...
-                                            Please wait...</div>
+                                            Please wait...</div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                                 <div class="col-12"><strong>{{ ucfirst($order->customers->last_name) }},
                                                         {{ ucfirst($order->customers->first_name) }}</strong>
                                                 </div>
-                                                <div class="col-12"><small>#<i>{{ $order->order_no }}</i></small></div>
+                                                <div class="col-12"><small>#{{ $order->order_no }}</small></div>
                                             </div>
                                         </td>
                                         @foreach ($header as $menu)
@@ -196,8 +196,7 @@
 
                                 @if ($orders->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage"
-                                            wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">
@@ -213,8 +212,14 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     document.getElementById('selectAll').addEventListener('change', function() {
         @this.set('selectAll', this.checked);
     });
+
+    Livewire.on('openPrintPage', () => {
+        window.open('{{ route("print.order-dishes") }}', '_blank');
+    });
 </script>
+@endpush

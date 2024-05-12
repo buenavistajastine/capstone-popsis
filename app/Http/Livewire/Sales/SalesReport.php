@@ -36,29 +36,28 @@ class SalesReport extends Component
         $this->selectedYear = Carbon::now()->year;
         $this->selectedMonth = Carbon::now()->month;
         $this->selectedWeek = Carbon::now()->weekOfYear;
-
     }
 
     public function render()
     {
         $transactions = Billing::query();
-    
+
         if ($this->filterType == 'booking') {
             $transactions->whereNotNull('booking_id');
         } elseif ($this->filterType == 'order') {
             $transactions->whereNotNull('foodOrder_id');
         }
-    
+
         $transactions->whereYear('created_at', $this->selectedYear);
         $yearlyTotal = $transactions->sum('total_amt');
-    
+
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
         }
-    
+
         $monthlyTotal = $transactions->sum('total_amt');
-            $transactions = $transactions->paginate(20);
-    
+        $transactions = $transactions->paginate(20);
+
 
         $transacs = Billing::query();
         if ($this->filterType == 'booking') {
@@ -81,6 +80,7 @@ class SalesReport extends Component
 
     public function export()
     {
+
         $transactions = Billing::query();
 
         if ($this->filterType == 'booking') {
@@ -96,6 +96,16 @@ class SalesReport extends Component
         }
 
         $transactions = $transactions->get();
+
+        // $filename = 'SalesReport-' . date('M', mktime(0, 0, 0, $this->selectedMonth, 1)) . $this->selectedYear . '.xlsx';
+        $selectedMonthName = $this->selectedMonth ? date('M', mktime(0, 0, 0, $this->selectedMonth, 1)) : null;
+        $filename = 'SalesReport';
+
+        if ($selectedMonthName && $this->selectedMonth !== 'all') {
+            $filename .= '-' . $selectedMonthName;
+        }
+
+        $filename .= $this->selectedYear . '.xlsx';
 
         $headers = [];
         array_push($headers, 'Transaction ID');
@@ -151,9 +161,7 @@ class SalesReport extends Component
 
         return Excel::download(
             new SalesReportExport($data, $headers),
-            'SalesReport.xlsx'
+            $filename
         );
     }
-    
-    
 }

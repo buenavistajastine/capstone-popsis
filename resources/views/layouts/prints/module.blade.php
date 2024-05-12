@@ -165,12 +165,12 @@
                     {{-- @foreach (['Serving Spoon', 'Serving Fork', 'Clip Big', 'Clip Small', 'Pitcher', 'Softdrinks Bowl', 'Knife', 'Scissors', 'Lechon Tray', 'Cake Stand', 'Soup Warmer', 'Special Request'] as $requestItem)
                         <div class="mt-1">{{ $requestItem }}: </div>
                     @endforeach --}}
-                    <div class="mt-1">Serving Spoon: </div>
-                    <div class="mt-1">Serving Fork: </div>
-                    <div class="mt-1">Clip Big: </div>
-                    <div class="mt-1">Clip Small: </div>
-                    <div class="mt-1">Pitcher: </div>
-                    <div class="mt-1">Softdrinks Bowl: </div>
+                    <div class="mt-1">Serving Spoon: <strong>{{ $booking->no_pax <= 75 ? 8 : 10 }}</strong></div>
+                    <div class="mt-1">Serving Fork: <strong>{{ $booking->no_pax <= 75 ? 2 : 4 }}</strong></div>
+                    <div class="mt-1">Clip Big: <strong>{{ $booking->no_pax <= 75 ? 2 : 3 }}</strong></div>
+                    <div class="mt-1">Clip Small: <strong>{{ $booking->no_pax <= 75 ? 2 : 3 }}</strong></div>
+                    <div class="mt-1">Pitcher: <strong>{{ $booking->no_pax <= 75 ? 2 : 5 }}</strong></div>
+                    <div class="mt-1">Softdrinks Bowl: <strong>{{ $booking->no_pax <= 75 ? 1 : 2 }}</strong></div>
                     <div class="mt-1">Knife: <strong>{{ $lechonTable }}</strong></div>
                     <div class="mt-1">Scissors: <strong>{{ $lechonTable }}</strong></div>
                     <div class="mt-1">Lechon Tray: <strong>{{ $lechonTable }}</strong></div>

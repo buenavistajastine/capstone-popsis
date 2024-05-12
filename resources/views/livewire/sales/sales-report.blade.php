@@ -120,7 +120,7 @@
                                     <h3>Sales Report</h3>
                                     <div class="btn-group" role="group">
                                         <button type="button" class="btn btn-success btn-sm mx-1"
-                                        wire:click="export" title="Export"> <i class="fa-solid fa-download"></i> Excel Report</button>
+                                        wire:click="export" title="Export"> <i class="fa-solid fa-file-export"></i> Excel Report</button>
 
                                     </div>
                                     {{-- <div class="doctor-search-blk">

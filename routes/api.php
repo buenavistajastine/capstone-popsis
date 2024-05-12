@@ -48,5 +48,8 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     // Placing orders
     Route::post('place_order', [DishController::class, 'foodOrder']);
     Route::post('book_event', [DishController::class, 'booking']);
+
+    Route::get('image/{filename}', [UserController::class, 'show']);
+    Route::get('qrCode', [UserController::class, 'showQR']);
 });
 

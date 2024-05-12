@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\FoodOrder;
+use App\Models\QR;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -139,14 +140,14 @@ class UserController extends Controller
         try {
             // Get the customer associated with the authenticated user
             $customer = $request->user()->customers()->first();
-    
+
             if (!$customer) {
                 return response()->json(['error' => 'User is not associated with a customer'], 400);
             }
-    
+
             // Fetch orders associated with the customer and eager load the transports relationship
             $orders = FoodOrder::where('customer_id', $customer->id)->with('transports', 'statuses')->get();
-    
+
             return response()->json($orders);
         } catch (\Exception $e) {
             // Return an error response if an exception occurs
@@ -164,7 +165,7 @@ class UserController extends Controller
                 ->orderByDesc('dish_count')
                 ->limit(5)
                 ->get();
-    
+
             return $populars;
         } catch (\Exception $e) {
             // Log the error or handle it in any other way you prefer
@@ -172,7 +173,7 @@ class UserController extends Controller
             return null; // Or return an empty array, or handle the error in any other way
         }
     }
-    
+
 
 
     public function registerUser(Request $request)
@@ -260,10 +261,31 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function show($filename)
     {
-        //
+        $path = storage_path('app/public/images/' . $filename);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
     }
+
+    public function showQR()
+    {
+        $qr = QR::whereNotNull('qr_code')->first();
+    
+        if (!$qr) {
+            abort(404);
+        }
+    
+        $path = storage_path('app/public/qrCode/' . $qr->qr_code);
+    
+        if (!file_exists($path)) {
+            abort(404);
+        }
+    
+        return response()->file($path);
+    }    
 
     /**
      * Remove the specified resource from storage.

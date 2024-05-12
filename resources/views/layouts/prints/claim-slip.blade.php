@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +17,7 @@
         /* @font-face {
             font-family: 'FigTree';
             src: url('https://fonts.bunny.net/figtree/fontfile.woff2') format('woff2'); */
-            /* Add additional font formats for cross-browser compatibility */
+        /* Add additional font formats for cross-browser compatibility */
         /* } */
 
         html,
@@ -64,6 +65,7 @@
         }
     </style>
 </head>
+
 <body onload='window.print()''>
     <div class="claim-slip-container" id="contentToPrint">
         <div class="row">
@@ -77,16 +79,13 @@
             <div class="col-md-12 d-flex justify-content-center text-center">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Maxima Limquiaco Bldg.
+                        Luzariaga St.
                     </div>
                     <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Dr. V. Locsin Street
+                        Valencia, Negros Oriental
                     </div>
                     <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Dumaguete City, Negros Oriental
-                    </div>
-                    <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Tel.Nos. 035-4210259, 421-0838
+                        Tel.Nos. 09458613737
                     </div>
                     <div class="col-12 mt-2"><strong>
                             <h4 class="text-center">Claim Slip</h3>
@@ -100,19 +99,31 @@
         <div class="row">
             <div class="col-md-12">BOOKING NO: {{ $booking->booking_no }}</div>
             <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
-            <div class="col-md-12">NAME: <span>{{ $billing->customers->last_name }}, {{ $billing->customers->first_name }}</span></div>
-            <div class="col-md-12">PACKAGE: <span>{{ $booking->packages->name }} (₱{{ $booking->packages->price }}/PAX)</span></div>
-            <div class="col-md-12">PACKAGE: <span>{{ $booking->no_pax }}</span></div>
+            <div class="col-md-12">DATE OF EVENT:
+                <span>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
+                    at
+                    {{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}
+                </span>
+            </div>
+            <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }},
+                    {{ $billing->customers->first_name }}</span></div>
+            <div class="col-md-12">PACKAGE: <span>{{ $booking->packages->name }}
+                    (₱{{ $booking->packages->price }}/PAX)</span></div>
+            <div class="col-md-12">NO. OF GUESTS: <span>{{ $booking->no_pax }}</span></div>
             @php
                 $total = $booking->packages->price * $booking->no_pax;
             @endphp
-            <div class="col-md-12 ps-4">TOTAL: <span class="float-end">₱{{ number_format($total, 2) }}</span></div>
-            <div class="col-md-12">ADD-ONS: </div>
+            <div class="col-md-12">DISHES & ADD-ONS: </div>
+            @foreach ($dish_keys as $key)
+                <div class="ps-4">{{ $key->dishes->name }}</div>
+            @endforeach
             @foreach ($add_ons as $dish)
-                <div class="ps-4">{{ $dish->dishss->name }} <span class="float-end">{{ number_format($dish->dishss->price_full, 2) }}</span></div>              
+                <div class="ps-4">Add-on: {{ $dish->dishss->name }} <span
+                        class="float-end">{{ number_format($dish->dishss->price_full, 2) }}</span></div>
             @endforeach
             <hr class="mt-3">
-            <div class="col-md-12 mt-1">TOTAL AMOUNT: <span class="float-end">₱{{ number_format($booking->total_price, 2) }}</span></div>
+            <div class="col-md-12 mt-1">TOTAL AMOUNT: <span
+                    class="float-end"><strong>₱ {{ number_format($booking->total_price, 2) }}</strong></span></div>
 
 
             {{-- <div class="colspan-12">SERVICES AVAILED:</div>
@@ -137,4 +148,5 @@
         </div>
     </div>
 </body>
+
 </html>

@@ -57,9 +57,11 @@ class PrintController extends Controller
 
         $groupedDishes = collect($dishes)->groupBy('dish.menu.name');
 
-        $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+        return view('layouts.prints.print-dishes', compact('groupedDishes'));
 
-        return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
+        // $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+
+        // return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
     }
 
     public function printOrderDishes()
@@ -73,20 +75,22 @@ class PrintController extends Controller
 
         $groupedDishes = collect($orderDishes)->groupBy('dish.menu.name');
 
-        $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+        return view('layouts.prints.print-dishes', compact('groupedDishes'));
 
-        return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
+        // $pdfContent = view('layouts.prints.print-dishes', compact('groupedDishes'))->render();
+
+        // return PDF::loadHTML($pdfContent)->setPaper('letter', 'portrait')->download($fileName);
     }
 
     public function claimSlip($id) {
         $date = Carbon::now()->format('F d, Y');
         $billing = Billing::find($id);
-        $booking_dish_key = BookingDishKey::where('booking_id', $billing->booking_id)->get();
+        $dish_keys = BookingDishKey::where('booking_id', $billing->booking_id)->get();
         $add_ons = AddOn::where('booking_id', $billing->booking_id)->get();
         $booking = Booking::where('id', $billing->booking_id)->first();
 
         // dd($add_ons);
-        return view('layouts.prints.claim-slip', compact('billing', 'booking_dish_key', 'booking', 'date', 'add_ons'));
+        return view('layouts.prints.claim-slip', compact('billing', 'dish_keys', 'booking', 'date', 'add_ons'));
     }
 
 }

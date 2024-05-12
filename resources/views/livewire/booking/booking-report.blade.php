@@ -31,13 +31,17 @@
                                             title="export to Excel">
                                             Report <i class="fa-solid fa-file-export"></i>
                                         </a> --}}
-                                        <a class="btn btn-danger ms-2" title="print dishes" wire:click="printDishes"
+                                        {{-- <a class="btn btn-danger ms-2" title="print dishes" wire:click="printDishes"
                                             target="_blank">
                                             PDF <i class="fa-solid fa-print"></i>
+                                        </a> --}}
+                                        <a class="btn btn-danger ms-2" title="print dishes"
+                                            wire:click="printDishes" target="_blank">
+                                            Print <i class="fa-solid fa-print"></i>
                                         </a>
-                                        <div wire:loading wire:target="printDishes" class="text-dark">
+                                        {{-- <div wire:loading wire:target="printDishes" class="text-dark">
                                             Exporting...
-                                            Please wait...</div>
+                                            Please wait...</div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +117,7 @@
                                                 <div class="col-12"><strong>{{ ucfirst($book->customers->last_name) }},
                                                         {{ ucfirst($book->customers->first_name) }}</strong>
                                                 </div>
-                                                <div class="col-12"><small>#<i>{{ $book->booking_no }}</i></small></div>
+                                                <div class="col-12"><small>#{{ $book->booking_no }}</small></div>
                                             </div>
                                         </td>
                                         @foreach ($header as $menu)
@@ -237,6 +241,7 @@
     });
 </script> --}}
 
+@push('scripts')
 <script>
     $('#selectAll').click(function(){
         if ($(this).is(':checked')) {
@@ -245,4 +250,9 @@
             $('input[ type= checkbox]').prop('checked', false);
         }
     }) ;
+
+    Livewire.on('openPrintPage', () => {
+        window.open('{{ route("print.dishes") }}', '_blank');
+    });
 </script>
+@endpush

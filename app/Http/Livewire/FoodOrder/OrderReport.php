@@ -89,7 +89,8 @@ class OrderReport extends Component
 
         session(['orderDishes' => $orderDishes, 'selectedOrders' => $selectedOrders]);
         
-        return redirect()->route('print.order-dishes', compact('orderDishes', 'selectedOrders'));
+        // return redirect()->route('print.order-dishes');
+        $this->emit('openPrintPage');
     }
 
     public function render()
