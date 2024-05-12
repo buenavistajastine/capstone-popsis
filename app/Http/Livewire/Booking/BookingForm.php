@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 class BookingForm extends Component
 {
     public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id, $additional_amt, $advance_amt, $discount_amt;
-    public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id;
+    public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id, $selectedIndex;
     public $dishItems = [];
     public $selectedVenue, $city, $barangay, $specific_address, $landmark;
     public $color, $color2;
@@ -38,6 +38,10 @@ class BookingForm extends Component
     public $action = '';
     public $message = '';
 
+    public $customers = [];
+    public $searchQuery = '';
+    public $selectedCustomerId = null;
+
     protected $listeners = [
         'bookingId',
         'resetInputFields',
@@ -48,6 +52,21 @@ class BookingForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+    }
+
+    public function selectCustomer($customerId)
+    {
+        $this->selectedCustomerId = $customerId;
+        // Fetch the customer's details
+        $customer = Customer::find($customerId);
+        $this->first_name = $customer->first_name;
+        $this->last_name = $customer->last_name;
+        $this->contact_no = $customer->contact_no;
+
+        // Update the search input field with the selected customer's name
+        $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
+
+        // You can populate other fields here as needed
     }
 
 
@@ -255,12 +274,14 @@ class BookingForm extends Component
             // Set the status_id based on advance_amt
             $billingStatusId = $advanceAmt != 0 ? 13 : 6;
 
-            // $totalAdvanceAmt = str_replace(',', '', $booking_data['advance_amt'] ?? 0);
-            // $booking_data['status_id'] = $totalAdvanceAmt != 0 ? 13 : 6;
-
             if (!$this->customer_id) {
-                $newCustomer = Customer::create($customer_data);
-                $booking_data['customer_id'] = $newCustomer->id;
+                if(!$this->selectedCustomerId) {
+                    $newCustomer = Customer::create($customer_data);
+                    $booking_data['customer_id'] = $newCustomer->id;
+                } else {
+                    $booking_data['customer_id'] = $this->selectedCustomerId;
+                }
+                
             } else {
 
                 $booking_data['customer_id'] = $this->customer_id;
@@ -535,6 +556,16 @@ class BookingForm extends Component
         $this->addOns = [];
     }
 
+    // public function incrementIndex()
+    // {
+    //     $this->selectedIndex = min($this->selectedIndex + 1, count($this->customers) - 1);
+    // }
+
+    // public function decrementIndex()
+    // {
+    //     $this->selectedIndex = max($this->selectedIndex - 1, 0);
+    // }
+
     public function render()
     {
         $customers = Customer::all();
@@ -543,6 +574,13 @@ class BookingForm extends Component
         $menus = Menu::all();
         $venues = Venue::all();
         $selectedVenue = Venue::find($this->selectedVenue);
+
+        if (strlen($this->searchQuery) > 0) {
+            $this->customers = Customer::where('last_name', 'like', "%{$this->searchQuery}%")
+                ->orWhere('first_name', 'like', "%{$this->searchQuery}%")
+                ->orWhere('middle_name', 'like', "%{$this->searchQuery}%")
+                ->get();
+        }
 
         $packages = [];
         if ($selectedVenue) {

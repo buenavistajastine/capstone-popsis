@@ -38,10 +38,35 @@
 
                                     </div>
                                 </div> --}}
-                <h4 class="mb-3">Customer Details</h4>
+                                @if (!$bookingId)
+                                <div class="col-md-12 position-relative">
+                                    <div class="form-group local-forms">
+                                        <label>Search for Existing Customer<span class="login-danger">*</span></label>
+                                        <div class="custom-dropdown" style="z-index: 2;">
+                                            <input type="text" wire:model.debounce.300ms="searchQuery" class="form-control" placeholder="Search Customer">
+                                            <div class="dropdown-content" style="max-height: 200px; overflow-y: auto;"
+                                                @if (!$searchQuery || (isset($customers) && $customers->isEmpty())) style="display: none;" @endif>
+                                                @if ($searchQuery && (!isset($customers) || $customers->isNotEmpty()))
+                                                    @foreach ($customers as $customer)
+                                                        <div wire:key="{{ $customer->id }}" wire:click="selectCustomer({{ $customer->id }})"
+                                                            class="dropdown-item cursor-pointer fs-8">
+                                                            {{ $customer->first_name }}
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+{{--     
+                                                @if ($searchQuery && (!isset($customers) || $customers->isEmpty()))
+                                                    <div class="dropdown-item">No customers found.</div>
+                                                @endif --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
-                        <label>First Name<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">First Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="first_name" placeholder />
                         @error('first_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -50,7 +75,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Last Name<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Last Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="last_name" placeholder />
                         @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -59,7 +84,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Contact No.<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Contact No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="contact_no" placeholder />
                         @error('contact_no')
                             <span class="text-danger">{{ $message }}</span>
@@ -75,7 +100,7 @@
                                 <input class="form-check-input" type="radio" name="venue_id"
                                     id="venue_{{ $venue->id }}" wire:change="updatePackages"
                                     wire:model="selectedVenue" value="{{ $venue->id }}">
-                                <label class="form-check-label" for="venue_{{ $venue->id }}">
+                                <label class="form-check-label" style="z-index: 1" for="venue_{{ $venue->id }}">
                                     {{ $venue->name }}
                                 </label>
                             </div>
@@ -92,7 +117,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>City/Town<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">City/Town<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="city" placeholder />
                         @error('city')
                             <span class="text-danger">{{ $message }}</span>
@@ -101,7 +126,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Barangay<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Barangay<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="barangay" placeholder />
                         @error('barangay')
                             <span class="text-danger">{{ $message }}</span>
@@ -110,7 +135,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Event's Place/ Venue<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Event's Place/ Venue<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="venue_address" placeholder />
                         @error('venue_address')
                             <span class="text-danger">{{ $message }}</span>
@@ -119,7 +144,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group local-forms">
-                        <label>Specific Address<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Specific Address<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="specific_address" placeholder />
                         @error('specific_address')
                             <span class="text-danger">{{ $message }}</span>

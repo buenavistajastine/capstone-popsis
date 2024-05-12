@@ -29,6 +29,10 @@ class FoodOrderForm extends Component
     public $action = '';
     public $message = '';
 
+    public $customers = [];
+    public $searchQuery = '';
+    public $selectedCustomerId = null;
+
     protected $listeners = [
         'orderId',
         'resetInputFields'
@@ -41,13 +45,28 @@ class FoodOrderForm extends Component
         $this->resetErrorBag();
     }
 
+    public function selectCustomer($customerId)
+    {
+        $this->selectedCustomerId = $customerId;
+        // Fetch the customer's details
+        $customer = Customer::find($customerId);
+        $this->first_name = $customer->first_name;
+        $this->last_name = $customer->last_name;
+        $this->contact_no = $customer->contact_no;
+
+        // Update the search input field with the selected customer's name
+        $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
+
+        // You can populate other fields here as needed
+    }
+
     public function orderId($orderId)
     {
         $this->orderId = $orderId;
-        
+
         $this->dishItems = [];
 
-        $order = FoodOrder::whereId($orderId)->with('customers') ->first();
+        $order = FoodOrder::whereId($orderId)->with('customers')->first();
         $address = CustomerAddress::where('customer_id', $order->customer_id)->first();
 
         if ($order) {
@@ -71,7 +90,6 @@ class FoodOrderForm extends Component
             $this->barangay = $address->barangay;
             $this->specific_address = $address->specific_address;
             $this->landmark = $address->landmark;
-
         } else {
             $this->ordered_by = null;
             $this->date_need = null;
@@ -106,17 +124,15 @@ class FoodOrderForm extends Component
                 $i++;
             }
         }
-
-        
-    } 
+    }
 
     public function store()
     {
         $order = FoodOrder::find($this->orderId);
-    
+
         try {
             DB::beginTransaction();
-    
+
             $customer_data = $this->validate([
                 'first_name' => 'required',
                 'middle_name' => 'nullable',
@@ -142,10 +158,16 @@ class FoodOrderForm extends Component
                 'specific_address' => 'nullable',
                 'landmark' => 'nullable',
             ]);
-    
+
             if (!$this->customer_id) {
-                $newCustomer = Customer::create($customer_data);
-                $order_data['customer_id'] = $newCustomer->id;
+
+
+                if (!$this->selectedCustomerId) {
+                    $newCustomer = Customer::create($customer_data);
+                    $order_data['customer_id'] = $newCustomer->id;
+                } else {
+                    $order_data['customer_id'] = $this->selectedCustomerId;
+                }
             } else {
                 $order_data['customer_id'] = $this->customer_id;
 
@@ -165,17 +187,17 @@ class FoodOrderForm extends Component
                     'last_name' => $this->last_name,
                 ]);
             }
-    
+
             // Assign the result of str_replace to 'total_price'
             $order_data['total_price'] = str_replace(['₱', ' ', ','], '', $order_data['total_price'] ?? 0);
-    
+
             if ($this->orderId) {
                 $order = FoodOrder::find($this->orderId);
                 $address = CustomerAddress::where('customer_id', $order->customer_id);
 
                 $order->update($order_data, ['status_id' => 2]);
                 $address->update($address_data);
-    
+
                 foreach ($this->dishItems as $key => $value) {
                     if ($this->dishItems[$key]['id'] == null) {
                         FoodOrderDishKey::create([
@@ -205,7 +227,7 @@ class FoodOrderForm extends Component
 
                     PaidAmount::create([
                         'billing_id' => $billing->id,
-                        'payable_amt' => $order_data['total_price'], 
+                        'payable_amt' => $order_data['total_price'],
                     ]);
                 } else {
                     // Create billing if it does not exist
@@ -218,16 +240,16 @@ class FoodOrderForm extends Component
 
                     PaidAmount::create([
                         'billing_id' => $billed->id,
-                        'payable_amt' => $order_data['total_price'], 
+                        'payable_amt' => $order_data['total_price'],
                     ]);
                 }
-    
+
                 // Move this outside the outer loop
                 foreach ($this->dishItems as $key => $value) {
                     FoodOrderDishKey::where('order_id', '=', $this->orderId)
                         ->update(['update' => 0]);
                 }
-    
+
                 $action = "edit";
                 $message = 'Successfully Updated';
             } else {
@@ -237,11 +259,11 @@ class FoodOrderForm extends Component
                 $address_data['customer_id'] = $newCustomer->id;
 
                 CustomerAddress::create($address_data);
-    
-                $currentYear ="ORD";
+
+                $currentYear = "ORD";
                 $paddedRowId = str_pad($order->id, 6, '0', STR_PAD_LEFT);
                 $result = $currentYear . $paddedRowId;
-    
+
                 $order->update([
                     'order_no' => $result
                 ]);
@@ -260,7 +282,7 @@ class FoodOrderForm extends Component
                     'billing_id' => $bills->id,
                     'payable_amt' => $order_data['total_price'],
                 ]);
-    
+
                 foreach ($this->dishItems as $key => $value) {
                     FoodOrderDishKey::create([
                         'order_id' => $order->id,
@@ -270,17 +292,17 @@ class FoodOrderForm extends Component
                         'update' => false
                     ]);
                 }
-    
+
                 $action = "store";
                 $message = 'Successfully Created';
             }
-    
+
             FoodOrderDishKey::where('order_id', '=', $this->orderId)
                 ->whereNotIn('dish_id', collect($this->dishItems)->pluck('dish_id')->toArray())
                 ->delete();
-    
+
             DB::commit();
-    
+
             $this->emit('flashAction', $action, $message);
             $this->resetInputFields();
             $this->emit('closeFoodOrderModal');
@@ -292,7 +314,7 @@ class FoodOrderForm extends Component
             $this->emit('flashAction', 'error', $errorMessage);
         }
     }
-  
+
     public function calculatePrice()
     {
         $dishesTotalPrice = 0;
@@ -332,7 +354,14 @@ class FoodOrderForm extends Component
         $customers = Customer::all();
         $transports = ModeOfTransportation::all();
         $dishes = Dish::all();
-        
+
+        if (strlen($this->searchQuery) > 0) {
+            $this->customers = Customer::where('last_name', 'like', "%{$this->searchQuery}%")
+                ->orWhere('first_name', 'like', "%{$this->searchQuery}%")
+                ->orWhere('middle_name', 'like', "%{$this->searchQuery}%")
+                ->get();
+        }
+
         return view('livewire.food-order.food-order-form', compact('customers', 'dishes', 'transports'));
     }
 }

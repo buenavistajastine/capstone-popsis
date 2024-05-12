@@ -39,20 +39,34 @@
                                     </div>
                                 </div> --}}
                 <h4 class="mb-3">Customer Details</h4>
-                {{-- <div class="col-md-4 mb-2">
+                @if (!$orderId)
+                <div class="col-md-12 position-relative">
                     <div class="form-group local-forms">
-                        <label>Ordered by:<span class="login-danger">*</span></label>
-                        <input class="form-control" type="text" wire:model="ordered_by" placeholder
-                            @if ($customer_id) readonly @endif />
-                        @error('ordered_by')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <label>Search for Existing Customer<span class="login-danger">*</span></label>
+                        <div class="custom-dropdown" style="z-index: 2;">
+                            <input type="text" wire:model.debounce.300ms="searchQuery" class="form-control" placeholder="Search Customer">
+                            <div class="dropdown-content" style="max-height: 200px; overflow-y: auto;"
+                                @if (!$searchQuery || (isset($customers) && $customers->isEmpty())) style="display: none;" @endif>
+                                @if ($searchQuery && (!isset($customers) || $customers->isNotEmpty()))
+                                    @foreach ($customers as $customer)
+                                        <div wire:key="{{ $customer->id }}" wire:click="selectCustomer({{ $customer->id }})"
+                                            class="dropdown-item cursor-pointer fs-8">
+                                            {{ $customer->first_name }}
+                                        </div>
+                                    @endforeach
+                                @endif
+{{--     
+                                @if ($searchQuery && (!isset($customers) || $customers->isEmpty()))
+                                    <div class="dropdown-item">No customers found.</div>
+                                @endif --}}
+                            </div>
+                        </div>
                     </div>
-                </div> --}}
-                {{-- @if ($customer_id) readonly @endif  --}}
+                </div>
+                @endif
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
-                        <label>First Name<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">First Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="first_name" placeholder />
                         @error('first_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -61,7 +75,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Last Name<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Last Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="last_name" placeholder />
                         @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -70,7 +84,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Contact No.<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Contact No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="contact_no" placeholder />
                         @error('contact_no')
                             <span class="text-danger">{{ $message }}</span>
@@ -90,7 +104,7 @@
                 <h4 class="mb-3">Address</h4>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>City/Town<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">City/Town<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="city" placeholder />
                         @error('city')
                             <span class="text-danger">{{ $message }}</span>
@@ -99,7 +113,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Barangay<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Barangay<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="barangay" placeholder />
                         @error('barangay')
                             <span class="text-danger">{{ $message }}</span>
@@ -108,7 +122,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Street No.<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Street No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="specific_address" placeholder />
                         @error('specific_address')
                             <span class="text-danger">{{ $message }}</span>
@@ -117,7 +131,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Landmark<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Landmark<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="landmark" placeholder />
                         @error('landmark')
                             <span class="text-danger">{{ $message }}</span>
@@ -128,7 +142,7 @@
                 <h4 class="mb-3">Order Details</h4>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Transportation<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Transportation<span class="login-danger">*</span></label>
                         <select wire:model="transport_id" class="form-control ">
                             <option selected value="">--select--</option>
                             @foreach ($transports as $transpo)
@@ -153,7 +167,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Date<span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Date<span class="login-danger">*</span></label>
                         <input class="form-control" type="date" wire:model="date_need">
                         @error('date_need')
                             <span class="text-danger">{{ $message }}</span>
@@ -162,7 +176,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Call Time <span class="login-danger">*</span></label>
+                        <label style="z-index: 1">Call Time <span class="login-danger">*</span></label>
                         <input type="time" class="form-control" wire:model="call_time">
                         @error('call_time')
                             <span class="text-danger">{{ $message }}</span>
