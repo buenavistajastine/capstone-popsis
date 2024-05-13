@@ -161,7 +161,7 @@
                             <tbody>
                                 @if ($transactions->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center">No data available in table.</td>
+                                        <td colspan="6" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
                                     @foreach ($transactions as $transaction)

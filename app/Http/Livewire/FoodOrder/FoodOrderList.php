@@ -5,9 +5,11 @@ namespace App\Http\Livewire\FoodOrder;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\FoodOrder;
+use Livewire\WithPagination;
 
 class FoodOrderList extends Component
 {
+    use WithPagination;
     public $orderId;
     public $dateFrom;
     public $dateTo;
@@ -23,7 +25,7 @@ class FoodOrderList extends Component
 
     public function updatingSearch()
     {
-        $this->resetPage(); // Reset pagination when the search term changes
+        $this->resetPage();
     }
     
     public function createOrder()

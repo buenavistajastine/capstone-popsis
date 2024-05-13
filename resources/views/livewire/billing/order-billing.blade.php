@@ -79,9 +79,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (is_array($billings) && count($billings) === 0)
+                                @if ($billings->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center">No data available in table.</td>
+                                        <td colspan="7" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
                                     @foreach ($billings as $billing)

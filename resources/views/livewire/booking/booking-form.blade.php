@@ -153,7 +153,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group local-forms">
-                        <label>Landmark (optional)<span class="login-danger">*</span></label>
+                        <label>Landmark (optional)</label>
                         <input class="form-control" type="text" wire:model="landmark" placeholder />
                         @error('landmark')
                             <span class="text-danger">{{ $message }}</span>
@@ -238,7 +238,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Additional Payment<span class="login-danger">*</span></label>
+                        <label>Additional Payment</label>
                         <input class="form-control text-end" type="text" wire:model="additional_amt"
                             wire:change="calculateTotalPrice" placeholder />
 
@@ -246,7 +246,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Advance Payment<span class="login-danger">*</span></label>
+                        <label>Advance Payment</label>
                         <input class="form-control text-end" type="text" wire:model="advance_amt"
                             wire:change="calculateTotalPrice" placeholder />
 
@@ -254,7 +254,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Discount Amount<span class="login-danger">*</span></label>
+                        <label>Discount Amount</label>
                         <input class="form-control text-end" type="text" wire:model="discount_amt"
                             wire:change="calculateTotalPrice" placeholder />
 

@@ -69,7 +69,6 @@ class BookingForm extends Component
         // You can populate other fields here as needed
     }
 
-
     public function bookingId($bookingId)
     {
         $this->bookingId = $bookingId;
@@ -188,8 +187,6 @@ class BookingForm extends Component
         }
     }
 
-
-
     public function updatedPackageId()
     {
         $package = Package::find($this->package_id);
@@ -242,7 +239,7 @@ class BookingForm extends Component
                 'selectedVenue' => 'required',
                 'event_name' => 'nullable',
                 'no_pax' => 'required',
-                'date_event' => 'nullable',
+                'date_event' => 'required|date|after_or_equal:today',
                 'call_time' => 'nullable',
                 'total_price' => 'nullable',
                 'dt_booked' => 'nullable',
@@ -308,19 +305,12 @@ class BookingForm extends Component
 
             if ($this->bookingId) {
 
-
                 $booking = Booking::find($this->bookingId);
                 $address = Address::where('booking_id', $booking->id);
 
                 $booking->update($booking_data, ['status_id' => 2]);
                 $address->update($address_data);
                 $booking_services = BookingDishKey::where('booking_id', $this->bookingId)->get();
-
-                // $billing = Billing::where('booking_id', $this->bookingId)->first();
-                // $billing->update([
-                //     'total_amt' => $booking_data['total_price'],
-                //     'payable_amt' => $booking_data['total_price']
-                // ]);
 
                 foreach ($this->dishItems as $key => $value) {
                     if ($this->dishItems[$key]['id'] == null) {
@@ -506,6 +496,9 @@ class BookingForm extends Component
                 $add = Dish::find($addOn['dish_id']);
 
                 if ($add) {
+                    if ($addOn['quantity'] == 0.5) {
+                        $addOnPrice = (float)$add->price_half;
+                    }
                     $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
                 }
             }
@@ -555,16 +548,6 @@ class BookingForm extends Component
         $this->dishItems = [];
         $this->addOns = [];
     }
-
-    // public function incrementIndex()
-    // {
-    //     $this->selectedIndex = min($this->selectedIndex + 1, count($this->customers) - 1);
-    // }
-
-    // public function decrementIndex()
-    // {
-    //     $this->selectedIndex = max($this->selectedIndex - 1, 0);
-    // }
 
     public function render()
     {

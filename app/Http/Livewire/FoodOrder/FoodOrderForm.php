@@ -144,7 +144,7 @@ class FoodOrderForm extends Component
 
             $order_data = $this->validate([
                 'ordered_by' => 'nullable',
-                'date_need' => 'required',
+                'date_need' => 'required|date|after_or_equal:today',
                 'call_time' => 'required',
                 'total_price' => 'required',
                 'transport_id' => 'required',

@@ -32,12 +32,12 @@
                             <span>Booking</span></a>
                     </li>
                 @endcan
-                {{-- @haspermission('kitchen-access')
+                @haspermission('kitchen-access')
                     <li>
                         <a href="kitchen"><span class="menu-side"><i class="fa-solid fa-fire-burner"></i></i></span>
                             <span>Kitchen</span></a>
                     </li>
-                @endhaspermission --}}
+                @endhaspermission
 
                 {{-- <li>
 							<a href="billing"><span class="menu-side"><i class="fa-solid fa-calculator"></i></span> <span>Billing</span></a>
