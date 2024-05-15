@@ -12,7 +12,7 @@
 
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
-            <div class="row justify-content-center align-items-center mb-4">
+            {{-- <div class="row justify-content-center align-items-center mb-4">
                 <div class="col-md-3 text-center"> <!-- Adjusted column width -->
                     @if ($photo)
                         <img id="showImage" class="rounded-circle" width="80" height="80" src="{{ asset('storage/images/' . $photo) }}" alt="profile">
@@ -33,7 +33,7 @@
                         @enderror
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <div class="form-group local-forms">

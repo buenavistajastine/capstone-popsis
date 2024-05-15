@@ -195,17 +195,17 @@ class UserForm extends Component
             $this->validate($validationRules);
 
             // Handle photo upload
-            $filename = null;
-            if ($this->photo) {
-                $user = $this->userId ? User::find($this->userId) : null;
+            // $filename = null;
+            // if ($this->photo) {
+            //     $user = $this->userId ? User::find($this->userId) : null;
 
-                if ($user && $user->photo) {
-                    Storage::delete('public/images/' . $user->photo);
-                }
+            //     if ($user && $user->photo) {
+            //         Storage::delete('public/images/' . $user->photo);
+            //     }
 
-                $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
-                $this->photo->storeAs('public/images', $filename);
-            }
+            //     $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
+            //     $this->photo->storeAs('public/images', $filename);
+            // }
 
             // Update or create user
             $userData = [
@@ -214,7 +214,7 @@ class UserForm extends Component
                 'last_name' => $this->last_name,
                 'username' => $this->username,
                 'email' => $this->email,
-                'photo' => $filename,
+                // 'photo' => $filename,
             ];
 
             if ($this->userId) {
