@@ -219,8 +219,19 @@ class UserForm extends Component
 
             if ($this->userId) {
                 // Update existing user
-                $user = User::findOrFail($this->userId);
+                $user = User::whereId($this->userId)->first();
                 $user->update($userData);
+
+                if (!empty($this->password)) {
+                    $this->validate([
+                        'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+                    ]);
+
+                    $user->update([
+                        'password' => Hash::make($this->password),
+                    ]);
+                }
+                
             } else {
                 // Create new user
                 $userData['password'] = Hash::make($this->password);
