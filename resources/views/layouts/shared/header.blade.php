@@ -50,7 +50,8 @@
 					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
 				</div>
 				<span class="user-img">
-					<img src="{{ auth()->user()->photo ? 'storage/images/' . auth()->user()->photo : asset('assets/img/user-06.jpg') }}" alt="User Photo">
+					{{-- <img src="{{ auth()->user()->photo ? 'storage/images/' . auth()->user()->photo : asset('assets/img/user.jpg') }}" alt="User Photo"> --}}
+					<img src="{{ asset('assets/img/user.jpg') }}" alt="User Photo">
 				</span>
 			</a>
 			<div class="dropdown-menu">
