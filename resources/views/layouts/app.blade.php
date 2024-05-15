@@ -78,7 +78,7 @@
     @livewireStyles
     @yield('upper_script')
     <!-- Scripts -->
-    @vite([])
+    {{-- @vite([]) --}}
 
 </head>
 
