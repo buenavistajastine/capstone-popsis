@@ -67,7 +67,8 @@
                                                             alt="Customer Photo" class="rounded-circle" width="50"
                                                             height="50">
                                                     @else
-                                                        <span><small><i>No photo available</i></small></span>
+                                                        <img src="{{ asset('assets/img/user.jpg') }}" alt="User Photo"  class="rounded-circle" width="50"
+                                                        height="50">
                                                     @endif
     
                                                 </td>
