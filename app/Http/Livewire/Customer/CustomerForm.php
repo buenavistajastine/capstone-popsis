@@ -73,19 +73,19 @@ class CustomerForm extends Component
                 'gender_id' => 'nullable',
             ]);
 
-            // $filename = null;
-            // if ($this->photo) {
-            //     $customer = $this->customerId ? Customer::find($this->customerId) : null;
+            $filename = null;
+            if ($this->photo) {
+                $customer = $this->customerId ? Customer::find($this->customerId) : null;
 
-            //     if ($customer && $customer->photo) {
-            //         Storage::delete('public/images/' . $customer->photo);
-            //     }
+                if ($customer && $customer->photo) {
+                    Storage::delete('public/images/' . $customer->photo);
+                }
 
-            //     $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
-            //     $this->photo->storeAs('public/images', $filename);
-            // }
+                $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
+                $this->photo->storeAs('public/images', $filename);
+            }
 
-            // $data['photo'] = $filename;
+            $data['photo'] = $filename;
 
             if ($this->customerId) {
                 $customer = Customer::find($this->customerId);
