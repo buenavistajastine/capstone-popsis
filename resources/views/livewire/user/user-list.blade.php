@@ -66,7 +66,7 @@
                                                 <img src="{{ asset('storage/images/' . $user->photo) }}" alt="User Photo" class="rounded-circle" width="50" height="50">
 
                                                 @else
-                                                    <span>No photo available</span>
+                                                <img src="{{ asset('assets/img/user.jpg') }}" alt="User Photo">
                                                 @endif
 
                                             </td>
