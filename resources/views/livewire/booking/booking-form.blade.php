@@ -50,7 +50,7 @@
                                                     @foreach ($customers as $customer)
                                                         <div wire:key="{{ $customer->id }}" wire:click="selectCustomer({{ $customer->id }})"
                                                             class="dropdown-item cursor-pointer fs-8">
-                                                            {{ $customer->first_name }}
+                                                            {{ $customer->first_name }} {{ $customer->last_name }}
                                                         </div>
                                                     @endforeach
                                                 @endif
