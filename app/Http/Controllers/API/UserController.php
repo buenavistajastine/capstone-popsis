@@ -42,7 +42,6 @@ class UserController extends Controller
             $user->customers = $customerDetail;
             $token = $user->createToken('mobile')->plainTextToken;
 
-            // Include user information along with the token
             return response([
                 'user' => $user,
                 'token' => $token,
@@ -56,7 +55,6 @@ class UserController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            // Include the address information in the response
             $customerDetail = $user->customers->address;
             $user->address = $customerDetail;
             $user->customers = $customerDetail;
@@ -64,59 +62,6 @@ class UserController extends Controller
         }
         return Response(['data' => 'Unauthorized'], 401);
     }
-
-    // public function loginUser(Request $request)
-    // {
-    //     $validator = Validator::make($request->only('email', 'password'), [
-    //         'email' => 'required|email',
-    //         'password' => 'required|string|min:6',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Validation errors',
-    //             'errors' => $validator->errors()
-    //         ], 422);
-    //     }
-
-    //     if (!$token = auth()->guard('api')->attempt($validator->validated())) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Login failed',
-    //             'errors' => ['email' => 'These credentials do not match our records.']
-    //         ], 401);
-    //     }
-
-    //     $userId = auth()->guard('api')->id();
-    //     // $patient = $this->getPatientInfo($userId);
-    //     $patient = $this->getPatientInfo($userId) ?? new Patient;
-    //     $patient->load([
-    //         'bookingsss.physicalExamination.doctor',
-    //         'bookingsss.vaccine.covid_vaccine',
-    //         'bookingsss.doctorFindings.finding',
-    //         'bookingsss.habit',  // Corrected relationship path
-    //         'bookingsss.mental_health', 
-    //         'bookingsss.diagnosticExamination',
-    //         'bookingsss.service_key' => function ($query) {
-    //             $query->with(['service', 'result_keys.results.units']);
-    //         },
-    //         'genders',
-    //         'status',
-    //         'civil_statuses',
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Login successful',
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->guard('api')->factory()->getTTL() * 86400,
-    //         'user' => auth()->guard('api')->user(),
-    //         'patient' => $patient,
-    //     ])->header('Content-Type', 'application/json');
-
-    // }
 
     public function booking(Request $request): JsonResponse
     {
@@ -138,19 +83,16 @@ class UserController extends Controller
     public function order(Request $request): JsonResponse
     {
         try {
-            // Get the customer associated with the authenticated user
             $customer = $request->user()->customers()->first();
 
             if (!$customer) {
                 return response()->json(['error' => 'User is not associated with a customer'], 400);
             }
 
-            // Fetch orders associated with the customer and eager load the transports relationship
             $orders = FoodOrder::where('customer_id', $customer->id)->with('transports', 'statuses')->get();
 
             return response()->json($orders);
         } catch (\Exception $e) {
-            // Return an error response if an exception occurs
             return response()->json(['error' => 'Failed to fetch order data.'], 500);
         }
     }
@@ -168,13 +110,10 @@ class UserController extends Controller
 
             return $populars;
         } catch (\Exception $e) {
-            // Log the error or handle it in any other way you prefer
             Log::error('Error fetching popular dishes: ' . $e->getMessage());
-            return null; // Or return an empty array, or handle the error in any other way
+            return null;
         }
     }
-
-
 
     public function registerUser(Request $request)
     {
@@ -184,7 +123,6 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'username' => 'string',
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password' => ['required', 'string', 'min:8' /*'confirmed'*/],
             'city' => ['nullable', 'string'],
             'barangay' => ['nullable', 'string'],

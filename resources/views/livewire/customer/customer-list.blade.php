@@ -64,7 +64,7 @@
                                                 <td>
                                                     @if ($customer->photo)
                                                         <img src="{{ asset('storage/images/' . $customer->photo) }}"
-                                                            alt="Customer Photo" class="rounded-circle" width="50"
+                                                            alt="Customer Photo" class="rounded-circle" max-width="80"
                                                             height="50">
                                                     @else
                                                         <img src="{{ asset('assets/img/user.jpg') }}" alt="User Photo"  class="rounded-circle" width="50"
