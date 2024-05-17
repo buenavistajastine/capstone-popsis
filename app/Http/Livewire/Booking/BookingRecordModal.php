@@ -21,7 +21,7 @@ class BookingRecordModal extends Component
 
     public function render()
     {
-        $booking = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu', 'customers'])
+        $booking = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu', 'customers', 'billing.statuses'])
             ->whereId($this->recordId)
             ->orderBy('date_event', 'asc')
             ->first();

@@ -36,8 +36,8 @@
                         <small>(₱{{ number_format($booking->packages->price, 2) }})</small></span>
                 </div>
                 <div class="col-md-12 mb-2">
-                    <span>Total Amount: ₱{{ number_format($booking->total_price, 2) }} / {{ $booking->billing->statuses->name }}</span>
-                </div>
+                    <span>Total Amount: ₱{{ number_format($booking->total_price, 2) }} / {{ $booking->billing->first()->statuses->name }}</span>
+                </div>                
                 <div class="col-md-6 mb-2">
                     <div>Dishes: </div>
                     <div class="mb-1 ps-4">

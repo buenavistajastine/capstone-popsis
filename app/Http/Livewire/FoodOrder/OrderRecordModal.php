@@ -21,7 +21,7 @@ class OrderRecordModal extends Component
 
     public function render()
     {
-        $order = FoodOrder::with(['orderDish_keys.dishes.menu', 'customers'])
+        $order = FoodOrder::with(['orderDish_keys.dishes.menu', 'customers', 'billing.statuses'])
         ->whereId($this->orderRecordId)
         ->orderBy('date_need', 'asc')
         ->first();

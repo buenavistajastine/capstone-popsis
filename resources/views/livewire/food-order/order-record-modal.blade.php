@@ -25,7 +25,7 @@
                 <div class="col-md-12 mb-2">
                     <span>Total Amount: ₱{{ number_format($order->total_price, 2) }}
                     @if ($order->billing)
-                    / {{ $order->billing->statuses->name }}
+                    / {{ $order->billing->first()->statuses->name }}
                     @endif
                 </span>
                 </div>
