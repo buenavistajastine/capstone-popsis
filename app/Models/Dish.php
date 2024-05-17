@@ -29,6 +29,7 @@ class Dish extends Model
         'description',
         'price_full',
         'price_half',
+        'photo',
     ];
 
     public function menu()

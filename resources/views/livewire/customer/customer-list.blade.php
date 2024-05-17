@@ -78,7 +78,13 @@
                                                     {{ $customer->middle_name ? ucfirst($customer->middle_name) : '' }}
                                                 </td>
 
-                                                <td>{{ $customer->contact_no }}</td>
+                                                <td>
+                                                    @if ($customer->contact_no)
+                                                    {{ $customer->contact_no }}
+                                                    @else
+                                                    <small><i>No contact</i></small>
+                                                    @endif
+                                                </td>
                                                 {{-- @php
                                                     dd($customer);
                                                 @endphp --}}

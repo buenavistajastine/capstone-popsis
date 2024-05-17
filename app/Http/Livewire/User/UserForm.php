@@ -31,7 +31,7 @@ class UserForm extends Component
     public function updatedPhoto($photo)
     {
         $this->validate([
-            'photo' => 'image|max:1024', // Example validation rule for image size
+            'photo' => 'image|max:5120', // Example validation rule for image size
         ]);
 
         $this->emit('photoPreview', $photo->temporaryUrl());
@@ -196,7 +196,7 @@ class UserForm extends Component
 
             // Handle photo upload
             $filename = null;
-            if ($this->photo) {
+            if ($this->photo instanceof \Illuminate\Http\UploadedFile) {
                 $user = $this->userId ? User::find($this->userId) : null;
 
                 if ($user && $user->photo) {
@@ -205,6 +205,9 @@ class UserForm extends Component
 
                 $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
                 $this->photo->storeAs('public/images', $filename);
+            } elseif (is_string($this->photo)) {
+                // If $this->photo is already a string (file name), no need to process it
+                $filename = $this->photo;
             }
 
             // Update or create user

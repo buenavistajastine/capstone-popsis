@@ -74,7 +74,7 @@ class CustomerForm extends Component
             ]);
 
             $filename = null;
-            if ($this->photo) {
+            if ($this->photo instanceof \Illuminate\Http\UploadedFile) {
                 $customer = $this->customerId ? Customer::find($this->customerId) : null;
 
                 if ($customer && $customer->photo) {
@@ -83,6 +83,9 @@ class CustomerForm extends Component
 
                 $filename = date('YmdHi') . '_' . $this->photo->getClientOriginalName();
                 $this->photo->storeAs('public/images', $filename);
+            } elseif (is_string($this->photo)) {
+                // If $this->photo is already a string (file name), no need to process it
+                $filename = $this->photo;
             }
 
             $data['photo'] = $filename;

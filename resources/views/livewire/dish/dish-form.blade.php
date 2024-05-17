@@ -31,7 +31,29 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="row justify-content-center align-items-center mb-4">
+                        <div class="col-md-3 text-center"> <!-- Adjusted column width -->
+                            @if ($photo)
+                                <img id="showImage" class="rounded-circle" width="80" height="80" src="{{ asset('storage/dishImage/' . $photo) }}" alt="profile">
+                            @else
+                                <span>No photo available</span>
+                            @endif
+                        </div>
                     
+                        <div class="col-md-9"> <!-- Adjusted column width -->
+                            <div class="input-block local-top-form">
+                                <label class="local-top">Dish Image</label>
+                                <div class="settings-btn upload-files-avator">
+                                    <input type="file" wire:model="photo" id="image" class="hide-input">
+                                    <label for="image" class="upload">Choose File</label>
+                                </div>
+                                @error('photo')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group local-forms">
@@ -98,3 +120,21 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('photoPreview', function (photoUrl) {
+            $('#showImage').attr('src', photoUrl);
+        });
+
+        $('#image').on('change', function (e) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                Livewire.emit('updatePhotoPreview', e.target.result);
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    });
+</script> 
+@endpush

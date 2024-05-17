@@ -80,7 +80,16 @@
                                 @else
                                     @foreach ($dishes as $dish)
                                         <tr>
-                                            <td></td>
+                                            <td>
+                                                @if ($dish->photo)
+                                                <img src="{{ asset('storage/dishImage/' . $dish->photo) }}" alt="Dish Photo" class="rounded-circle" width="50" height="50">
+
+                                                @else
+                                                <img src="{{ asset('assets/img/user.jpg') }}" alt="Dish Photo"  class="rounded-circle" width="50"
+                                                        height="50">
+                                                @endif
+
+                                            </td>
                                             <td>{{ $dish->menu->name }}</td>
                                             <td>{{ $dish->name }}</td>
                                             <td class="text-center">₱ {{ number_format($dish->price_full, 2) }}</td>
