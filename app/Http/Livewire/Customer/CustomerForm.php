@@ -59,10 +59,17 @@ class CustomerForm extends Component
         $this->gender_id = $customer->gender_id;
         $this->photo = $customer->photo;
 
-        $this->city = $customer_address->city;
-        $this->barangay = $customer_address->barangay;
-        $this->specific_address = $customer_address->specific_address;
-        $this->landmark = $customer_address->landmark;
+        if ($customer_address) {
+            $this->city = $customer_address->city;
+            $this->barangay = $customer_address->barangay;
+            $this->specific_address = $customer_address->specific_address;
+            $this->landmark = $customer_address->landmark;
+        } else {
+            $this->city = '';
+            $this->barangay = '';
+            $this->specific_address = '';
+            $this->landmark = '';
+        }
 
         $this->photoPath = $customer->photo ? 'upload/images/' . $customer->photo : null;
 
