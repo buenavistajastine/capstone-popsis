@@ -17,6 +17,7 @@ use App\Models\Package;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\BookingDishKey;
+use App\Models\CustomerAddress;
 use App\Models\PaidAmount;
 use Illuminate\Support\Facades\DB;
 
@@ -59,14 +60,22 @@ class BookingForm extends Component
         $this->selectedCustomerId = $customerId;
         // Fetch the customer's details
         $customer = Customer::find($customerId);
-        $this->first_name = $customer->first_name;
-        $this->last_name = $customer->last_name;
-        $this->contact_no = $customer->contact_no;
+        
+        if ($customer) {
+            $customer_address = CustomerAddress::where('customer_id', $customer->id)->first();
+            $this->first_name = $customer->first_name;
+            $this->last_name = $customer->last_name;
+            $this->contact_no = $customer->contact_no;
+            $this->city = $customer_address->city;
+            $this->barangay = $customer_address->barangay;
+            $this->specific_address = $customer_address->specific_address;
+            $this->landmark = $customer_address->landmark;
 
-        // Update the search input field with the selected customer's name
-        $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
-
-        // You can populate other fields here as needed
+            $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
+    
+        } else {
+            $this->resetInputFields();
+        }
     }
 
     public function bookingId($bookingId)

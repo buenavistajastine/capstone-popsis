@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class OrderBillingForm extends Component
 {
-    public $orderBillingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts;
+    public $orderBillingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts, $billingStatus;
     public $message = '';
     public $action = '';
+    public $errorMessage = '';
 
     protected $listeners = [
         'orderBillingId',
@@ -26,6 +27,7 @@ class OrderBillingForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+        $this->errorMessage = '';
     }
 
     public function orderBillingId($orderBillingId)
@@ -37,6 +39,7 @@ class OrderBillingForm extends Component
         $this->paid_amt = 0;
 
         $this->paid_amounts = PaidAmount::where('billing_id', $billing->id)->get();
+        $this->billingStatus = $billing->status_id;
     }
 
     public function store()
@@ -45,7 +48,7 @@ class OrderBillingForm extends Component
             DB::beginTransaction();
 
             $this->validate([
-                'paid_amt' => 'nullable|numeric',
+                'paid_amt' => 'nullable|numeric|min:1',
                 'payment_id' => 'nullable',
             ]);
 
@@ -54,6 +57,12 @@ class OrderBillingForm extends Component
             $latestPaidAmount = PaidAmount::where('billing_id', $this->orderBillingId)
                 ->latest('created_at')
                 ->first();
+
+            $currentPayableAmt = $latestPaidAmount ? $latestPaidAmount->payable_amt : $billing->payable_amt;
+
+            if ($this->paid_amt > $currentPayableAmt) {
+                throw new Exception("The amount to pay exceeds the latest payable amount.");
+            }
 
             $newPayableAmt = $latestPaidAmount
                 ? ($latestPaidAmount->payable_amt - $this->paid_amt)
@@ -90,8 +99,7 @@ class OrderBillingForm extends Component
             $this->emit('refreshParentOrderBilling');
         } catch (Exception $e) {
             DB::rollBack();
-            $errorMessage = $e->getMessage();
-            $this->emit('flashAction', 'error', $errorMessage);
+            $this->errorMessage = $e->getMessage();
         }
     }
 

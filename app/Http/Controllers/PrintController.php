@@ -13,6 +13,8 @@ use App\Models\Booking;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\BookingDishKey;
+use App\Models\FoodOrder;
+use App\Models\FoodOrderDishKey;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 
@@ -91,6 +93,16 @@ class PrintController extends Controller
 
         // dd($add_ons);
         return view('layouts.prints.claim-slip', compact('billing', 'dish_keys', 'booking', 'date', 'add_ons'));
+    }
+
+    public function claimSlipOrder($id) {
+        $date = Carbon::now()->format('F d, Y');
+        $billing = Billing::find($id);
+        $dish_keys = FoodOrderDishKey::where('order_id', $billing->foodOrder_id)->get();
+        $order = FoodOrder::where('id', $billing->foodOrder_id)->first();
+
+        // dd($add_ons);
+        return view('layouts.prints.claim-slip-order', compact('billing', 'dish_keys', 'order', 'date'));
     }
 
 }

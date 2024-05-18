@@ -135,6 +135,9 @@
                                                     @elseif ($booking->status_id == 2)
                                                         <button
                                                             class="custom-badge status-green">{{ $booking->status->name }}</button>
+                                                    @elseif ($booking->status_id == 11)
+                                                        <button
+                                                            class="custom-badge status-pink">{{ $booking->status->name }}</button>
                                                     @endif
 
                                                 </td>

@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class BillingForm extends Component
 {
-    public $billingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts;
+    public $billingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts, $billingStatus;
     public $message = '';
     public $action = '';
+    public $errorMessage = '';
 
     protected $listeners = [
         'billingId',
@@ -26,6 +27,7 @@ class BillingForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+        $this->errorMessage = '';
     }
 
     public function billingId($billingId)
@@ -37,6 +39,7 @@ class BillingForm extends Component
         $this->paid_amt = 0;
 
         $this->paid_amounts = PaidAmount::where('billing_id', $billing->id)->get();
+        $this->billingStatus = $billing->status_id;
     }
 
     public function store()
@@ -45,24 +48,27 @@ class BillingForm extends Component
             DB::beginTransaction();
 
             $this->validate([
-                'paid_amt' => 'nullable|numeric',
-                'payment_id' => 'nullable',
+                'paid_amt' => 'required|numeric|min:1',
+                'payment_id' => 'required',
             ]);
 
             $billing = Billing::find($this->billingId);
 
-            $booking = Booking::where('id', $billing->booking_id);
             $latestPaidAmount = PaidAmount::where('billing_id', $this->billingId)
                 ->latest('created_at')
                 ->first();
 
-            $newPayableAmt = $latestPaidAmount
-                ? ($latestPaidAmount->payable_amt - $this->paid_amt)
-                : (0 - $this->paid_amt);
+            $currentPayableAmt = $latestPaidAmount ? $latestPaidAmount->payable_amt : $billing->payable_amt;
+
+            // Check if the paid amount exceeds the payable amount
+            if ($this->paid_amt > $currentPayableAmt) {
+                throw new Exception("The amount to pay exceeds the latest payable amount.");
+            }
+
+            $newPayableAmt = $currentPayableAmt - $this->paid_amt;
 
             if ($this->billingId) {
                 $billing->update([
-
                     'payment_id' => $this->payment_id,
                 ]);
 
@@ -74,8 +80,8 @@ class BillingForm extends Component
 
                 if ($payAmount->payable_amt === 0) {
                     $billing->update(['status_id' => 5]);
-                    $booking->update(['status_id' => 11]);
-                } elseif ($latestPaidAmount->paid_amt !== 0) {
+                    Booking::where('id', $billing->booking_id)->update(['status_id' => 11]);
+                } elseif ($latestPaidAmount && $latestPaidAmount->paid_amt !== 0) {
                     $billing->update(['status_id' => 13]);
                 }
 
@@ -92,8 +98,7 @@ class BillingForm extends Component
             $this->emit('refreshParentBilling');
         } catch (Exception $e) {
             DB::rollBack();
-            $errorMessage = $e->getMessage();
-            $this->emit('flashAction', 'error', $errorMessage);
+            $this->errorMessage = $e->getMessage();
         }
     }
 

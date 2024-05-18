@@ -9,7 +9,7 @@
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-
+    <livewire:flash-message.flash-message />
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row justify-content-center align-items-center mb-4">
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label> First Name<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="first_name" placeholder />
@@ -53,7 +53,7 @@
                         <input class="form-control" type="text" wire:model="last_name" placeholder />
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Sex<span class="login-danger">*</span>
                         </label>
@@ -67,12 +67,40 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label> Contact No.<span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="contact_no" placeholder />
                     </div>
                 </div>
+
+                <h4 class="mb-3">Address</h4>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group local-forms">
+                        <label> City<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="city" placeholder />
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="form-group local-forms">
+                        <label> Barangay<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="barangay" placeholder />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group local-forms">
+                        <label> Street No.<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="specific_address" placeholder />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group local-forms">
+                        <label> Landmark<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" wire:model="landmark" placeholder />
+                    </div>
+                </div>
+                
             </div>
         </div>
         <div class="modal-footer">

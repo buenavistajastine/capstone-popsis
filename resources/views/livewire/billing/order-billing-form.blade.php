@@ -19,6 +19,11 @@
 
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
+            @if ($errorMessage)
+                <div class="alert alert-danger">
+                    {{ $errorMessage }}
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-12">
 
@@ -83,8 +88,15 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
+        {{-- <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save</button>
+        </div> --}}
+        <div class="modal-footer">
+            @if ($billingStatus === 5)
+                <button type="button" class="btn btn-primary" disabled>Already Paid</button>
+            @else
+                <button type="submit" class="btn btn-primary">Submit</button>
+            @endif
         </div>
     </form>
 </div>

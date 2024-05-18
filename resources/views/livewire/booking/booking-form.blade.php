@@ -38,7 +38,7 @@
 
                                     </div>
                                 </div> --}}
-                                @if (!$bookingId)
+                                @if (!isset($bookingId) || !$bookingId)
                                 <div class="col-md-12 position-relative">
                                     <div class="form-group local-forms">
                                         <label>Search for Existing Customer<span class="login-danger">*</span></label>

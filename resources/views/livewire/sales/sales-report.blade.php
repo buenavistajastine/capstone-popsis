@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
-                <label>Year<span class="login-danger">*</span></label>
+                <label>Year</label>
                 <select class="form-control" wire:model="selectedYear">
                     @for ($year = date('Y'); $year >= 2020; $year--)
                         <option value="{{ $year }}">{{ $year }}</option>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
-                <label>Month<span class="login-danger">*</span></label>
+                <label>Month</label>
                 <select class="form-control" wire:model="selectedMonth">
                     <option value="">All</option>
                     @for ($month = 1; $month <= 12; $month++)
@@ -35,7 +35,7 @@
         </div>
         <div class="col-12 col-md-6 col-xl-2">
             <div class="form-group local-forms">
-                <label>Filter<span class="login-danger">*</span></label>
+                <label>Filter</label>
                 <select class="form-control" wire:model="filterType">
                     <option value="all">All</option>
                     <option value="booking">Booking</option>

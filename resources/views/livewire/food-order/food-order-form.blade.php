@@ -39,7 +39,7 @@
                                     </div>
                                 </div> --}}
                 <h4 class="mb-3">Customer Details</h4>
-                @if (!$orderId)
+                @if (!isset($orderId) || !$orderId)
                 <div class="col-md-12 position-relative">
                     <div class="form-group local-forms">
                         <label>Search for Existing Customer<span class="login-danger">*</span></label>
@@ -269,7 +269,7 @@
                             readonly />
                     </div>
                 </div> --}}
-                <div class="col-md-12 mb-4">
+                {{-- <div class="col-md-12 mb-4">
                     <div class="row">
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
@@ -280,7 +280,7 @@
                                 <div class="text-end">
                                     <h4>{{ $total_price }}</h4>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- <div class="col-md-12 d-flex justify-content-between">
                                 <div>
@@ -290,6 +290,18 @@
                                     <h4></h4>
                                 </div>
                             </div> --}}
+                        {{-- </div>
+                    </div>
+                </div> --}}
+
+                <div class="col-md-12 mb-4">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="col-md-12 pe-4 d-flex justify-content-end">
+                                <h3 class="text-end">Total Price: {{ $total_price }}</h3>
+                            </div>
+
                         </div>
                     </div>
                 </div>

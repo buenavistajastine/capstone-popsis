@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title style="text-transform: capitalize;">Claim Slip - {{ $booking->customers->first_name }} {{ $booking->customers->last_name }}</title>
+    <title style="text-transform: capitalize;">Claim Slip - {{ $order->customers->first_name }}
+        {{ $order->customers->last_name }}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -97,54 +98,25 @@
 
 
         <div class="row">
-            <div class="col-md-6">BOOKING NO: {{ $booking->booking_no }} <span class="float-end">{{ $billing->statuses->name }}</div>
+            <div class="col-md-6">ORDER NO: {{ $order->order_no }} <span
+                    class="float-end">{{ $billing->statuses->name }}</div>
             <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
-            <div class="col-md-12">DATE OF EVENT:
-                <span>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
+            <div class="col-md-12">DATE OF DELIVERY:
+                <span>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('F j, Y') : '' }}
                     at
-                    {{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}
+                    {{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}
                 </span>
             </div>
             <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }},
                     {{ $billing->customers->first_name }}</span></div>
-            <div class="col-md-12">PACKAGE: <span>{{ $booking->packages->name }}
-                    (₱{{ $booking->packages->price }}/PAX)</span></div>
-            <div class="col-md-12">NO. OF GUESTS: <span>{{ $booking->no_pax }}</span></div>
-            @php
-                $total = $booking->packages->price * $booking->no_pax;
-            @endphp
-            <div class="col-md-12">DISHES & ADD-ONS: </div>
+
+            <div class="col-md-12">DISHES: </div>
             @foreach ($dish_keys as $key)
                 <div class="ps-4">{{ $key->dishes->name }}</div>
             @endforeach
-            @foreach ($add_ons as $dish)
-                <div class="ps-4">Add-on: {{ $dish->dishss->name }} <span
-                        class="float-end">{{ number_format($dish->dishss->price_full, 2) }}</span></div>
-            @endforeach
             <hr class="mt-3">
             <div class="col-md-12 mt-1">TOTAL AMOUNT: <span class="float-end"><strong>₱
-                        {{ number_format($booking->total_price, 2) }}</strong></span></div>
-
-
-            {{-- <div class="colspan-12">SERVICES AVAILED:</div>
-            <div class="colspan-12">
-                @foreach ($services as $service)
-                    <div class="marg service-item">
-                        <div><strong>{{ $service->name }}</strong></div>
-                        <div><strong>{{ number_format($service->price, 2) }}</strong></div>
-                    </div>
-                @endforeach
-                <hr>
-            </div>
-            <div class="colspan-12 service-item">TOTAL AMOUNT
-                <strong>₱{{ number_format($billing->total_amt, 2) }}</strong>
-            </div>
-            <div class="text-center mt-2 d-flex flex-column align-items-center">
-                @php
-                    echo DNS1D::getBarcodeHTML($booking->barcode, 'C128', 3, 33);
-                @endphp
-                <div class="text-center">{{ $booking->barcode }}</div>
-            </div> --}}
+                        {{ number_format($order->total_price, 2) }}</strong></span></div>
         </div>
     </div>
 </body>

@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/print-dishes', [PrintController::class, 'printDishes'])->name('print.dishes');
     Route::get('/print-order-dishes', [PrintController::class, 'printOrderDishes'])->name('print.order-dishes');
     Route::get('claim-slip/{id}', [PrintController::class, 'claimSlip'])->name('print.claim-slip');
+    Route::get('claim-slip-order/{id}', [PrintController::class, 'claimSlipOrder'])->name('print.claim-slip-order');
 
     Route::get('kitchen', Kitchen::class);
 

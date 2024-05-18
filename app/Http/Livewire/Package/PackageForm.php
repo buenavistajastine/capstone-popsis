@@ -3,11 +3,12 @@
 namespace App\Http\Livewire\Package;
 
 use App\Models\Package;
+use App\Models\Venue;
 use Livewire\Component;
 
 class PackageForm extends Component
 {
-    public $packageId, $name, $price, $description, $limitation_of_maindish, $minimum_pax;
+    public $packageId, $name, $price, $description, $limitation_of_maindish, $minimum_pax, $venue_id;
     public $action= '';
     public $message= '';
 
@@ -30,6 +31,7 @@ class PackageForm extends Component
         $this->price = number_format($package->price, 2);
         $this->description = $package->description;
         $this->minimum_pax = $package->minimum_pax;
+        $this->venue_id = $package->venue_id;
     }
 
     public function store() {
@@ -38,7 +40,8 @@ class PackageForm extends Component
             'price' => 'required',
             'description' => 'required',
             'limitation_of_maindish' => 'nullable',
-            'minimum_pax' => 'nullable'
+            'minimum_pax' => 'nullable',
+            'venue_id' => 'nullable'
         ]);
 
         
@@ -63,6 +66,7 @@ class PackageForm extends Component
 
     public function render()
     {
-        return view('livewire.package.package-form');
+        $venues = Venue::all();
+        return view('livewire.package.package-form', compact('venues'));
     }
 }

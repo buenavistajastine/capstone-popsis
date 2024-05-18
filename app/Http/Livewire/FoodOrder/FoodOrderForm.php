@@ -48,17 +48,26 @@ class FoodOrderForm extends Component
     public function selectCustomer($customerId)
     {
         $this->selectedCustomerId = $customerId;
-        // Fetch the customer's details
+        
         $customer = Customer::find($customerId);
-        $this->first_name = $customer->first_name;
-        $this->last_name = $customer->last_name;
-        $this->contact_no = $customer->contact_no;
+        
+        if ($customer) {
+            $customer_address = CustomerAddress::where('customer_id', $customer->id)->first();
+            $this->first_name = $customer->first_name;
+            $this->last_name = $customer->last_name;
+            $this->contact_no = $customer->contact_no;
+            $this->city = $customer_address->city;
+            $this->barangay = $customer_address->barangay;
+            $this->specific_address = $customer_address->specific_address;
+            $this->landmark = $customer_address->landmark;
 
-        // Update the search input field with the selected customer's name
-        $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
-
-        // You can populate other fields here as needed
+            $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
+    
+        } else {
+            $this->resetInputFields();
+        }
     }
+    
 
     public function orderId($orderId)
     {
@@ -129,6 +138,7 @@ class FoodOrderForm extends Component
     public function store()
     {
         $order = FoodOrder::find($this->orderId);
+        $newCustomer = null;
 
         try {
             DB::beginTransaction();
@@ -159,104 +169,109 @@ class FoodOrderForm extends Component
                 'landmark' => 'nullable',
             ]);
 
+            
             if (!$this->customer_id) {
-
-
-                if (!$this->selectedCustomerId) {
-                    $newCustomer = Customer::create($customer_data);
-                    $order_data['customer_id'] = $newCustomer->id;
-                } else {
-                    $order_data['customer_id'] = $this->selectedCustomerId;
-                }
+                    if (!$this->selectedCustomerId) {
+                        $newCustomer = Customer::create($customer_data);
+                        $order_data['customer_id'] = $newCustomer->id;
+                    } else {
+                        $order_data['customer_id'] = $this->selectedCustomerId;
+                    }
             } else {
-                $order_data['customer_id'] = $this->customer_id;
+                    $order_data['customer_id'] = $this->customer_id;
 
-                $cust = Customer::whereId($this->customer_id)->first();
-                $user = User::whereId($cust->user_id)->first();
-                if ($user) {
-                    $user->update([
+                    $cust = Customer::whereId($this->customer_id)->first();
+                    $user = User::whereId($cust->user_id)->first();
+                    if ($user) {
+                        $user->update([
+                            'first_name' => $this->first_name,
+                            'middle_name' => $this->middle_name,
+                            'last_name' => $this->last_name,
+                        ]);
+                    }
+
+                    $cust->update([
                         'first_name' => $this->first_name,
                         'middle_name' => $this->middle_name,
                         'last_name' => $this->last_name,
                     ]);
-                }
-
-                $cust->update([
-                    'first_name' => $this->first_name,
-                    'middle_name' => $this->middle_name,
-                    'last_name' => $this->last_name,
-                ]);
             }
 
             // Assign the result of str_replace to 'total_price'
             $order_data['total_price'] = str_replace(['₱', ' ', ','], '', $order_data['total_price'] ?? 0);
 
             if ($this->orderId) {
-                $order = FoodOrder::find($this->orderId);
-                $address = CustomerAddress::where('customer_id', $order->customer_id);
+                        $order = FoodOrder::find($this->orderId);
+                      
+                        $address = CustomerAddress::where('customer_id', $order->customer_id);
 
-                $order->update($order_data, ['status_id' => 2]);
-                $address->update($address_data);
+                        $order->update($order_data, ['status_id' => 2]);
+                        $address->update($address_data);
 
-                foreach ($this->dishItems as $key => $value) {
-                    if ($this->dishItems[$key]['id'] == null) {
-                        FoodOrderDishKey::create([
-                            'order_id' => $this->orderId,
-                            'dish_id' => $this->dishItems[$key]['dish_id'],
-                            'quantity' => $this->dishItems[$key]['quantity'],
-                            'status_id' => 1,
-                            'update' => true
-                        ]);
-                    } else {
-                        $dish_ni = FoodOrderDishKey::find($this->dishItems[$key]['id']);
-                        $dish_ni->update([
-                            'order_id' => $this->orderId,
-                            'dish_id' => $this->dishItems[$key]['dish_id'],
-                            'quantity' => $this->dishItems[$key]['quantity'],
-                            'status_id' => 1,
-                            'update' => true
-                        ]);
-                    }
-                }
+                        foreach ($this->dishItems as $key => $value) {
+                            if ($this->dishItems[$key]['id'] == null) {
+                                FoodOrderDishKey::create([
+                                    'order_id' => $this->orderId,
+                                    'dish_id' => $this->dishItems[$key]['dish_id'],
+                                    'quantity' => $this->dishItems[$key]['quantity'],
+                                    'status_id' => 1,
+                                    'update' => true
+                                ]);
+                            } else {
+                                $dish_ni = FoodOrderDishKey::find($this->dishItems[$key]['id']);
+                                $dish_ni->update([
+                                    'order_id' => $this->orderId,
+                                    'dish_id' => $this->dishItems[$key]['dish_id'],
+                                    'quantity' => $this->dishItems[$key]['quantity'],
+                                    'status_id' => 1,
+                                    'update' => true
+                                ]);
+                            }
+                        }
 
-                $billing = Billing::where('foodOrder_id', $this->orderId)->first();
-                if ($billing) {
-                    $billing->update([
-                        'total_amt' => $order_data['total_price'],
-                    ]);
+                        $billing = Billing::where('foodOrder_id', $this->orderId)->first();
+                        if ($billing) {
+                            $billing->update([
+                                'total_amt' => $order_data['total_price'],
+                            ]);
 
-                    PaidAmount::create([
-                        'billing_id' => $billing->id,
-                        'payable_amt' => $order_data['total_price'],
-                    ]);
-                } else {
-                    // Create billing if it does not exist
-                    $billed = Billing::create([
-                        'customer_id' => $order->customer_id,
-                        'foodOrder_id' => $order->id,
-                        'total_amt' => $order_data['total_price'],
-                        'status_id' => 6,
-                    ]);
+                            PaidAmount::create([
+                                'billing_id' => $billing->id,
+                                'payable_amt' => $order_data['total_price'],
+                            ]);
+                        } else {
+                            // Create billing if it does not exist
+                            $billed = Billing::create([
+                                'customer_id' => $order->customer_id,
+                                'foodOrder_id' => $order->id,
+                                'total_amt' => $order_data['total_price'],
+                                'status_id' => 6,
+                            ]);
 
-                    PaidAmount::create([
-                        'billing_id' => $billed->id,
-                        'payable_amt' => $order_data['total_price'],
-                    ]);
-                }
+                            PaidAmount::create([
+                                'billing_id' => $billed->id,
+                                'payable_amt' => $order_data['total_price'],
+                            ]);
+                        }
 
-                // Move this outside the outer loop
-                foreach ($this->dishItems as $key => $value) {
-                    FoodOrderDishKey::where('order_id', '=', $this->orderId)
-                        ->update(['update' => 0]);
-                }
+                        // Move this outside the outer loop
+                        foreach ($this->dishItems as $key => $value) {
+                            FoodOrderDishKey::where('order_id', '=', $this->orderId)
+                                ->update(['update' => 0]);
+                        }
 
-                $action = "edit";
-                $message = 'Successfully Updated';
+                        $action = "edit";
+                        $message = 'Successfully Updated';
             } else {
                 $order_data['status_id'] = 2;
                 $order = FoodOrder::create($order_data);
 
-                $address_data['customer_id'] = $newCustomer->id;
+                if (!$this->selectedCustomerId) {
+                    $address_data['customer_id'] = $order->customer_id;
+                } else {
+                    $address_data['customer_id'] = $this->selectedCustomerId;
+                }
+
 
                 CustomerAddress::create($address_data);
 

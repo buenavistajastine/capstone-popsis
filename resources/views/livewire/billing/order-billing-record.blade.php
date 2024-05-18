@@ -127,9 +127,14 @@
                                                 <div class="btn-group btn-group-xs" role="group">
                                                     <button type="button" class="btn btn-primary btn-sm mx-1"
                                                         wire:click="editOrderBilling({{ $billing->id }})"
-                                                        title="Edit">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                        title="View">
+                                                        <i class="fa-solid fa-eye"></i>
                                                     </button>
+                                                    <a class="btn btn-primary btn-sm mx-1"
+                                                        href="{{ route('print.claim-slip-order', $billing->id) }}"
+                                                        target="_blank" title="Print Claim Slip">
+                                                        <i class="fa-solid fa-print"></i>
+                                                    </a>
                                                     {{-- <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteOrderBilling({{ $billing->id }})"
                                                         title="Delete">

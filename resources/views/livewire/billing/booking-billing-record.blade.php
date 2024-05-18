@@ -160,7 +160,7 @@
                                                 <div class="btn-group btn-group-xs" role="group">
                                                     <button type="button" class="btn btn-primary btn-sm mx-1"
                                                         wire:click="editBilling({{ $billing->id }})" title="Edit">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                        <i class="fa-solid fa-eye"></i>
                                                     </button>
                                                     <a class="btn btn-primary btn-sm mx-1"
                                                         href="{{ route('print.claim-slip', $billing->id) }}"

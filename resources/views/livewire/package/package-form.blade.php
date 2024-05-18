@@ -19,20 +19,34 @@
                         <input class="form-control" type="text" wire:model="name" placeholder />
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 ">
+                    <div class="form-group local-forms">
+                        <label class="form-label">Venue<span class="login-danger">*</span>
+                        </label>
+                        <select class="form-control select form-select-md" wire:model="venue_id">
+                            <option selected value="">--select--</option>
+                            @foreach ($venues as $venue)
+                            <option value="{{ $venue->id }}">
+                                {{ $venue->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Price <span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="price" placeholder />
                     </div>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
-                        <label>Limitation of Main Dish <span class="login-danger">*</span></label>
+                        <label>No. of Dish <span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="limitation_of_maindish" placeholder />
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group local-forms">
                         <label>Minimum Pax <span class="login-danger">*</span></label>
                         <input class="form-control" type="text" wire:model="minimum_pax" placeholder />

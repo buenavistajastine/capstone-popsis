@@ -16,7 +16,7 @@ class ModeOfPaymentSeeder extends Seeder
         ModeOfPayment::insert([
             ['name' => 'Cash'],
             ['name' => 'Cheque'],
-            ['name' => 'Mobile Wallet Service']
+            ['name' => 'GCash']
         ]);
     }
 }
