@@ -334,19 +334,24 @@ class FoodOrderForm extends Component
     public function calculatePrice()
     {
         $dishesTotalPrice = 0;
-
+    
         foreach ($this->dishItems as $dishItem) {
             if (!empty($dishItem['dish_id'])) {
                 $dish = Dish::find($dishItem['dish_id']);
-
+    
                 if ($dish) {
-                    $dishesTotalPrice += ($dish->price_full * $dishItem['quantity']);
+                    if ($dishItem['quantity'] == 0.5) {
+                        $dishesTotalPrice += (float) $dish->price_half;
+                    } else {
+                        $dishesTotalPrice += (float) $dish->price_full * (int) $dishItem['quantity'];
+                    }
                 }
             }
         }
-
+    
         $this->total_price = '₱ ' . number_format($dishesTotalPrice, 2);
     }
+    
 
     public function addDish()
     {

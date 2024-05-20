@@ -14,23 +14,17 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <style>
-        /* @font-face {
-            font-family: 'FigTree';
-            src: url('https://fonts.bunny.net/figtree/fontfile.woff2') format('woff2'); */
-        /* Add additional font formats for cross-browser compatibility */
-        /* } */
+        @font-face {
+            font-family: 'Colombo';
+            src: url('{{ asset('assets/fonts/Colombo.ttf') }}') format('truetype');
+        }
 
         html,
         body {
             color: black;
             font-size: 10px;
+            font-family: 'Colombo', sans-serif;
         }
-
-        /* body {
-            font-family: 'Arial', sans-serif;        } */
-        /* .marg {
-            padding-left: 5px;
-        } */
 
         .service-item {
             display: flex;
@@ -53,98 +47,95 @@
 
         .fon {
             font-size: 12px;
-
         }
-
-
 
         .logo {
             width: 75%;
             margin-bottom: -10px;
             margin-top: -17px;
         }
+
+        .broken-line {
+            border: none;
+            border-top: 1px dashed #000;
+            /* Adjust color and thickness as needed */
+        }
     </style>
 </head>
 
-<body onload='window.print()''>
+<body onload='window.print()'>
     <div class="claim-slip-container" id="contentToPrint">
         <div class="row">
             <div class="col-12 p-2 text-center">
                 <div>
-                    <h1 class="fw-bold">POPSI'S</h2>
+                    <h1 class="fw-bold">POPSI'S</h1>
                 </div>
-                <div class="fon">Prepared by our Family, for your Family
-                </div>
+                <div class="fon">Prepared by our Family, for your Family</div>
             </div>
-            <div class="col-md-12 d-flex justify-content-center text-center">
+            <div class="col-12 text-center">
                 <div class="row">
-                    <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Luzariaga St.
-                    </div>
-                    <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Valencia, Negros Oriental
-                    </div>
-                    <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
-                        Tel.Nos. 09458613737
-                    </div>
-                    <div class="col-12 mt-2"><strong>
-                            <h4 class="text-center">Claim Slip</h3>
-                        </strong></div>
+                    <div class="col-12 header-font" style="margin-bottom:-5px">Luzariaga St.</div>
+                    <div class="col-12 header-font" style="margin-bottom:-5px">Valencia, Negros Oriental</div>
+                    <div class="col-12 header-font" style="margin-bottom:-5px">Tel.Nos. 09458613737</div>
                 </div>
             </div>
-            <hr>
+            <hr class="broken-line mt-3">
         </div>
 
+        <div class="row">
+            <div class="col-md-6">{{ $booking->booking_no }} <span class="float-end">{{ $billing->statuses->name }}</span></div>
+            <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
+            <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }}, {{ $billing->customers->first_name }}</span></div>
+        </div>
 
         <div class="row">
-            <div class="col-md-6">{{ $booking->booking_no }} <span class="float-end">{{ $billing->statuses->name }}</div>
-            <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
-            <div class="col-md-12">DATE OF EVENT:
-                <span>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
-                    at
-                    {{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}
-                </span>
-            </div>
-            <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }},
-                    {{ $billing->customers->first_name }}</span></div>
-            <div class="col-md-12">PACKAGE: <span>{{ $booking->packages->name }}
-                    (₱{{ $booking->packages->price }}/PAX)</span></div>
-            <div class="col-md-12">NO. OF GUESTS: <span>{{ $booking->no_pax }}</span></div>
-            @php
-                $total = $booking->packages->price * $booking->no_pax;
-            @endphp
+            <div class="col-md-6">PACKAGE: <span>{{ $booking->packages->name }}</span></div>
+            <div class="col-md-6 text-end">{{ number_format($booking->packages->price, 2) }}/PAX</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">NO. OF GUESTS: <span class="float-end">{{ $booking->no_pax }} Pax</span></div>
+        </div>
+
+        <div class="row">
             <div class="col-md-12">DISHES & ADD-ONS: </div>
             @foreach ($dish_keys as $key)
-                <div class="ps-4">{{ $key->dishes->name }}</div>
+                <div class="col-md-12 ps-4">{{ $key->dishes->name }}</div>
             @endforeach
             @foreach ($add_ons as $dish)
-                <div class="ps-4">Add-on: {{ $dish->dishss->name }} <span
-                        class="float-end">{{ number_format($dish->dishss->price_full, 2) }}</span></div>
+            @php
+                $total_price = 0;
+                if ($dish->quantity >= 1) {
+                    $total_price += ($dish->dishss->price_full * $dish->quantity); 
+                } elseif ($dish->quantity == 0.5) {
+                    $total_price += $dish->dishss->price_half;
+                }
+            @endphp
+                <div class="col-md-12 ps-4">Add-on: {{ $dish->dishss->name }} <span class="float-end">{{ number_format($total_price, 2) }}</span></div>
             @endforeach
-            <hr class="mt-3">
-            <div class="col-md-12 mt-1">TOTAL AMOUNT: <span class="float-end"><strong>₱
-                        {{ number_format($booking->total_price, 2) }}</strong></span></div>
+        </div>
 
+        <hr class="broken-line mt-3">
+        <div class="row">
+            <div class="col-md-12 mt-1 mb-1">TOTAL AMOUNT: <span class="float-end"><strong>₱{{ number_format($booking->total_price, 2) }}</strong></span></div>
 
-            {{-- <div class="colspan-12">SERVICES AVAILED:</div>
-            <div class="colspan-12">
-                @foreach ($services as $service)
-                    <div class="marg service-item">
-                        <div><strong>{{ $service->name }}</strong></div>
-                        <div><strong>{{ number_format($service->price, 2) }}</strong></div>
-                    </div>
-                @endforeach
-                <hr>
-            </div>
-            <div class="colspan-12 service-item">TOTAL AMOUNT
-                <strong>₱{{ number_format($billing->total_amt, 2) }}</strong>
-            </div>
-            <div class="text-center mt-2 d-flex flex-column align-items-center">
-                @php
-                    echo DNS1D::getBarcodeHTML($booking->barcode, 'C128', 3, 33);
-                @endphp
-                <div class="text-center">{{ $booking->barcode }}</div>
-            </div> --}}
+            @if ($billing->additional_amt != 0)
+            <div class="col-md-12 mt-1">ADDITIONAL AMOUNT: <span class="float-end"><strong>₱{{ number_format($billing->additional_amt, 2) }}</strong></span></div>
+            @endif
+            @if ($billing->advance_amt != 0)
+            <div class="col-md-12 mt-1">ADVANCE AMOUNT: <span class="float-end"><strong>₱{{ number_format($billing->advance_amt, 2) }}</strong></span></div>
+            @endif
+            @if ($billing->discount_amt != 0)
+            <div class="col-md-12 mt-1 mb-2">DISCOUNT AMOUNT: <span class="float-end"><strong>₱{{ number_format($billing->discount_amt, 2) }}</strong></span></div>
+            @endif 
+
+            <div class="col-md-12 mt-1">PAID AMOUNT: <span class="float-end"><strong>₱{{ number_format($billing->paidAmount()->where('billing_id', $billing->id)->sum('paid_amt'), 2) }}</strong></span></div>
+            <hr class="broken-line mt-3">
+            <div class="col-md-12">BALANCE: <span class="float-end"><strong>₱{{ number_format($billing->paidAmount->payable_amt, 2) }}</strong></span></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center mt-3">** NOT AN OFFICIAL RECEIPT **</div>
         </div>
     </div>
 </body>

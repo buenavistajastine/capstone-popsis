@@ -15,16 +15,16 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <style>
-        /* @font-face {
-            font-family: 'FigTree';
-            src: url('https://fonts.bunny.net/figtree/fontfile.woff2') format('woff2'); */
-        /* Add additional font formats for cross-browser compatibility */
-        /* } */
+        @font-face {
+            font-family: 'Colombo';
+            src: url('{{ asset('assets/fonts/Colombo.ttf') }}') format('truetype');
+        }
 
         html,
         body {
             color: black;
-            font-size: 12px;
+            font-size: 10px;
+            font-family: 'Colombo', sans-serif;
         }
 
         /* body {
@@ -64,18 +64,23 @@
             margin-bottom: -10px;
             margin-top: -17px;
         }
+
+        .broken-line {
+            border: none;
+            border-top: 1px dashed #000;
+            /* Adjust color and thickness as needed */
+        }
     </style>
 </head>
 
-<body onload='window.print()''>
+<body onload='window.print()'>
     <div class="claim-slip-container" id="contentToPrint">
         <div class="row">
             <div class="col-12 p-2 text-center">
                 <div>
-                    <h1 class="fw-bold">POPSI'S</h2>
+                    <h1 class="fw-bold">POPSI'S</h1>
                 </div>
-                <div class="fon">Prepared by our Family, for your Family
-                </div>
+                <div class="fon">Prepared by our Family, for your Family</div>
             </div>
             <div class="col-md-12 d-flex justify-content-center text-center">
                 <div class="row">
@@ -88,35 +93,41 @@
                     <div class="col-12 d-flex justify-content-center header-font" style="margin-bottom:-5px">
                         Tel.Nos. 09458613737
                     </div>
-                    <div class="col-12 mt-2"><strong>
-                            <h4 class="text-center">Claim Slip</h3>
-                        </strong></div>
+
                 </div>
             </div>
-            <hr>
+            <hr class="broken-line mt-3">
         </div>
 
-
         <div class="row">
-            <div class="col-md-6">ORDER NO: {{ $order->order_no }} <span
-                    class="float-end">{{ $billing->statuses->name }}</div>
+            <div class="col-md-12 text-center"><h3>{{ $order->transports->name }}</h3></div>
+            <div class="col-md-6">ORDER NO: {{ $order->order_no }} <span class="float-end">{{ $billing->statuses->name }}</span></div>
             <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
             <div class="col-md-12">DATE OF DELIVERY:
-                <span>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('F j, Y') : '' }}
-                    at
-                    {{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}
-                </span>
+                <span>{{ $order['date_need'] ? \Carbon\Carbon::parse($order['date_need'])->format('F j, Y') : '' }} at {{ $order['call_time'] ? \Carbon\Carbon::parse($order['call_time'])->format('g:i A') : '' }}</span>
             </div>
-            <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }},
-                    {{ $billing->customers->first_name }}</span></div>
+            <div class="col-md-12">CUSTOMER: <span>{{ $billing->customers->last_name }}, {{ $billing->customers->first_name }}</span></div>
 
             <div class="col-md-12">DISHES: </div>
             @foreach ($dish_keys as $key)
-                <div class="ps-4">{{ $key->dishes->name }}</div>
+            @php
+                $total_price = 0;
+                if ($key->quantity >= 1) {
+                    $total_price += ($key->dishes->price_full * $key->quantity);
+                } elseif ($key->quantity == 0.5) {
+                    $total_price += $key->dishes->price_half;
+                }
+            @endphp
+                <div class="ps-4">{{ $key->dishes->name }} X{{ $key->quantity }}  <span class="float-end">{{ number_format($total_price, 2) }}</span></div>
             @endforeach
-            <hr class="mt-3">
-            <div class="col-md-12 mt-1">TOTAL AMOUNT: <span class="float-end"><strong>₱
-                        {{ number_format($order->total_price, 2) }}</strong></span></div>
+            <hr class="broken-line mt-3">
+            <div class="col-md-12 mt-1">TOTAL AMOUNT: <span class="float-end"><strong>₱{{ number_format($order->total_price, 2) }}</strong></span></div>
+            <div class="col-md-12 mt-1">PAID AMOUNT: <span class="float-end"><strong>₱{{ number_format($billing->paidAmount()->where('billing_id', $billing->id)->sum('paid_amt'), 2) }}</strong></span></div>
+            <div class="col-md-12 mt-1">BALANCE: <span class="float-end"><strong>₱{{ number_format($billing->paidAmount->payable_amt, 2) }}</strong></span></div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center mt-3">** NOT AN OFFICIAL RECEIPT **</div>
         </div>
     </div>
 </body>
