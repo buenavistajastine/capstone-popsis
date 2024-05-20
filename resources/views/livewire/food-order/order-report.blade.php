@@ -6,7 +6,7 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-                    <li class="breadcrumb-item active">Food Order Report</li>
+                    <li class="breadcrumb-item active">Food Order Printables</li>
                 </ul>
             </div>
         </div>
@@ -21,7 +21,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="doctor-table-blk">
-                                    <h3>Food Order Reports</h3>
+                                    <h3>Food Order Printables</h3>
                                     <div class="doctor-search-blk">
                                         {{-- <a class="btn btn-primary ms-2" wire:click="exportToExcel"
                                             title="export to Excel">

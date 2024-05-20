@@ -143,17 +143,26 @@
                                                 @endif
                                             </td>
 
+                                            @if ($billing->status_id == 3)
+                                                <td colspan="5" class="text-center">
+                                                    <button class="custom-badge status-pink">
+                                                        {{ $billing->statuses->name }}</button>
+                                                </td>
+                                            @else
                                             <td>
                                                 @if ($billing->status_id == 6)
-                                                    <button
-                                                        class="custom-badge status-orange">{{ $billing->statuses->name }}</button>
-                                                @elseif ($billing->status_id == 5)
-                                                    <button
-                                                        class="custom-badge status-green">{{ $billing->statuses->name }}</button>
-                                                @elseif ($billing->status_id == 13)
-                                                    <button
-                                                        class="custom-badge status-pink">{{ $billing->statuses->name }}</button>
-                                                @endif
+                                                        <button
+                                                            class="custom-badge status-orange">{{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 5)
+                                                        <button
+                                                            class="custom-badge status-green">{{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 3)
+                                                        <button class="custom-badge status-pink">
+                                                            {{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 13)
+                                                        <button class="custom-badge status-blue">
+                                                            {{ $billing->statuses->name }}</button>
+                                                    @endif
                                             </td>
                                             <td>
 
@@ -173,6 +182,7 @@
                                                     </a> --}}
                                                 </div>
                                             </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif

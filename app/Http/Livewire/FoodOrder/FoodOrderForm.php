@@ -32,6 +32,7 @@ class FoodOrderForm extends Component
     public $customers = [];
     public $searchQuery = '';
     public $selectedCustomerId = null;
+    public $errorMessage = '';
 
     protected $listeners = [
         'orderId',
@@ -43,6 +44,7 @@ class FoodOrderForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+        $this->errorMessage = '';
     }
 
     public function selectCustomer($customerId)
@@ -325,8 +327,7 @@ class FoodOrderForm extends Component
             $this->emit('refreshTable');
         } catch (Exception $e) {
             DB::rollBack();
-            $errorMessage = $e->getMessage();
-            $this->emit('flashAction', 'error', $errorMessage);
+            $this->errorMessage = $e->getMessage();
         }
     }
 

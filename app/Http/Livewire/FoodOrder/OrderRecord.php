@@ -14,6 +14,12 @@ class OrderRecord extends Component
     public $dateTo;
     public $search = '';
     public $orderRecordId;
+    public $status = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
@@ -31,13 +37,18 @@ class OrderRecord extends Component
 
     public function render()
     {
-        $records = FoodOrder::with('orderDish_keys')
-        ->whereBetween('date_need', [
-            Carbon::parse($this->dateFrom)->startOfDay(),
-            Carbon::parse($this->dateTo)->endOfDay()
-        ])
-        ->orderBy('date_need', 'asc')
-        ->paginate(10);
+        $records = FoodOrder::whereHas('customers', function ($query) {
+            $query->where(function ($subquery) {
+                $subquery->where('first_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            });
+        })
+            ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            ->when($this->status, function ($query) {
+                $query->where('status_id', $this->status);
+            })
+            ->paginate(10);
 
         return view('livewire.food-order.order-record', compact('records'));
     }

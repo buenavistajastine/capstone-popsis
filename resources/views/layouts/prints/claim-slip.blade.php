@@ -23,14 +23,14 @@
         html,
         body {
             color: black;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         /* body {
             font-family: 'Arial', sans-serif;        } */
-        .marg {
+        /* .marg {
             padding-left: 5px;
-        }
+        } */
 
         .service-item {
             display: flex;
@@ -97,7 +97,7 @@
 
 
         <div class="row">
-            <div class="col-md-6">BOOKING NO: {{ $booking->booking_no }} <span class="float-end">{{ $billing->statuses->name }}</div>
+            <div class="col-md-6">{{ $booking->booking_no }} <span class="float-end">{{ $billing->statuses->name }}</div>
             <div class="col-md-12">DATE: <span>{{ $date }}</span></div>
             <div class="col-md-12">DATE OF EVENT:
                 <span>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}

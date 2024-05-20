@@ -81,7 +81,7 @@
                             <tbody>
                                 @if ($billings->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center">No data available in table.</td>
+                                        <td colspan="7" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
                                     @foreach ($billings as $billing)
@@ -134,7 +134,8 @@
                                             <td class="text-center">₱
                                                 {{ number_format($billing->paidAmount()->where('billing_id', $billing->id)->sum('paid_amt'),2) }}
                                             </td>
-                                            <td class="text-center">₱ {{ number_format($billing->paidAmount->payable_amt, 2) }}
+                                            <td class="text-center">₱
+                                                {{ number_format($billing->paidAmount->payable_amt, 2) }}
                                             </td>
                                             <td class="text-center">
                                                 @if (!empty($billing->payment_id))
@@ -143,36 +144,49 @@
                                                     <small><i>Not selected</i></small>
                                                 @endif
                                             </td>
-                                            <td>
-                                                @if ($billing->status_id == 6)
-                                                    <button
-                                                        class="custom-badge status-orange">{{ $billing->statuses->name }}</button>
-                                                @elseif ($billing->status_id == 5)
-                                                    <button
-                                                        class="custom-badge status-green">{{ $billing->statuses->name }}</button>
-                                                @elseif ($billing->status_id == 13)
-                                                    <button
-                                                        class="custom-badge status-pink">{{ $billing->statuses->name }}</button>
-                                                @endif
-                                            </td>
-                                            <td>
 
-                                                <div class="btn-group btn-group-xs" role="group">
-                                                    <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editBilling({{ $billing->id }})" title="Edit">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </button>
-                                                    <a class="btn btn-primary btn-sm mx-1"
-                                                        href="{{ route('print.claim-slip', $billing->id) }}"
-                                                        target="_blank" title="View Booking">
-                                                        <i class="fa-solid fa-print"></i>
-                                                    </a>
-                                                    {{-- <a class="btn btn-danger btn-sm mx-1"
+                                            @if ($billing->status_id == 3)
+                                                <td colspan="5" class="text-center">
+                                                    <button class="custom-badge status-pink">
+                                                        {{ $billing->statuses->name }}</button>
+                                                </td>
+                                            @else
+                                                <td>
+
+                                                    @if ($billing->status_id == 6)
+                                                        <button
+                                                            class="custom-badge status-orange">{{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 5)
+                                                        <button
+                                                            class="custom-badge status-green">{{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 3)
+                                                        <button class="custom-badge status-pink">
+                                                            {{ $billing->statuses->name }}</button>
+                                                    @elseif ($billing->status_id == 13)
+                                                        <button class="custom-badge status-blue">
+                                                            {{ $billing->statuses->name }}</button>
+                                                    @endif
+                                                </td>
+                                                <td>
+
+                                                    <div class="btn-group btn-group-xs" role="group">
+                                                        <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                            wire:click="editBilling({{ $billing->id }})"
+                                                            title="Edit">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                        <a class="btn btn-primary btn-sm mx-1"
+                                                            href="{{ route('print.claim-slip', $billing->id) }}"
+                                                            target="_blank" title="View Booking">
+                                                            <i class="fa-solid fa-print"></i>
+                                                        </a>
+                                                        {{-- <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteBilling({{ $billing->id }})" title="Delete">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </a> --}}
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif

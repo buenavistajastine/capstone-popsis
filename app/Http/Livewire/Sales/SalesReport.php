@@ -55,6 +55,10 @@ class SalesReport extends Component
             $transactions->whereMonth('created_at', $this->selectedMonth);
         }
 
+        $transactions->whereDoesntHave('statuses', function ($query) {
+            $query->where('status_id', 3);
+        });
+
         $monthlyTotal = $transactions->sum('total_amt');
         $transactions = $transactions->paginate(20);
 
@@ -94,6 +98,10 @@ class SalesReport extends Component
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
         }
+
+        $transactions->whereDoesntHave('statuses', function ($query) {
+            $query->where('status_id', 3);
+        });
 
         $transactions = $transactions->get();
 

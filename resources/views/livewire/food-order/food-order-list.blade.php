@@ -61,6 +61,18 @@
                                 <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="form-group local-forms">
+                                <label for="statusFilter">Status:</label>
+                                <select class="form-control" id="statusFilter" wire:model="status">
+                                    <option value="">All</option>
+                                    <option value="1">Pending</option>
+                                    <option value="2">Approved</option>
+                                    <option value="3">Cancelled</option>
+                                    <option value="11">Completed</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
@@ -77,7 +89,7 @@
                             <tbody>
                                 @if ($orders->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center">No data available in table.</td>
+                                        <td colspan="6" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
                                     @foreach ($orders as $order)
@@ -103,44 +115,63 @@
 
                                             <td>
                                                 <div>
+                                                    <small>{{ ucfirst($order->customers->address->specific_address) }}
+                                                    </small>
+                                                </div>
+                                                <div>
                                                     {{ ucfirst($order->customers->address->barangay) }},
                                                     {{ ucfirst($order->customers->address->city) }}
                                                 </div>
-                                                <div>
-                                                    <small>{{ ucfirst($order->customers->address->specific_address) }}
-                                                        ({{ $order->customers->address->landmark }})
-                                                    </small>
-                                                </div>
+
                                             </td>
                                             <td>{{ $order->transports->name }}</td>
-                                            <td>
-                                                @if (!empty($order->status_id))
-                                                @if ($order->status_id == 1)
-                                                    <button
-                                                        class="custom-badge status-orange">{{ $order->statuses->name }}</button>
-                                                @elseif ($order->status_id == 2)
-                                                    <button
-                                                        class="custom-badge status-green">{{ $order->statuses->name }}</button>
-                                                @endif
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                        wire:click="editOrder({{ $order->id }})" title="Edit"> <i
-                                                            class="fa-solid fa-pen-to-square"></i></button>
-                                                    @if ($order->status_id == 1)
-                                                        <button type="button" class="btn btn-success btn-sm mx-1"
-                                                            onclick="confirmAcceptance({{ $order->id }})"
-                                                            title="Accept Order">
-                                                            <i class="fa-solid fa-check-to-slot"></i>
-                                                        </button>
+
+                                            @if ($order->status_id == 3)
+                                                <td colspan="5" class="text-center">
+                                                    <button class="custom-badge status-pink">
+                                                        {{ $order->statuses->name }}</button>
+                                                </td>
+                                            @else
+                                                <td>
+                                                    @if (!empty($order->status_id))
+                                                        @if ($order->status_id == 1)
+                                                            <button
+                                                                class="custom-badge status-orange">{{ $order->statuses->name }}</button>
+                                                        @elseif ($order->status_id == 2)
+                                                            <button
+                                                                class="custom-badge status-green">{{ $order->statuses->name }}</button>
+                                                        @elseif ($order->status_id == 3)
+                                                            <button class="custom-badge status-pink">
+                                                                {{ $order->statuses->name }}</button>
+                                                        @elseif ($order->status_id == 11)
+                                                            <button class="custom-badge status-blue">
+                                                                {{ $order->statuses->name }}</button>
+                                                        @endif
                                                     @endif
-                                                    {{-- <a class="btn btn-danger btn-sm mx-1"
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <button type="button" class="btn btn-primary btn-sm mx-1"
+                                                            wire:click="editOrder({{ $order->id }})" title="Edit">
+                                                            <i class="fa-solid fa-pen-to-square"></i></button>
+                                                        @if ($order->status_id == 1)
+                                                            <button type="button" class="btn btn-success btn-sm mx-1"
+                                                                onclick="confirmAction('accept', {{ $order->id }})"
+                                                                title="Accept Order">
+                                                                <i class="fa-solid fa-check-to-slot"></i>
+                                                            </button>
+                                                        @endif
+                                                        <button type="button" class="btn btn-danger btn-sm mx-1"
+                                                            onclick="confirmAction('cancel', {{ $order->id }})"
+                                                            title="Cancel Booking">
+                                                            <i class="fa-solid fa-calendar-xmark"></i>
+                                                        </button>
+                                                        {{-- <a class="btn btn-danger btn-sm mx-1"
                                                         wire:click="deleteOrder({{ $order->id }})" title="Delete">
                                                         <i class="fa-solid fa-trash"></i></a> --}}
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif
@@ -193,7 +224,8 @@
 
                                 @if ($orders->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage"
+                                            wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">
@@ -219,9 +251,17 @@
 
 @push('scripts')
     <script>
-        function confirmAcceptance(orderId) {
-            if (confirm('Are you sure you want to accept this food order?')) {
-                Livewire.emit('acceptOrder', orderId);
+        function confirmAction(action, orderId) {
+            const messages = {
+                accept: 'Are you sure you want to ACCEPT this order?',
+                cancel: 'Are you sure you want to CANCEL this order?'
+            };
+            if (confirm(messages[action])) {
+                const eventMap = {
+                    accept: 'acceptOrder',
+                    cancel: 'cancelOrder'
+                };
+                Livewire.emit(eventMap[action], orderId);
             }
         }
     </script>

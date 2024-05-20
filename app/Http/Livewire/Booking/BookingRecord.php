@@ -14,6 +14,7 @@ class BookingRecord extends Component
     public $dateFrom;
     public $dateTo;
     public $search = '';
+    public $status = '';
 
     public function updatingSearch()
     {
@@ -49,6 +50,9 @@ class BookingRecord extends Component
             Carbon::parse($this->dateFrom)->startOfDay(),
             Carbon::parse($this->dateTo)->endOfDay()
         ])
+        ->when($this->status, function ($query) {
+            $query->where('status_id', $this->status);
+        })
         ->orderBy('date_event', 'asc')
         ->paginate(10);
         

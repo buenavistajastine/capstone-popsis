@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
+use App\Models\Billing;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\FoodOrder;
@@ -14,27 +15,27 @@ class FoodOrderList extends Component
     public $dateFrom;
     public $dateTo;
     public $search = '';
+    public $status = '';
 
     protected $listeners = [
         'refreshParentFoodOrder' => '$refresh',
         'deleteOrder',
         'editOrder',
         'deleteConfirmBooking',
-        'acceptOrder' => 'acceptOrder'
+        'acceptOrder' => 'acceptOrder',
+        'cancelOrder' => 'cancelOrder'
     ];
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
-    
+
     public function createOrder()
     {
         $this->emit('resetInputFields');
         $this->emit('openFoodOrderModal');
     }
-
-
 
     public function editOrder($orderId)
     {
@@ -64,15 +65,32 @@ class FoodOrderList extends Component
     public function acceptOrder($orderId)
     {
         $order = FoodOrder::find($orderId);
-    
+
         if ($order) {
             $order->update(['status_id' => 2]);
-    
+
             $this->emit('flashAction', 'store', 'Order accepted successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Order not found.');
         }
-    
+
+        $this->emit('refreshTable');
+    }
+
+    public function cancelOrder($orderId)
+    {
+        $order = FoodOrder::find($orderId);
+        $billing = Billing::where('foodOrder_id', $orderId)->first();
+
+        if ($order) {
+            $order->update(['status_id' => 3]);
+            $billing->update(['status_id' => 3]);
+
+            $this->emit('flashAction', 'store', 'Order cancelled successfully.');
+        } else {
+            $this->emit('flashAction', 'error', 'Order not found.');
+        }
+
         $this->emit('refreshTable');
     }
 
@@ -86,6 +104,9 @@ class FoodOrderList extends Component
             });
         })
             ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            ->when($this->status, function ($query) {
+                $query->where('status_id', $this->status);
+            })
             ->paginate(10);
 
         return view('livewire.food-order.food-order-list', compact('orders'));

@@ -9,9 +9,13 @@
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <livewire:flash-message.flash-message />
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
+            @if ($errorMessage)
+            <div class="alert alert-danger">
+                {{ $errorMessage }}
+            </div>
+        @endif
             <div class="row justify-content-center align-items-center mb-4">
                 <div class="col-md-3 text-center"> <!-- Adjusted column width -->
                     @if ($photo)

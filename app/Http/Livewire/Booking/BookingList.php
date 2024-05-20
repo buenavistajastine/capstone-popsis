@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\Models\Billing;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Livewire\Component;
@@ -15,6 +16,7 @@ class BookingList extends Component
     public $dateFrom;
     public $dateTo;
     public $search = '';
+    public $status = '';
 
     protected $listeners = [
         'refreshParentBooking' => '$refresh',
@@ -22,7 +24,8 @@ class BookingList extends Component
         'editBooking',
         'printDishesByDate',
         'deleteConfirmBooking',
-        'acceptBooking' => 'acceptBooking'
+        'acceptBooking' => 'acceptBooking',
+        'cancelBooking' => 'cancelBooking'
     ];
 
     public function updatingSearch()
@@ -87,6 +90,24 @@ class BookingList extends Component
     
         $this->emit('refreshTable');
     }
+
+    public function cancelBooking($bookingId)
+    {
+        
+        $booking = Booking::find($bookingId);
+        $billing = Billing::where('booking_id', $bookingId)->first();
+
+        if ($booking) {
+            $booking->update(['status_id' => 3]);
+            $billing->update(['status_id' => 3]);
+    
+            $this->emit('flashAction', 'store', 'Booking cancelled successfully.');
+        } else {
+            $this->emit('flashAction', 'error', 'Booking not found.');
+        }
+    
+        $this->emit('refreshTable');
+    }
     
     public function render()
     {
@@ -99,8 +120,11 @@ class BookingList extends Component
                     ->orWhere('event_name', 'like', '%' . $this->search . '%');
             });
         })
-            ->where('date_event', '>=', $tomorrow) // Filter bookings with date event greater than or equal to tomorrow
+            ->where('date_event', '>', $tomorrow) // Filter bookings with date event greater than or equal to tomorrow
             ->whereBetween('date_event', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            ->when($this->status, function ($query) {
+                $query->where('status_id', $this->status);
+            })
             ->orderBy('date_event', 'asc')
             ->paginate(10);
 

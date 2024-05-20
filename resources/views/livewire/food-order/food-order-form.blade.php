@@ -9,18 +9,13 @@
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <livewire:flash-message.flash-message />
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
+            @if ($errorMessage)
+                <div class="alert alert-danger">
+                    {{ $errorMessage }}
+                </div>
+            @endif
             <div class="row">
 
                 {{-- <div class="col-md-4 ">
@@ -40,29 +35,31 @@
                                 </div> --}}
                 <h4 class="mb-3">Customer Details</h4>
                 @if (!isset($orderId) || !$orderId)
-                <div class="col-md-12 position-relative">
-                    <div class="form-group local-forms">
-                        <label>Search for Existing Customer<span class="login-danger">*</span></label>
-                        <div class="custom-dropdown" style="z-index: 2;">
-                            <input type="text" wire:model.debounce.300ms="searchQuery" class="form-control" placeholder="Search Customer">
-                            <div class="dropdown-content" style="max-height: 200px; overflow-y: auto;"
-                                @if (!$searchQuery || (isset($customers) && $customers->isEmpty())) style="display: none;" @endif>
-                                @if ($searchQuery && (!isset($customers) || $customers->isNotEmpty()))
-                                    @foreach ($customers as $customer)
-                                        <div wire:key="{{ $customer->id }}" wire:click="selectCustomer({{ $customer->id }})"
-                                            class="dropdown-item cursor-pointer fs-8">
-                                            {{ $customer->first_name }} {{ $customer->last_name }}
-                                        </div>
-                                    @endforeach
-                                @endif
-{{--     
+                    <div class="col-md-12 position-relative">
+                        <div class="form-group local-forms">
+                            <label>Search for Existing Customer<span class="login-danger">*</span></label>
+                            <div class="custom-dropdown" style="z-index: 2;">
+                                <input type="text" wire:model.debounce.300ms="searchQuery" class="form-control"
+                                    placeholder="Search Customer">
+                                <div class="dropdown-content" style="max-height: 200px; overflow-y: auto;"
+                                    @if (!$searchQuery || (isset($customers) && $customers->isEmpty())) style="display: none;" @endif>
+                                    @if ($searchQuery && (!isset($customers) || $customers->isNotEmpty()))
+                                        @foreach ($customers as $customer)
+                                            <div wire:key="{{ $customer->id }}"
+                                                wire:click="selectCustomer({{ $customer->id }})"
+                                                class="dropdown-item cursor-pointer fs-8">
+                                                {{ $customer->first_name }} {{ $customer->last_name }}
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                    {{--     
                                 @if ($searchQuery && (!isset($customers) || $customers->isEmpty()))
                                     <div class="dropdown-item">No customers found.</div>
                                 @endif --}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @endif
                 <div class="col-md-4 mb-2">
                     <div class="form-group local-forms">
@@ -282,7 +279,7 @@
                                 </div>
                             </div> --}}
 
-                            {{-- <div class="col-md-12 d-flex justify-content-between">
+                {{-- <div class="col-md-12 d-flex justify-content-between">
                                 <div>
                                     <h5>Additional Payment:</h5>
                                 </div>
@@ -290,7 +287,7 @@
                                     <h4></h4>
                                 </div>
                             </div> --}}
-                        {{-- </div>
+                {{-- </div>
                     </div>
                 </div> --}}
 

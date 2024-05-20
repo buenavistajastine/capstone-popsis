@@ -18,6 +18,7 @@ class CustomerForm extends Component
     public $city, $barangay, $specific_address, $landmark;
     public $photo;
     public $photoPath;
+    public $errorMessage = '';
 
     protected $listeners = [
         'customerId',
@@ -44,6 +45,7 @@ class CustomerForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+        $this->errorMessage = '';
     }
 
 
@@ -142,8 +144,7 @@ class CustomerForm extends Component
             $this->emit('refreshTable');
         } catch (Exception $e) {
             DB::rollBack();
-            $errorMessage = $e->getMessage();
-            $this->emit('flashAction', 'error', $errorMessage);
+            $this->errorMessage = $e->getMessage();
         }
     }
     public function render()

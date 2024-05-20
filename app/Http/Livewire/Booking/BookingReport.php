@@ -105,12 +105,21 @@ class BookingReport extends Component
     {
         $dish_id = [];
     
-        $bookings = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu'])
+        $query = Booking::with(['dish_keys.dishes.menu', 'addOns.dishss.menu'])
             ->whereBetween('date_event', [
                 Carbon::parse($this->dateFrom)->startOfDay(),
                 Carbon::parse($this->dateTo)->endOfDay()
-            ])
-            ->orderBy('date_event', 'asc')
+            ]);
+    
+        if (!empty($this->search)) {
+            $query->whereHas('customers', function ($query) {
+                $query->where('first_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            });
+        }
+    
+        $bookings = $query->orderBy('date_event', 'asc')
             ->paginate(10);
     
         foreach ($bookings as $book) {

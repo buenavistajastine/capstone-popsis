@@ -43,7 +43,7 @@
                 </select>
             </div>
         </div>
-        
+
 
     </div>
     <div class="row">
@@ -53,14 +53,19 @@
                 <div class="dash-content dash-count">
                     <h4>Yearly Total</h4>
                     @php
-                        $yearlyTotal = $transacs->sum('total_amt');
+                        $yearlyTotal = $transacs
+                            ->whereDoesntHave('statuses', function ($query) {
+                                $query->where('status_id', 3);
+                            })
+                            ->sum('total_amt');
                     @endphp
+
                     <h2>₱{{ number_format($yearlyTotal, 2) }}</h2>
                 </div>
             </div>
         </div>
-        
-        
+
+
         <!-- Monthly total -->
         <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
             <div class="dash-widget">
@@ -75,7 +80,7 @@
                 </div>
             </div>
         </div>
-        
+
         {{-- <!-- Weekly total -->
         <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
             <div class="dash-widget">
@@ -119,8 +124,9 @@
                                 <div class="doctor-table-blk">
                                     <h3>Sales Report</h3>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success btn-sm mx-1"
-                                        wire:click="export" title="Export"> <i class="fa-solid fa-file-export"></i> Excel Report</button>
+                                        <button type="button" class="btn btn-success btn-sm mx-1" wire:click="export"
+                                            title="Export"> <i class="fa-solid fa-file-export"></i> Excel
+                                            Report</button>
 
                                     </div>
                                     {{-- <div class="doctor-search-blk">

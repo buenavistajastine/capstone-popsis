@@ -77,7 +77,7 @@ class OrderReport extends Component
             ->get();
 
         $orderDishes = [];
-    
+
         foreach ($selectedOrders as $order) {
             foreach ($order['orderDish_keys'] as $dishKey) {
                 $orderDishes[] = [
@@ -88,7 +88,7 @@ class OrderReport extends Component
         }
 
         session(['orderDishes' => $orderDishes, 'selectedOrders' => $selectedOrders]);
-        
+
         // return redirect()->route('print.order-dishes');
         $this->emit('openPrintPage');
     }
@@ -96,15 +96,24 @@ class OrderReport extends Component
     public function render()
     {
         $dish_id = [];
-    
-        $orders = FoodOrder::with(['orderDish_keys.dishes.menu'])
+
+        $query = FoodOrder::with(['orderDish_keys.dishes.menu'])
             ->whereBetween('date_need', [
                 Carbon::parse($this->dateFrom)->startOfDay(),
                 Carbon::parse($this->dateTo)->endOfDay()
-            ])
-            ->orderBy('date_need', 'asc')
+            ]);
+
+        if (!empty($this->search)) {
+            $query->whereHas('customers', function ($query) {
+                $query->where('first_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        $orders = $query->orderBy('date_need', 'asc')
             ->paginate(10);
-    
+
         foreach ($orders as $order) {
             foreach ($order->orderDish_keys as $dish) {
                 if (!in_array($dish->dish_id, $dish_id)) {
@@ -112,9 +121,9 @@ class OrderReport extends Component
                 }
             }
         }
-        
+
         $header = Menu::all();
-    
+
         $this->totalAmountSum = $orders->sum('total_price');
 
         return view('livewire.food-order.order-report', [

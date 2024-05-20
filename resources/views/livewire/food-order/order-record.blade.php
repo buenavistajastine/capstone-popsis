@@ -59,12 +59,25 @@
                                 <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="form-group local-forms">
+                                <label for="statusFilter">Status:</label>
+                                <select class="form-control" id="statusFilter" wire:model="status">
+                                    <option value="">All</option>
+                                    <option value="1">Pending</option>
+                                    <option value="2">Approved</option>
+                                    <option value="3">Cancelled</option>
+                                    <option value="11">Completed</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>Customer</th>
+                                    <th>Date</th>
                                     <th>Address</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -84,9 +97,13 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-md-12 mb-1 text-justify fw-bold">
-                                                        {{ ucwords($record->customers->last_name) }},
-                                                        {{ ucwords($record->customers->first_name) }}
-                                                        {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
+                                                        @if ($record->customers)
+                                                            {{ ucwords($record->customers->last_name) }},
+                                                            {{ ucwords($record->customers->first_name) }}
+                                                            {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
+                                                        @else
+                                                            No customer data
+                                                        @endif
                                                     </div>
                                                     <div class="col-12"><small>#{{ $record->order_no }}</small>
                                                     </div>
@@ -96,34 +113,45 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="row">
-                                                    <div class="col-md-12 mb-1 text-justify">
-                                                        @php
-                                                            $address = $record->customers->address;
-                                                        @endphp
-                                                        {{ ucfirst($address->specific_address) }},
-                                                        {{ ucfirst($address->barangay) }}, {{ ucfirst($address->city) }}
-                                                        ({{ ucfirst($address->landmark) }})
-                                                    </div>
-                                                    <div class="col-md-12 mb-1">
-                                                        {{ $record['date_need'] ? \Carbon\Carbon::parse($record['date_need'])->format('F j, Y') : '' }}
-                                                        at
-                                                        <strong>{{ $record['call_time'] ? \Carbon\Carbon::parse($record['call_time'])->format('g:i A') : '' }}</strong>
-
-                                                    </div>
-
-                                                </div>
-
+                                                {{ $record['date_need'] ? \Carbon\Carbon::parse($record['date_need'])->format('F j, Y') : '' }}
+                                                at
+                                                <strong>{{ $record['call_time'] ? \Carbon\Carbon::parse($record['call_time'])->format('g:i A') : '' }}</strong>
                                             </td>
                                             <td>
-                                                <button
-                                                    class="custom-badge status-orange">{{ $record->statuses->name }}</button>
+                                                @php
+                                                    $address = $record->customers->address;
+                                                @endphp
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-1 text-justify">
+                                                        <small>{{ ucfirst($address->specific_address) }}</small>
+                                                    </div>
+                                                    <div class="col-md-12 mb-1">
+
+                                                        {{ ucfirst($address->barangay) }}, {{ ucfirst($address->city) }}
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if ($record->status_id == 1)
+                                                    <button
+                                                        class="custom-badge status-orange">{{ $record->statuses->name }}</button>
+                                                @elseif ($record->status_id == 2)
+                                                    <button
+                                                        class="custom-badge status-green">{{ $record->statuses->name }}</button>
+                                                @elseif ($record->status_id == 3)
+                                                    <button class="custom-badge status-pink">
+                                                        {{ $record->statuses->name }}</button>
+                                                @elseif ($record->status_id == 11)
+                                                    <button class="custom-badge status-blue">
+                                                        {{ $record->statuses->name }}</button>
+                                                @endif
                                             </td>
 
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-sm mx-1"
                                                     wire:click="orderDetails({{ $record->id }})" title="View"> <i
-                                                        class="fa-solid fa-list-check"></i> View details</button>
+                                                        class="fa-solid fa-list-check"></i></button>
                                             </td>
 
                                         </tr>
@@ -178,7 +206,8 @@
 
                                 @if ($records->hasMorePages())
                                     <li class="page-item">
-                                        <a class="page-link" wire:click="nextPage" wire:loading.attr="disabled">Next</a>
+                                        <a class="page-link" wire:click="nextPage"
+                                            wire:loading.attr="disabled">Next</a>
                                     </li>
                                 @else
                                     <li class="page-item disabled">

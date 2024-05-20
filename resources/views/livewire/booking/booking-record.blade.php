@@ -24,7 +24,8 @@
                                     <h3>Booking Records</h3>
 
                                 </div>
-                                <a onclick="goBack()" href="booking" style="position: relative;"><small><i class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
+                                <a onclick="goBack()" href="booking" style="position: relative;"><small><i
+                                            class="fa-solid fa-arrow-left"></i> <i>Back</i></small></a>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
                                 <div class="top-nav-search table-search-blk">
@@ -55,6 +56,18 @@
                                 <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="form-group local-forms">
+                                <label for="statusFilter">Status:</label>
+                                <select class="form-control" id="statusFilter" wire:model="status">
+                                    <option value="">All</option>
+                                    <option value="1">Pending</option>
+                                    <option value="2">Approved</option>
+                                    <option value="3">Cancelled</option>
+                                    <option value="11">Completed</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table border-0 custom-table comman-table table-hover mb-0">
@@ -63,6 +76,7 @@
                                     <th>Customer</th>
                                     <th>Event</th>
                                     <th>Package</th>
+                                    <th>Address</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                     <th></th>
@@ -109,16 +123,42 @@
 
                                             </td>
                                             <td>{{ $record->packages->name }}</td>
+                                            <td>
+                                                @if ($record->address->venue_address || $record->address->barangay || $record->address->city)
+                                                    <div class="row">
+                                                        <div class="col-md-12 mb-1 text-justify">
+                                                            {{ $record->address->venue_address ? ucfirst($record->address->venue_address) : '' }}
+                                                        </div>
+                                                        <div class="col-md-12 mb-1">
+                                                            <small>
+                                                                {{ $record->address->barangay ? ucfirst($record->address->barangay) . ', ' : '' }}
+                                                                {{ $record->address->city ? ucfirst($record->address->city) : '' }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </td>
 
                                             <td>
+                                                @if ($record->status_id == 1)
                                                     <button
-                                                        class="custom-badge status-pink">{{ $record->status->name }}</button>
+                                                        class="custom-badge status-orange">{{ $record->status->name }}</button>
+                                                @elseif ($record->status_id == 2)
+                                                    <button
+                                                        class="custom-badge status-green">{{ $record->status->name }}</button>
+                                                @elseif ($record->status_id == 3)
+                                                    <button class="custom-badge status-pink">
+                                                        {{ $record->status->name }}</button>
+                                                @elseif ($record->status_id == 11)
+                                                    <button class="custom-badge status-blue">
+                                                        {{ $record->status->name }}</button>
+                                                @endif
                                             </td>
 
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-sm mx-1"
                                                     wire:click="bookingDetails({{ $record->id }})" title="View"> <i
-                                                        class="fa-solid fa-list-check"></i> View details</button>
+                                                        class="fa-solid fa-list-check"></i></button>
                                             </td>
 
                                         </tr>
