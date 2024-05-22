@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     Route::get('viewPackage/{id}', [DishController::class, 'viewPackage']);
 
     Route::post('/cancelOrder/{id}', [DishController::class, 'cancelOrder']);
+    Route::post('/cancelBooking/{id}', [DishController::class, 'cancelBooking']);
 
     // Placing orders
     Route::post('place_order', [DishController::class, 'foodOrder']);

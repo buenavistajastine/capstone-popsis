@@ -123,6 +123,21 @@ class DishController extends Controller
         return response()->json(['message' => 'Order not found'], 404);
     }
 
+    public function cancelBooking(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+        $billing = Billing::where('booking_id', $booking->id)->first();
+
+        if ($booking && $billing) {
+            $booking->update(['status_id' => 3]);
+            $billing->update(['status_id' => 3]);
+
+            return response()->json(['message' => 'Booking cancelled successfully'], 200);
+        }
+
+        return response()->json(['message' => 'Booking not found'], 404);
+    }
+
     public function viewBooking(Request $request, $id)
     {
         $booking = Booking::with([
