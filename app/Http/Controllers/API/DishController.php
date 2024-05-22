@@ -26,7 +26,7 @@ class DishController extends Controller
     public function dish()
     {
         $dishes = Dish::with('menu')->get(); // Change 'all()' to 'get()'
-    
+
         return response()->json(['data' => $dishes], 200);
     }
 
@@ -43,7 +43,7 @@ class DishController extends Controller
 
         return response()->json(['data' => $venues], 200);
     }
-    
+
     // Dish Methods
     public function dishList()
     {
@@ -100,14 +100,29 @@ class DishController extends Controller
             'billing.paidAmount',
             'billing.paidAmounts'
         ])->find($id);
-    
+
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-    
+
         return response()->json(['data' => $order], 200);
     }
-    
+
+    public function cancelOrder(Request $request, $id)
+    {
+        $order = FoodOrder::find($id);
+        $billing = Billing::where('foodOrder_id', $order->id)->first();
+
+        if ($order && $billing) {
+            $order->update(['status_id' => 3]);
+            $billing->update(['status_id' => 3]);
+
+            return response()->json(['message' => 'Order cancelled successfully'], 200);
+        }
+
+        return response()->json(['message' => 'Order not found'], 404);
+    }
+
     public function viewBooking(Request $request, $id)
     {
         $booking = Booking::with([
@@ -122,15 +137,15 @@ class DishController extends Controller
             'billing.paidAmount',
             'billing.paidAmounts'
         ])->find($id);
-    
+
         if (!$booking) {
             return response()->json(['message' => 'Booking not found'], 404);
         }
-    
+
         return response()->json(['data' => $booking], 200);
     }
-    
-    
+
+
 
 
     // Package Methods
@@ -198,7 +213,7 @@ class DishController extends Controller
         $billing = Billing::create([
             'foodOrder_id' => $order->id,
             'customer_id' => $request->customer_id,
-            'total_amt' => $request->total_amount,         
+            'total_amt' => $request->total_amount,
             'status_id' => 6,
         ]);
 
@@ -260,7 +275,7 @@ class DishController extends Controller
         $booking = Booking::create([
             'customer_id' => $request->customer_id,
             'package_id' => $request->selectedPackage,
-            'venue_id' => $request->selectedOption,
+            'venue_id' => $request->selectedVenueId,
             'event_name' => $request->eventName,
             'no_pax' => $request->noPax,
             'date_event' => $request->date,

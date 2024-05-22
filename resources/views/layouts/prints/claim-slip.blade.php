@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title style="text-transform: capitalize;">Claim Slip - {{ $booking->customers->first_name }} {{ $booking->customers->last_name }}</title>
+    <title>Claim Slip - {{ $booking->customers->first_name }} {{ $booking->customers->last_name }}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js"></script>
+    <script src="https://unpkg.com/qz-tray"></script>
+
     <style>
         @font-face {
             font-family: 'Colombo';
             src: url('{{ asset('assets/fonts/Colombo.ttf') }}') format('truetype');
         }
 
-        html,
-        body {
+        html, body {
             color: black;
             font-size: 11px;
             font-family: 'Colombo', sans-serif;
+            font-weight: semibold;
         }
 
         .service-item {
@@ -61,13 +65,11 @@
         .broken-line {
             border: none;
             border-top: 1px dashed #000;
-            /* Adjust color and thickness as needed */
         }
     </style>
 </head>
-
-<body onload='window.print()'>
-    <div class="claim-slip-container" id="contentToPrint">
+<body>
+    <div class="claim-slip-container" id="content">
         <div class="row">
             <div class="col-12 p-2 text-center">
                 <div>
@@ -141,6 +143,55 @@
             <div class="col-md-12 text-center mt-3">** NOT AN OFFICIAL RECEIPT **</div>
         </div>
     </div>
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            qz.api.setPromiseType(function promise(resolver) {
+                return new Promise(resolver);
+            });
+
+            // Function to connect to qz-tray
+            function connectQZ() {
+                return qz.websocket.connect().then(() => {
+                    return qz.printers.find().then((printer) => {
+                        return printer;
+                    });
+                });
+            }
+
+            // Function to print the PDF
+            function printPDF(pdfData) {
+                connectQZ().then((printer) => {
+                    var config = qz.configs.create(printer);
+                    var data = [
+                        { type: 'pdf', format: 'base64', data: pdfData.split(',')[1] }
+                    ];
+                    return qz.print(config, data).then(() => {
+                        qz.websocket.disconnect();
+                    });
+                }).catch(function(e) {
+                    console.error(e);
+                });
+            }
+
+            // Convert plain text content to U24 code page and print it
+            function convertAndPrint() {
+                var content = document.getElementById('content').innerText;
+                connectQZ().then((printer) => {
+                    var config = qz.configs.create(printer);
+                    var data = [
+                        { type: 'raw', format: 'plain', data: content, options: { language: 'u24', encoding: 'cp858', charType: 'u24', codeType: 'codepage', baudRate: 115200, cmdType: 'esc', printDepth: 38, font: '1.10' } }
+                    ];
+                    return qz.print(config, data).then(() => {
+                        qz.websocket.disconnect();
+                    });
+                }).catch(function(e) {
+                    console.error(e);
+                });
+            }
+
+            convertAndPrint();
+        });
+    </script>
+</body>
 </html>
