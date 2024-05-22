@@ -70,6 +70,10 @@
             border-top: 1px dashed #000;
             /* Adjust color and thickness as needed */
         }
+
+        .receipt-header {
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -78,7 +82,7 @@
         <div class="row">
             <div class="col-12 p-2 text-center">
                 <div>
-                    <h1 class="fw-bold">POPSI'S</h1>
+                    <h1 class="fw-bold receipt-header">POPSI'S</h1>
                 </div>
                 <div class="fon">Prepared by our Family, for your Family</div>
             </div>

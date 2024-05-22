@@ -22,7 +22,7 @@
         html,
         body {
             color: black;
-            font-size: 10px;
+            font-size: 11px;
             font-family: 'Colombo', sans-serif;
         }
 
@@ -37,7 +37,7 @@
         }
 
         .header-font {
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .claim-slip-container {
@@ -47,6 +47,9 @@
 
         .fon {
             font-size: 12px;
+        }
+        .receipt-header {
+            font-size: 16px;
         }
 
         .logo {
@@ -68,7 +71,7 @@
         <div class="row">
             <div class="col-12 p-2 text-center">
                 <div>
-                    <h1 class="fw-bold">POPSI'S</h1>
+                    <h1 class="fw-bold receipt-header">POPSI'S</h1>
                 </div>
                 <div class="fon">Prepared by our Family, for your Family</div>
             </div>
