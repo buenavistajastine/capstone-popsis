@@ -91,7 +91,7 @@
         <div class="page-wrapper">
             {{ $slot }}
         </div>
-        {{-- @include('layouts.shared.footer') --}}
+        @include('layouts.shared.footer')
         @yield('delete_modal')
     </div>
 

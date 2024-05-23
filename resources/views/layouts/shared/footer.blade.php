@@ -1,6 +1,5 @@
 <footer class="footer">
     <div class="container text-center">
-        <p>© 2024 Popsis Catering. All rights reserved. Designed by Earl Dave.
-        </p>
+        <p>&copy; 2024 Earl & Dave. All rights reserved.</p>
     </div>
 </footer>

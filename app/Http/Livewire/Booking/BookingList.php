@@ -111,23 +111,24 @@ class BookingList extends Component
     
     public function render()
     {
-        $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
+        $now = Carbon::now(); // Get current date and time
         $bookings = Booking::whereHas('customers', function ($query) {
-            $query->where(function ($subquery) {
-                $subquery->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('event_name', 'like', '%' . $this->search . '%');
-            });
-        })
-            ->where('date_event', '>', $tomorrow) // Filter bookings with date event greater than or equal to tomorrow
+                $query->where(function ($subquery) {
+                    $subquery->where('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('event_name', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->where('date_event', '>', $now) // Filter bookings with date event greater than current date and time
             ->whereBetween('date_event', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
             ->when($this->status, function ($query) {
                 $query->where('status_id', $this->status);
             })
-            ->orderBy('date_event', 'asc')
+            ->orderByRaw("ABS(TIMESTAMPDIFF(SECOND, NOW(), date_event)) + ABS(TIMESTAMPDIFF(SECOND, NOW(), call_time))") // Order by the time difference between current date and time and date event, call time
             ->paginate(10);
-
+    
         return view('livewire.booking.booking-list', compact('bookings'));
     }
+    
 }

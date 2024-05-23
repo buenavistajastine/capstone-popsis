@@ -96,6 +96,7 @@ class FoodOrderList extends Component
 
     public function render()
     {
+        $now = Carbon::now();
         $orders = FoodOrder::whereHas('customers', function ($query) {
             $query->where(function ($subquery) {
                 $subquery->where('first_name', 'like', '%' . $this->search . '%')
@@ -103,10 +104,12 @@ class FoodOrderList extends Component
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
             });
         })
+            ->where('date_need', '>', $now)
             ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
             ->when($this->status, function ($query) {
                 $query->where('status_id', $this->status);
             })
+            ->orderByRaw("ABS(TIMESTAMPDIFF(SECOND, NOW(), date_need)) + ABS(TIMESTAMPDIFF(SECOND, NOW(), call_time))")  // Order by the absolute difference between date_need and current date and time
             ->paginate(10);
 
         return view('livewire.food-order.food-order-list', compact('orders'));
