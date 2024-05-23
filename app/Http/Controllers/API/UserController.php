@@ -208,6 +208,15 @@ class UserController extends Controller
         return response()->file($path);
     }
 
+    public function showDish($filename)
+    {
+        $path = storage_path('app/public/dishImage/' . $filename);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
+    }
+
     public function showQR()
     {
         $qr = QR::whereNotNull('qr_code')->first();
