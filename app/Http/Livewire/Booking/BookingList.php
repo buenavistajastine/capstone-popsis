@@ -19,6 +19,7 @@ class BookingList extends Component
     public $status = '';
 
     protected $listeners = [
+        'refreshTable' => '$refresh',
         'refreshParentBooking' => '$refresh',
         'deleteBooking',
         'editBooking',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\BookingCreated;
+use App\Events\OrderCreated;
 use App\Models\Dish;
 use App\Models\Package;
 use Illuminate\Http\Request;
@@ -247,6 +249,7 @@ class DishController extends Controller
             ]);
         }
 
+        event(new OrderCreated($order));
         // Return success response
         return response()->json([
             'success' => true,
@@ -346,9 +349,11 @@ class DishController extends Controller
             ]);
         }
 
+        event(new BookingCreated($booking));
+
         return response()->json([
             'success' => true,
-            'message' => 'Order created successfully.',
+            'message' => 'Booking created successfully.',
             'booking' => $booking
         ], 200)->header(
             'Content-Type',

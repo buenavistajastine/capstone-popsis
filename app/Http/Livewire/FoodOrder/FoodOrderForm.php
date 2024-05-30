@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
+use App\Events\OrderCreated;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Dish;
@@ -36,8 +37,15 @@ class FoodOrderForm extends Component
 
     protected $listeners = [
         'orderId',
-        'resetInputFields'
+        'resetInputFields',
+        'echo:orders,OrderCreated' => 'handleOrderCreated'
     ];
+
+    public function handleOrderCreated($event)
+    {
+        // Reload the data or refresh the table
+        $this->emit('refreshTable');
+    }
 
     public function resetInputFields()
     {
@@ -320,6 +328,7 @@ class FoodOrderForm extends Component
 
             DB::commit();
 
+            event(new OrderCreated($order));
             $this->emit('flashAction', $action, $message);
             $this->resetInputFields();
             $this->emit('closeFoodOrderModal');

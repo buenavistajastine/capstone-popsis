@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\Events\OrderCreated;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Dish;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 class BookingForm extends Component
 {
+    public $order;
     public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id, $additional_amt, $advance_amt, $discount_amt;
     public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id, $selectedIndex;
     public $dishItems = [];
@@ -47,7 +49,14 @@ class BookingForm extends Component
     protected $listeners = [
         'bookingId',
         'resetInputFields',
+        'echo:orders,OrderCreated' => 'handleBookingCreated'
     ];
+
+    public function handleBookingCreated($event)
+    {
+        // Reload the data or refresh the table
+        $this->emit('refreshTable');
+    }
 
     public function resetInputFields()
     {
@@ -468,6 +477,7 @@ class BookingForm extends Component
             $action = "store";
             $message = 'Successfully Created';
             DB::commit();
+            event(new OrderCreated($booking));
 
             BookingDishKey::where('booking_id', '=', $this->bookingId)
                 ->whereNotIn('dish_id', collect($this->dishItems)->pluck('dish_id')->toArray())

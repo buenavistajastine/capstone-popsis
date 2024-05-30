@@ -18,6 +18,7 @@ class FoodOrderList extends Component
     public $status = '';
 
     protected $listeners = [
+        'refreshTable' => '$refresh',
         'refreshParentFoodOrder' => '$refresh',
         'deleteOrder',
         'editOrder',
@@ -58,8 +59,8 @@ class FoodOrderList extends Component
     public function mount()
     {
         // $this->dateFrom = now()->toDateString();
-        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfWeek()->toDateString();
-        $this->dateTo = Carbon::parse($this->dateFrom)->endOfWeek()->toDateString();
+        $this->dateFrom = Carbon::parse($this->dateFrom)->startOfMonth()->toDateString();
+        $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
     }
 
     public function acceptOrder($orderId)
