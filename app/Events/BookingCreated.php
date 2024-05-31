@@ -37,7 +37,7 @@ class BookingCreated implements ShouldBroadcast
         return new Channel('bookings');
     }
 
-    public function broadcastAs()
+    public function broadcastWith()
     {
         return ['booking' => $this->booking];
     }
