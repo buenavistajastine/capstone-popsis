@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BookingCreated
+class BookingCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,11 +34,12 @@ class BookingCreated
 
     public function broadcastOn()
     {
-        return ['bookings'];
+        return new Channel('bookings');
     }
 
     public function broadcastAs()
     {
-        return 'booking.created';
+        return ['booking' => $this->booking];
     }
+ 
 }

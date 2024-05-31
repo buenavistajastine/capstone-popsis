@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\Events\BookingCreated;
 use App\Events\OrderCreated;
 use Exception;
 use Carbon\Carbon;
@@ -49,7 +50,7 @@ class BookingForm extends Component
     protected $listeners = [
         'bookingId',
         'resetInputFields',
-        'echo:orders,OrderCreated' => 'handleBookingCreated'
+        'echo:bookings,BookingCreated' => 'handleBookingCreated'
     ];
 
     public function handleBookingCreated($event)
@@ -477,7 +478,7 @@ class BookingForm extends Component
             $action = "store";
             $message = 'Successfully Created';
             DB::commit();
-            event(new OrderCreated($booking));
+            event(new BookingCreated($booking));
 
             BookingDishKey::where('booking_id', '=', $this->bookingId)
                 ->whereNotIn('dish_id', collect($this->dishItems)->pluck('dish_id')->toArray())
