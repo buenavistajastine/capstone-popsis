@@ -366,6 +366,7 @@ class DishController extends Controller
     public function upload(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'billing_id' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
@@ -377,7 +378,10 @@ class DishController extends Controller
             $file = $request->file('image');
             $path = $file->store('images', 'public');
 
-            GcashPayment::create(['photo' => $file]);
+            GcashPayment::create([
+                'billing_id' => $request->billing_id,
+                'photo' => $file
+            ]);
             return response()->json(['message' => 'Image uploaded successfully', 'path' => $path], 200);
         }
 
