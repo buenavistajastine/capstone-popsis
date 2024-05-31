@@ -15,12 +15,14 @@ use App\Models\Booking;
 use App\Models\BookingDishKey;
 use App\Models\FoodOrder;
 use App\Models\FoodOrderDishKey;
+use App\Models\GcashPayment;
 use App\Models\Menu;
 use App\Models\PaidAmount;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class DishController extends Controller
 {
@@ -359,5 +361,26 @@ class DishController extends Controller
             'Content-Type',
             'application/json'
         );
+    }
+
+    public function upload(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('images', 'public');
+
+            GcashPayment::create(['photo' => $file]);
+            return response()->json(['message' => 'Image uploaded successfully', 'path' => $path], 200);
+        }
+
+        return response()->json(['error' => 'No image uploaded'], 400);
     }
 }

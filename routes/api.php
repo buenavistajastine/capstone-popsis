@@ -55,5 +55,6 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     Route::get('image/{filename}', [UserController::class, 'show']);
     Route::get('imageDish/{filename}', [UserController::class, 'showDish']);
     Route::get('qrCode', [UserController::class, 'showQR']);
+    Route::post('upload', [DishController::class, 'upload']);
 });
 

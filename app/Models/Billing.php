@@ -60,4 +60,9 @@ class Billing extends Model
     {
         return $this->hasMany(PaidAmount::class);
     }
+
+    public function gcashPay()
+    {
+        return $this->hasMany(GcashPayment::class, 'billing_id', 'id');
+    }
 }
