@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\FoodOrder;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -18,7 +19,7 @@ class OrderCreated implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct($order)
+    public function __construct(FoodOrder $order)
     {
         $this->order = $order;
     }

@@ -121,7 +121,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.1/echo.iife.js"></script>
 
     <script>
-        // Pusher.logToConsole = true;
+        Pusher.logToConsole = true;
 
         window.Echo = new Echo({
             broadcaster: 'pusher',
@@ -138,6 +138,16 @@
         window.Echo.channel('bookings')
             .listen('BookingCreated', (e) => {
                 Livewire.emit('refreshTable');
+            });
+
+        echo.channel('orders')
+            .listen('.order.created', (data) => {
+                console.log('Order Created:', data);
+            });
+
+        echo.channel('bookings')
+            .listen('.booking.created', (data) => {
+                console.log('Booking Created:', data);
             });
     </script>
 
