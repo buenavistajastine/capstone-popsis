@@ -18,6 +18,7 @@ use App\Http\Livewire\Billing\BillingList;
 use App\Http\Livewire\Billing\BookingBillingRecord;
 use App\Http\Livewire\Billing\OrderBilling;
 use App\Http\Livewire\Billing\OrderBillingRecord;
+use App\Http\Livewire\Billing\PaymentProof;
 use App\Http\Livewire\Booking\BookingRecord;
 use App\Http\Livewire\Booking\BookingReport;
 use App\Http\Livewire\Booking\Kitchen;
@@ -92,6 +93,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('activity_logs', ActivityLog::class);
     Route::get('qr-code', QRCode::class);
+
+    Route::get('payments/{id}', PaymentProof::class)->name('payment');
 
     // 
     Route::get('booking_reports', BookingReport::class);

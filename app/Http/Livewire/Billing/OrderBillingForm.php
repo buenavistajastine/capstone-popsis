@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderBillingForm extends Component
 {
-    public $orderBillingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts, $billingStatus;
+    public $orderBillingId, $total_amt, $payable_amt, $paid_amt, $payment_id, $paid_amounts, $billingStatus, $billingId;
     public $message = '';
     public $action = '';
     public $errorMessage = '';
@@ -21,6 +21,14 @@ class OrderBillingForm extends Component
         'orderBillingId',
         'resetInputFields'
     ];
+
+    public function paymentProof($orderBillingId)
+    {
+        $this->orderBillingId = $orderBillingId;
+        $this->emit('paymentId', $this->orderBillingId);
+
+        return view('livewire.billing.payment-proof');
+    }
 
     public function resetInputFields()
     {
@@ -40,6 +48,7 @@ class OrderBillingForm extends Component
 
         $this->paid_amounts = PaidAmount::where('billing_id', $billing->id)->get();
         $this->billingStatus = $billing->status_id;
+        $this->billingId = $billing->id;
     }
 
     public function store()

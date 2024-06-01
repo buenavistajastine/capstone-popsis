@@ -4,6 +4,7 @@
             @if ($orderBillingId)
                 Edit Billing Details
             @endif
+            
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
@@ -85,6 +86,13 @@
                             @endforeach
                         </div>
                     @endif
+                    <div class="row mt-3 text-end">
+                        <a href="{{ url('payments/' . $billingId) }}" target="_blank">
+                            <small class="text-decoration-underline"><i>see proof of payments</i></small>
+                        </a>
+                    </div>
+                    
+                    
                 </div>
             </div>
         </div>
