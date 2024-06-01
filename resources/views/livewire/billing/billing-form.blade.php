@@ -64,6 +64,11 @@
                         </div>
                     @endif
 
+                    <div class="row mt-3 text-end">
+                        <a href="{{ url('payments/' . $billingId) }}" target="_blank">
+                            <small class="text-decoration-underline"><i>see proof of payments</i></small>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

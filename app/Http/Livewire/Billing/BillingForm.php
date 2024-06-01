@@ -40,6 +40,7 @@ class BillingForm extends Component
 
         $this->paid_amounts = PaidAmount::where('billing_id', $billing->id)->get();
         $this->billingStatus = $billing->status_id;
+        $this->billingId = $billing->id;
     }
 
     public function store()
