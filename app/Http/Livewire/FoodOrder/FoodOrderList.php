@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FoodOrder;
 
+use App\Events\OrderCreated;
 use App\Models\Billing;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -69,6 +70,7 @@ class FoodOrderList extends Component
 
         if ($order) {
             $order->update(['status_id' => 2]);
+            event(new OrderCreated($order));
 
             $this->emit('flashAction', 'store', 'Order accepted successfully.');
         } else {
@@ -87,6 +89,7 @@ class FoodOrderList extends Component
             $order->update(['status_id' => 3]);
             $billing->update(['status_id' => 3]);
 
+            event(new OrderCreated($order));
             $this->emit('flashAction', 'store', 'Order cancelled successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Order not found.');

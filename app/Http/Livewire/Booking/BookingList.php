@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\Events\BookingCreated;
 use App\Models\Billing;
 use Carbon\Carbon;
 use App\Models\Booking;
@@ -83,6 +84,7 @@ class BookingList extends Component
     
         if ($booking) {
             $booking->update(['status_id' => 2]);
+            event(new BookingCreated($booking));
     
             $this->emit('flashAction', 'store', 'Booking accepted successfully.');
         } else {
@@ -102,6 +104,7 @@ class BookingList extends Component
             $booking->update(['status_id' => 3]);
             $billing->update(['status_id' => 3]);
     
+            event(new BookingCreated($booking));
             $this->emit('flashAction', 'store', 'Booking cancelled successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Booking not found.');
