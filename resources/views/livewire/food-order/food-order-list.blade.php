@@ -244,7 +244,7 @@
 {{-- Modal --}}
 <div wire.ignore.self class="modal fade" id="foodOrderModal" tabindex="-1" aria-labelledby="foodOrderModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-top modal-lg">
+    <div class="modal-dialog modal-dialog-top modal-xl">
         <livewire:food-order.food-order-form />
     </div>
 </div>

@@ -37,6 +37,8 @@ class OrderRecord extends Component
 
     public function render()
     {
+        $startOfToday = Carbon::now()->startOfDay();
+
         $records = FoodOrder::whereHas('customers', function ($query) {
             $query->where(function ($subquery) {
                 $subquery->where('first_name', 'like', '%' . $this->search . '%')
@@ -44,10 +46,12 @@ class OrderRecord extends Component
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
             });
         })
-            ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            // ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            ->where('date_need', '<', $startOfToday) 
             ->when($this->status, function ($query) {
                 $query->where('status_id', $this->status);
             })
+            ->orderBy('date_need', 'desc')
             ->paginate(10);
 
         return view('livewire.food-order.order-record', compact('records'));

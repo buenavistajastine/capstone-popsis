@@ -10,6 +10,7 @@ use App\Http\Livewire\Customer\CustomerList;
 use App\Http\Livewire\Employee\EmployeeList;
 use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrintController;
 use App\Http\Livewire\Activity\ActivityLog;
 use App\Http\Livewire\Authentication\RoleList;
@@ -60,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [ProfileController::class, 'Logout'])->name('user.logout');
     Route::get('/logout', [ProfileController::class, 'Logout'])->name('user.logout');
 
+  
     Route::get('permission', PermissionList::class)->name('permission');
     Route::get('role', RoleList::class)->name('role');
     Route::get('employee', EmployeeList::class)->name('employee');
@@ -67,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('position', PositionList::class)->name('position');
     Route::get('dish', DishList::class)->name('dish');
     Route::get('booking', BookingList::class)->name('booking');
+
      
     // Route::get('booking-form', BookingForm::class)->name('booking-form');
     Route::get('order', FoodOrderList::class)->name('order');
@@ -101,6 +104,9 @@ Route::middleware('auth')->group(function () {
     Route::get('order_reports', OrderReport::class);
     Route::get('booking_records', BookingRecord::class);
     Route::get('order_records', OrderRecord::class);
+
+    // Notification
+    Route::get('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 });
 

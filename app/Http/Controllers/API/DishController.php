@@ -90,6 +90,7 @@ class DishController extends Controller
 
         return response()->json(['data' => $dish], 200);
     }
+    
 
     public function viewOrder(Request $request, $id)
     {
@@ -112,6 +113,7 @@ class DishController extends Controller
         return response()->json(['data' => $order], 200);
     }
 
+
     public function cancelOrder(Request $request, $id)
     {
         $order = FoodOrder::find($id);
@@ -127,6 +129,7 @@ class DishController extends Controller
         return response()->json(['message' => 'Order not found'], 404);
     }
 
+
     public function cancelBooking(Request $request, $id)
     {
         $booking = Booking::find($id);
@@ -141,6 +144,7 @@ class DishController extends Controller
 
         return response()->json(['message' => 'Booking not found'], 404);
     }
+
 
     public function viewBooking(Request $request, $id)
     {
@@ -165,8 +169,6 @@ class DishController extends Controller
     }
 
 
-
-
     // Package Methods
     public function packageList()
     {
@@ -174,6 +176,7 @@ class DishController extends Controller
 
         return response()->json(['data' => $packages], 200);
     }
+
 
     public function viewPackage(Request $request, $id)
     {
@@ -185,6 +188,7 @@ class DishController extends Controller
 
         return response()->json(['data' => $package], 200);
     }
+
 
     public function foodOrder(Request $request)
     {
@@ -259,6 +263,7 @@ class DishController extends Controller
             'order' => $order
         ], 200)->header('Content-Type', 'application/json');
     }
+
 
     public function booking(Request $request)
     {
@@ -362,6 +367,7 @@ class DishController extends Controller
             'application/json'
         );
     }
+
 
     public function upload(Request $request)
     {

@@ -21,9 +21,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function loginUser(Request $request): Response
     {
         $validator = Validator::make($request->all(), [
@@ -51,6 +49,7 @@ class UserController extends Controller
         return response(['message' => 'Email or password wrong'], 401);
     }
 
+
     public function userDetails(): Response
     {
         if (Auth::check()) {
@@ -62,6 +61,7 @@ class UserController extends Controller
         }
         return Response(['data' => 'Unauthorized'], 401);
     }
+
 
     public function booking(Request $request): JsonResponse
     {
@@ -79,6 +79,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to fetch booking data.'], 500);
         }
     }
+
 
     public function order(Request $request): JsonResponse
     {
@@ -114,6 +115,7 @@ class UserController extends Controller
             return null;
         }
     }
+
 
     public function registerUser(Request $request)
     {
@@ -154,6 +156,7 @@ class UserController extends Controller
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
+            'status_id' => 12
         ]);
 
         $address = CustomerAddress::create([
@@ -179,14 +182,8 @@ class UserController extends Controller
             'token' => $token
         ], 201)->header('Content-Type', 'application/json');
     }
-    /**
-     * Store a newly created resource in storage.
-     */
+   
 
-
-    /**
-     * Display the specified resource.
-     */
     public function logout(): Response
     {
         $user = Auth::user();
@@ -196,9 +193,7 @@ class UserController extends Controller
         return Response(['data' => 'User Logout successfully.'], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function show($filename)
     {
         $path = storage_path('app/public/images/' . $filename);
@@ -234,9 +229,7 @@ class UserController extends Controller
         return response()->file($path);
     }    
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(User $user)
     {
         //

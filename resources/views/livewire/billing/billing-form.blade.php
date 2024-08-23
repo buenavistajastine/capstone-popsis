@@ -18,9 +18,13 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group local-forms">
+                            <div class="form-group local-forms input-group">
                                 <label class="form-label">Amount to Pay<span class="login-danger">*</span></label>
-                                <input class="form-control text-end" type="text" wire:model="paid_amt" placeholder="0.00" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">₱</span>
+                                </div>
+                                <input class="form-control text-end" type="text" wire:model="paid_amt" placeholder="0" />
+                                <span class="input-group-text">.00</span>
                                 @error('paid_amt')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

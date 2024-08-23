@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\Models\AddOn;
+use App\Models\Billing;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Livewire\Component;
@@ -17,6 +19,16 @@ class BookingRecordModal extends Component
     public function setRecordId($recordId)
     {
         $this->recordId = $recordId;
+    }
+
+    public function reBook($recordId)
+    {
+        $booking = Booking::whereId($recordId)->first();
+        $dish_keys = BookingDishKey::where('booking_id', $booking->id)->get();
+        $addOns = AddOn::where('booking_id', $booking->id)->get();
+        $billing = Billing::where('booking_id', $booking->id)->first();
+
+        dd($dish_keys);
     }
 
     public function render()

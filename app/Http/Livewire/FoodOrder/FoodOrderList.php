@@ -89,7 +89,7 @@ class FoodOrderList extends Component
             $order->update(['status_id' => 3]);
             $billing->update(['status_id' => 3]);
 
-            event(new OrderCreated($order));
+            // event(new OrderCreated($order));
             $this->emit('flashAction', 'store', 'Order cancelled successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Order not found.');
@@ -100,7 +100,8 @@ class FoodOrderList extends Component
 
     public function render()
     {
-        $now = Carbon::now();
+        $startOfToday = Carbon::now()->startOfDay(); // Start of today
+
         $orders = FoodOrder::whereHas('customers', function ($query) {
             $query->where(function ($subquery) {
                 $subquery->where('first_name', 'like', '%' . $this->search . '%')
@@ -108,12 +109,13 @@ class FoodOrderList extends Component
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
             });
         })
-            ->where('date_need', '>', $now)
+            ->where('date_need', '>=', $startOfToday)
             ->whereBetween('date_need', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
             ->when($this->status, function ($query) {
                 $query->where('status_id', $this->status);
             })
-            ->orderByRaw("ABS(TIMESTAMPDIFF(SECOND, NOW(), date_need)) + ABS(TIMESTAMPDIFF(SECOND, NOW(), call_time))")  // Order by the absolute difference between date_need and current date and time
+            ->orderBy('date_need') // Order by event date
+            ->orderBy('call_time') // Then order by call time
             ->paginate(10);
 
         return view('livewire.food-order.food-order-list', compact('orders'));

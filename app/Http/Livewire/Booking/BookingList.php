@@ -27,7 +27,9 @@ class BookingList extends Component
         'printDishesByDate',
         'deleteConfirmBooking',
         'acceptBooking' => 'acceptBooking',
-        'cancelBooking' => 'cancelBooking'
+        'cancelBooking' => 'cancelBooking',
+        'reBooking' => 'reBooking',
+
     ];
 
     public function updatingSearch()
@@ -62,7 +64,6 @@ class BookingList extends Component
 
     public function mount()
     {
-        // $this->dateFrom = now()->toDateString();
         $this->dateFrom = Carbon::parse($this->dateFrom)->startOfMonth()->toDateString();
         $this->dateTo = Carbon::parse($this->dateFrom)->endOfMonth()->toDateString();
     }
@@ -81,58 +82,58 @@ class BookingList extends Component
     public function acceptBooking($bookingId)
     {
         $booking = Booking::find($bookingId);
-    
+
         if ($booking) {
             $booking->update(['status_id' => 2]);
             event(new BookingCreated($booking));
-    
+
             $this->emit('flashAction', 'store', 'Booking accepted successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Booking not found.');
         }
-    
+
         $this->emit('refreshTable');
     }
 
     public function cancelBooking($bookingId)
     {
-        
+
         $booking = Booking::find($bookingId);
         $billing = Billing::where('booking_id', $bookingId)->first();
 
         if ($booking) {
             $booking->update(['status_id' => 3]);
             $billing->update(['status_id' => 3]);
-    
-            event(new BookingCreated($booking));
+
+            // event(new BookingCreated($booking));
             $this->emit('flashAction', 'store', 'Booking cancelled successfully.');
         } else {
             $this->emit('flashAction', 'error', 'Booking not found.');
         }
-    
+
         $this->emit('refreshTable');
     }
-    
+
     public function render()
     {
-        $now = Carbon::now(); // Get current date and time
+        $startOfToday = Carbon::now()->startOfDay(); // Start of today
+
         $bookings = Booking::whereHas('customers', function ($query) {
-                $query->where(function ($subquery) {
-                    $subquery->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('middle_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('event_name', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->where('date_event', '>', $now) // Filter bookings with date event greater than current date and time
-            ->whereBetween('date_event', [Carbon::parse($this->dateFrom)->startOfDay(), Carbon::parse($this->dateTo)->endOfDay()])
+            $query->where(function ($subquery) {
+                $subquery->where('first_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('event_name', 'like', '%' . $this->search . '%');
+            });
+        })
+            ->where('date_event', '>=', $startOfToday) // Only upcoming bookings
             ->when($this->status, function ($query) {
                 $query->where('status_id', $this->status);
             })
-            ->orderByRaw("ABS(TIMESTAMPDIFF(SECOND, NOW(), date_event)) + ABS(TIMESTAMPDIFF(SECOND, NOW(), call_time))") // Order by the time difference between current date and time and date event, call time
-            ->paginate(10);
-    
+            ->orderBy('date_event') // Order by event date
+            ->orderBy('call_time') // Then order by call time
+            ->paginate(10); 
+
         return view('livewire.booking.booking-list', compact('bookings'));
     }
-    
 }

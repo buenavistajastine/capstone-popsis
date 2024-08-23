@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class FoodOrderDishKey extends Model
 {
 
+    use HasFactory;
+    
     protected $fillable = [
         'order_id',
         'dish_id',
@@ -30,5 +32,5 @@ class FoodOrderDishKey extends Model
     {
         return $this->belongsTo(Dish::class, 'dish_id', 'id');
     }
-    use HasFactory;
+    
 }

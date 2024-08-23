@@ -26,24 +26,40 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 
     <style>
-        /* html {
-            line-height: 1.5;
-            -webkit-text-size-adjust: 100%;
-            -moz-tab-size: 4;
-            tab-size: 4;
-            font-family: Figtree, sans-serif;
-            font-feature-settings: normal
+        .dishes-container {
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            margin-left: 0px;
+            margin-right: 4px;
+            padding-right: 10px;
+            padding-left: 10px;
+            background: linear-gradient(
+            0deg,
+            rgba(51, 53, 72, 0.05),
+            rgba(51, 53, 72, 0.05)
+        ),
+        #ffffff;
+            padding-top: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(51, 53, 72, 0.05);
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-size: inherit;
-            font-weight: inherit
-        } */
+        .dishes-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dish-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .dish-card small {
+            font-size: 0.875rem;
+        }
 
         .counterHead {
             font-size: 14px;
@@ -52,7 +68,6 @@
         .custom-dropdown {
             position: relative;
             z-index: 1;
-            /* Ensure the dropdown container is above other elements */
         }
 
         .dropdown-content {
@@ -78,9 +93,6 @@
     </style>
     @livewireStyles
     @yield('upper_script')
-    <!-- Scripts -->
-    {{-- @vite([]) --}}
-
 </head>
 
 <body>

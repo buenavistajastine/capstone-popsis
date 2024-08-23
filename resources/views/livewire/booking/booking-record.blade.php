@@ -95,7 +95,7 @@
                                         <tr>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-12 mb-1 text-justify">
+                                                    <div class="col-md-12 mb-1 text-justify fw-bold">
                                                         {{ ucwords($record->customers->last_name) }},
                                                         {{ ucwords($record->customers->first_name) }}
                                                         {{ $record->customers->middle_name ? ucfirst($record->customers->middle_name) : '' }}
@@ -157,8 +157,8 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-sm mx-1"
-                                                    wire:click="bookingDetails({{ $record->id }})" title="View"> <i
-                                                        class="fa-solid fa-list-check"></i></button>
+                                                wire:click="editBooking({{ $record->id }})" title="View"> <i
+                                                        class="fa fa-eye"></i><small> View</small></button>
                                             </td>
 
                                         </tr>
@@ -229,11 +229,12 @@
         </div>
     </div>
 </div>
+
 {{-- Modal --}}
-<div wire.ignore.self class="modal fade" id="bookingRecordModal" tabindex="-1" aria-labelledby="bookingRecordModal"
+<div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-top modal-lg">
-        <livewire:booking.booking-record-modal />
+    <div class="modal-dialog modal-dialog-top modal-xl">
+        <livewire:booking.booking-form />
     </div>
 </div>
 

@@ -42,6 +42,44 @@
 
 	<ul class="nav user-menu float-end">
 
+		{{-- Notification --}}
+
+		{{-- <li class="nav-item dropdown d-none d-md-block">
+			<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img src="assets/img/icons/note-icon-02.svg" alt=""><span class="pulse"></span> </a>
+			<div class="dropdown-menu notifications">
+				<div class="topnav-dropdown-header">
+					<span>Notifications</span>
+				</div>
+				<div class="drop-scroll">
+					<ul class="notification-list">
+						@foreach (auth()->user()->unreadNotifications as $notification)
+							<li class="notification-message">
+								<a href="{{ route('notifications.markAsRead', $notification->id) }}">
+									<div class="media">
+										<span class="avatar">
+											<img alt="User Avatar" src="assets/img/user.jpg" class="img-fluid">
+										</span>
+										<div class="media-body">
+											<p class="noti-details">
+												<span class="noti-title">{{ $notification->data['message'] }}</span>
+											</p>
+											<p class="noti-time"><span class="notification-time">{{ $notification->created_at->diffForHumans() }}</span></p>
+										</div>
+									</div>
+								</a>
+							</li>
+						@endforeach
+					</ul>
+					
+				</div>
+				<div class="topnav-dropdown-footer">
+					<a href="activities.html">View all Notifications</a>
+				</div>
+			</div>
+		</li> --}}
+
+		{{-- End Notification --}}
+
 		<li class="nav-item dropdown has-arrow user-profile-list">
 
 			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">

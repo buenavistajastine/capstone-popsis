@@ -19,9 +19,13 @@
             <h5><strong>CATERING INFORMATION SHEET</strong></h5>
             <div>Name of Client: <strong> {{ ucwords($customer->last_name) }},
                     {{ ucwords($customer->first_name) }}</strong></div>
-            <div>Venue Address: <strong>{{ $booking->address->venue_address }} {{ $booking->address->specific_address }},
-                    {{ $booking->address->barangay }}, {{ $booking->address->city }}
-                    ({{ $booking->address->landmark }})</strong></div>
+            <div>Venue Address: <small><strong>{{ $booking->address->venue_address }}
+                        {{ $booking->address->specific_address }},
+                        {{ $booking->address->barangay }}, {{ $booking->address->city }}
+                        @if ($booking->address->landmark)
+                            ({{ $booking->address->landmark }})
+                        @endif
+                    </strong></small></div>
             <div>Date of Event:
                 <strong>{{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}</strong>
             </div>
@@ -42,7 +46,9 @@
             <div>
 
                 Motif:
-                @if ($booking->color && $booking->color2)
+                @if ($booking->color && !$booking->color2)
+                    <strong>{{ $booking->color }}</strong>
+                @elseif ($booking->color && $booking->color2)
                     <strong>{{ $booking->color }} & {{ $booking->color2 }}</strong>
                 @else
                 @endif
@@ -62,12 +68,12 @@
                         {{ $type->name }}:
                         @foreach ($dishes as $dish)
                             @if ($dish->type_id == $type->id)
-                                <div class="row ps-5">{{ $dish->name }}</div>
+                                <div class="row ps-4"><strong>{{ $dish->name }}</strong></div>
                             @endif
                         @endforeach
                         @foreach ($addons as $addon)
                             @if ($addon->type_id == $type->id)
-                                <div class="row ps-5">{{ $addon->name }} / Add-on</div>
+                                <div class="row ps-4"><strong>{{ $addon->name }} --- Add-on</strong></div>
                             @endif
                         @endforeach
                     </div>
@@ -117,26 +123,26 @@
                     </div>
                     <div class="mt-2">
                         <?php
-                        $numPlatito = 20;
-                        $canopyLace = 4 * $numCanopy;
-                        $chairLace = $booking->no_pax / 2;
-                        $lace = $booking->no_pax;
-                        $numHanky = $booking->no_pax / 2;
-                        $hanky = $booking->no_pax;
-                        
-                        if ($booking->no_pax >= 200) {
-                            $numPlatito += 20;
-                        } elseif ($booking->no_pax >= 300) {
-                            $numPlatito += 40;
-                        }
-                        
+                                $numPlatito = 20;
+                                $canopyLace = 4 * $numCanopy;
+                                $chairLace = $booking->no_pax / 2;
+                                $lace = $booking->no_pax;
+                                $numHanky = $booking->no_pax / 2;
+                                $hanky = $booking->no_pax;
+                                
+                                if ($booking->no_pax >= 200) {
+                                    $numPlatito += 20;
+                                } elseif ($booking->no_pax >= 300) {
+                                    $numPlatito += 40;
+                                }
                         ?>
                         <div class="mt-1">Drop 2.5: <strong>{{ $numTables }}</strong></div>
-                        <div class="mt-1">Chair Lace: @if ($booking)
+                        <div class="mt-1">Chair Lace: @if ($booking && $booking->color2)
                                 <strong>{{ $chairLace }}
                                     {{ $booking->color }} & {{ $chairLace }} {{ $booking->color2 }}</strong>
+                            @elseif($booking->color && !$booking->color2)
+                                <strong>{{ $lace }} {{ $booking->color }}</strong>
                             @else
-                                <strong>{{ $lace }}</strong>
                             @endif
                         </div>
                         <div class="mt-1">Canopy Lace: <strong>{{ $canopyLace }}</strong></div>
@@ -146,6 +152,8 @@
                             @if ($booking->color && $booking->color2)
                                 <strong>{{ $numHanky }} {{ $booking->color }} & {{ $numHanky }}
                                     {{ $booking->color2 }}</strong>
+                            @elseif($booking->color && !$booking->color2)
+                                <strong>{{ $booking->no_pax }} {{ $booking->color }}</strong>
                             @else
                                 <strong>{{ $hanky }}</strong>
                             @endif

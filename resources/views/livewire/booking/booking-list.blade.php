@@ -80,6 +80,7 @@
                                 <tr>
                                     <th>Customer</th>
                                     <th>Event</th>
+                                    <th>Date and Call Time</th>
                                     <th>Venue</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -88,7 +89,7 @@
                             <tbody>
                                 @if ($bookings->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center">No data available in table.</td>
+                                        <td colspan="6" class="text-center">No data available in table.</td>
                                     </tr>
                                 @else
                                     @foreach ($bookings as $booking)
@@ -110,11 +111,14 @@
                                                     <div class="col-md-12 mb-1 text-justify">
                                                         {{ $booking->event_name }} - <i>{{ $booking->no_pax }} Pax</i>
                                                     </div>
-                                                    <div class="col-md-12 mb-1">
-                                                        {{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
-                                                        at
-                                                        <strong>{{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}</strong>
-                                                    </div>
+                                                    
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-12 mb-1">
+                                                    {{ $booking['date_event'] ? \Carbon\Carbon::parse($booking['date_event'])->format('F j, Y') : '' }}
+                                                    at
+                                                    <strong>{{ $booking['call_time'] ? \Carbon\Carbon::parse($booking['call_time'])->format('g:i A') : '' }}</strong>
                                                 </div>
                                             </td>
                                             <td>
@@ -124,10 +128,10 @@
                                                             {{ $booking->address->venue_address ? ucfirst($booking->address->venue_address) : '' }}
                                                         </div>
                                                         <div class="col-md-12 mb-1">
-                                                            <small>
+                                                           
                                                                 {{ $booking->address->barangay ? ucfirst($booking->address->barangay) . ', ' : '' }}
                                                                 {{ $booking->address->city ? ucfirst($booking->address->city) : '' }}
-                                                            </small>
+                                                           
                                                         </div>
                                                     </div>
                                                 @endif
@@ -257,7 +261,7 @@
 {{-- Modal --}}
 <div wire.ignore.self class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModal"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-top modal-lg">
+    <div class="modal-dialog modal-dialog-top modal-xl">
         <livewire:booking.booking-form />
     </div>
 </div>

@@ -30,6 +30,7 @@ class SalesReport extends Component
     public $selectedWeek;
     public $weeksInMonth;
     public $filterType = 'all';
+    public $statusType = 'all';
 
     public function mount()
     {
@@ -48,19 +49,31 @@ class SalesReport extends Component
             $transactions->whereNotNull('foodOrder_id');
         }
 
+        if ($this->statusType == 'paid') {
+            $transactions->where('status_id', 5);
+        } elseif ($this->statusType == 'partial') {
+            $transactions->where('status_id', 13);
+        } elseif ($this->statusType == 'unpaid') {
+            $transactions->where('status_id', 6);
+        } elseif ($this->statusType == 'cancelled') {
+            $transactions->where('status_id', 3);
+        }
+
         $transactions->whereYear('created_at', $this->selectedYear);
         $yearlyTotal = $transactions->sum('total_amt');
 
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
+
+            $monthlyCount = $transactions;
         }
 
-        $transactions->whereDoesntHave('statuses', function ($query) {
-            $query->where('status_id', 3);
-        });
+        // $transactions->whereDoesntHave('statuses', function ($query) {
+        //     $query->where('status_id', 3);
+        // });
 
         $monthlyTotal = $transactions->sum('total_amt');
-        $transactions = $transactions->paginate(20);
+        $transactions = $transactions->paginate(50);
 
 
         $transacs = Billing::query();
@@ -68,6 +81,16 @@ class SalesReport extends Component
             $transacs->whereNotNull('booking_id');
         } elseif ($this->filterType == 'order') {
             $transacs->whereNotNull('foodOrder_id');
+        }
+
+        if ($this->statusType == 'paid') {
+            $transacs->where('status_id', 5);
+        } elseif ($this->statusType == 'partial') {
+            $transacs->where('status_id', 13);
+        } elseif ($this->statusType == 'unpaid') {
+            $transacs->where('status_id', 6);
+        } elseif ($this->statusType == 'cancelled') {
+            $transacs->where('status_id', 3);
         }
 
         $transacs->whereYear('created_at', $this->selectedYear);
@@ -79,6 +102,7 @@ class SalesReport extends Component
             'transacs' => $transacs,
             'yearlyTotal' => $yearlyTotal, // Pass the yearly total to the view
             'monthlyTotal' => $monthlyTotal, // Also pass the monthly total if needed
+            'filterMonth' => $this->selectedMonth, // Also pass the monthly total if needed
         ]);
     }
 
@@ -93,15 +117,25 @@ class SalesReport extends Component
             $transactions->whereNotNull('foodOrder_id');
         }
 
+        if ($this->statusType == 'paid') {
+            $transactions->where('status_id', 5);
+        } elseif ($this->statusType == 'partial') {
+            $transactions->where('status_id', 13);
+        } elseif ($this->statusType == 'unpaid') {
+            $transactions->where('status_id', 6);
+        } elseif ($this->statusType == 'cancelled') {
+            $transactions->where('status_id', 3);
+        }
+
         $transactions->whereYear('created_at', $this->selectedYear);
 
         if (!empty($this->selectedMonth)) {
             $transactions->whereMonth('created_at', $this->selectedMonth);
         }
 
-        $transactions->whereDoesntHave('statuses', function ($query) {
-            $query->where('status_id', 3);
-        });
+        // $transactions->whereDoesntHave('statuses', function ($query) {
+        //     $query->where('status_id', 3);
+        // });
 
         $transactions = $transactions->get();
 

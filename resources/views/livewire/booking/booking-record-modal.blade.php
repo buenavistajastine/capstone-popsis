@@ -64,6 +64,9 @@
         @endif
     </div>
     <div class="modal-footer">
+        <button type="button" class="btn btn-primary" wire:click="reBook({{ $recordId }})">Rebook</button>
+    </div>
+    <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
     </div>
 </div>

@@ -22,10 +22,12 @@ use App\Models\BookingDishKey;
 use App\Models\CustomerAddress;
 use App\Models\PaidAmount;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\BookingNotification;
+use Illuminate\Support\Facades\Notification;
 
 class BookingForm extends Component
 {
-    public $order;
+    public $order, $recordId;
     public $bookingId, $packageId, $first_name, $middle_name, $last_name, $contact_no, $gender_id, $additional_amt, $advance_amt, $discount_amt;
     public $customer_id, $package_id, $venue_id, $venue_name, $venue_address, $remarks, $no_pax, $date_event, $call_time, $total_price, $dt_booked, $status_id, $selectedIndex;
     public $dishItems = [];
@@ -35,12 +37,16 @@ class BookingForm extends Component
     public $maxFormRepeaters = 0;
     public $addOns = [];
     public $selectedDishes = [];
+    public $selectedAddOns = [];
     public $selectedMenus = [];
     public $quantity;
     public $event_name;
     public $activeTab = ['customer', 'address', 'booking'];
     public $action = '';
     public $message = '';
+    public $search = '';
+    public $totalBookingPrice, $totalAddOnPrice;
+    public $can_rebook = false;
 
     public $customers = [];
     public $searchQuery = '';
@@ -49,15 +55,19 @@ class BookingForm extends Component
 
     protected $listeners = [
         'bookingId',
+        'recordId',
         'resetInputFields',
+        'reBook',
         'echo:bookings,BookingCreated' => 'handleBookingCreated'
     ];
+    
 
     public function handleBookingCreated($event)
     {
         // Reload the data or refresh the table
         $this->emit('refreshTable');
     }
+
 
     public function resetInputFields()
     {
@@ -67,12 +77,13 @@ class BookingForm extends Component
         $this->errorMessage = '';
     }
 
+
     public function selectCustomer($customerId)
     {
         $this->selectedCustomerId = $customerId;
         // Fetch the customer's details
         $customer = Customer::find($customerId);
-        
+
         if ($customer) {
             $customer_address = CustomerAddress::where('customer_id', $customer->id)->first();
             $this->first_name = $customer->first_name;
@@ -84,11 +95,11 @@ class BookingForm extends Component
             $this->landmark = $customer_address->landmark;
 
             $this->searchQuery = $customer->first_name . ' ' . $customer->last_name;
-    
         } else {
             $this->resetInputFields();
         }
     }
+
 
     public function bookingId($bookingId)
     {
@@ -145,43 +156,32 @@ class BookingForm extends Component
         }
 
         $dishes = BookingDishKey::where('booking_id', $bookingId)->get();
-        $i = 0;
+        $this->selectedDishes = [];
+        foreach ($dishes as $dish) {
+            $this->selectedDishes[] = [
+                'id' => $dish->dish_id,
+                'name' => $dish->dishes->name,
+                'quantity' => $dish->quantity,
+                'type_id' => $dish->dishes->type->name
 
-        if ($dishes == null) {
-            $this->dishItems[$i] = [
-                'id' => null,
-                'dish_id' => null,
-                'quantity' => null,
             ];
-        } else {
-            foreach ($dishes as $dish) {
-                $this->dishItems[$i] = [
-                    'id' => $dish->id,
-                    'dish_id' => $dish->dish_id,
-                    'quantity' => $dish->quantity,
-                ];
-                $i++;
-            }
         }
 
         $addOnDishes = AddOn::where('booking_id', $bookingId)->get();
-        $j = 0;
-
-        if ($addOnDishes == null) {
-            $this->addOns[$j] = [
-                'id' => null,
-                'dish_id' => null,
-                'quantity' => null,
+        $this->selectedAddOns = [];
+        foreach ($addOnDishes as $addon) {
+            $this->selectedAddOns[] = [
+                'id' => $addon->dish_id,
+                'name' => $addon->dishss->name,
+                'quantity' => $addon->quantity,
+                'type_id' => $addon->dishss->type->name
             ];
-        } else {
-            foreach ($addOnDishes as $add) {
-                $this->addOns[$j] = [
-                    'id' => $add->id,
-                    'dish_id' => $add->dish_id,
-                    'quantity' => $add->quantity,
-                ];
-                $j++;
-            }
+        }
+
+        $now = Carbon::now();
+
+        if ($booking->date_event < $now) {
+            $this->can_rebook = true;
         }
 
         $this->selectedMenus = Menu::pluck('id')->toArray();
@@ -190,23 +190,60 @@ class BookingForm extends Component
         $this->advance_amt = number_format($billing->advance_amt ?? 0, 2);
         $this->discount_amt = number_format($billing->discount_amt ?? 0, 2);
         $this->calculateTotalPrice();
+
+        
     }
 
-    public function addDish()
+
+    public function addDish($dishId)
     {
-        $totalQuantity = array_reduce($this->dishItems, function ($carry, $item) {
-            return $carry + (float) $item['quantity'];
-        }, 0);
-
-        $package = Package::find($this->package_id);
-        if ($package && $package->limitation_of_maindish > 0 && $totalQuantity < $package->limitation_of_maindish) {
-            $this->dishItems[] = [
-                'id' => null,
-                'dish_id' => '',
-                'quantity' => 1,
-            ];
-        }
+        $dish = Dish::find($dishId);
+        $this->selectedDishes[] = [
+            'id' => $dish->id,
+            'name' => $dish->name,
+            'quantity' => 1,
+            'type_id' => $dish->type->name // or $dish->type->id if using the foreign key
+        ];
     }
+
+
+    public function addAddOn($dishId)
+    {
+        $dish = Dish::find($dishId);
+        $this->selectedAddOns[] = [
+            'id' => $dish->id,
+            'name' => $dish->name,
+            'quantity' => 1,
+            'type_id' => $dish->type->name // or $dish->type->id if using the foreign key
+        ];
+
+        $this->calculateTotalPrice();
+    }
+
+
+    public function isDishSelected($dishId)
+    {
+        return collect($this->selectedDishes)->contains('id', $dishId);
+    }
+
+
+    public function isAddOnSelected($dishId)
+    {
+        return collect($this->selectedAddOns)->contains('id', $dishId);
+    }
+
+    public function updateDishQuantity($index, $quantity)
+    {
+        $this->selectedDishes[$index]['quantity'] = $quantity;
+    }
+
+
+    public function updateAddOnQuantity($index, $quantity)
+    {
+        $this->selectedAddOns[$index]['quantity'] = $quantity;
+        $this->calculateTotalPrice();
+    }
+
 
     public function updatedPackageId()
     {
@@ -221,6 +258,22 @@ class BookingForm extends Component
     }
 
 
+    public function removeDish($index)
+    {
+        unset($this->selectedDishes[$index]);
+        $this->selectedDishes = array_values($this->selectedDishes);
+    }
+
+
+    public function removeAddOn($index)
+    {
+        unset($this->selectedAddOns[$index]);
+        $this->selectedAddOns = array_values($this->selectedAddOns);
+
+        $this->calculateTotalPrice();
+    }
+
+
     public function updatePackages()
     {
 
@@ -228,17 +281,6 @@ class BookingForm extends Component
         $this->calculateTotalPrice();
     }
 
-
-    public function addOnDish()
-    {
-        $this->addOns[] = [
-            'id' => null,
-            'dish_id' => '',
-            'quantity' => 1,
-        ];
-
-        $this->calculateTotalPrice();
-    }
 
     public function store()
     {
@@ -281,6 +323,21 @@ class BookingForm extends Component
                 'venue_address' => 'nullable',
             ]);
 
+            $address_data2 = $this->validate([
+                'city' => 'nullable',
+                'barangay' => 'nullable',
+                'specific_address' => 'nullable',
+                'landmark' => 'nullable',
+            ]);
+
+            if (empty($this->selectedDishes)) {
+                $this->selectedDishes = [];
+            }
+
+            if (empty($this->selectedAddOns)) {
+                $this->selectedAddOns = [];
+            }
+
             $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
             $booking_data['venue_id'] = $this->selectedVenue;
 
@@ -293,15 +350,13 @@ class BookingForm extends Component
             $billingStatusId = $advanceAmt != 0 ? 13 : 6;
 
             if (!$this->customer_id) {
-                if(!$this->selectedCustomerId) {
+                if (!$this->selectedCustomerId) {
                     $newCustomer = Customer::create($customer_data);
                     $booking_data['customer_id'] = $newCustomer->id;
                 } else {
                     $booking_data['customer_id'] = $this->selectedCustomerId;
                 }
-                
             } else {
-
                 $booking_data['customer_id'] = $this->customer_id;
                 $cust = Customer::whereId($this->customer_id)->first();
                 $user = User::whereId($cust->user_id)->first();
@@ -325,45 +380,47 @@ class BookingForm extends Component
             }
 
             if ($this->bookingId) {
-
                 $booking = Booking::find($this->bookingId);
                 $address = Address::where('booking_id', $booking->id);
 
-                $booking->update($booking_data, ['status_id' => 2]);
+                $booking->update($booking_data);
                 $address->update($address_data);
-                $booking_services = BookingDishKey::where('booking_id', $this->bookingId)->get();
 
-                foreach ($this->dishItems as $key => $value) {
-                    if ($this->dishItems[$key]['id'] == null) {
-                        BookingDishKey::create([
-                            'booking_id' => $this->bookingId,
-                            'dish_id' => $this->dishItems[$key]['dish_id'],
-                            'quantity' => $this->dishItems[$key]['quantity'],
-                            'update' => true
-                        ]);
-                    } else {
-                        $dish_ni = BookingDishKey::find($this->dishItems[$key]['id']);
-                        $dish_ni->update([
-                            'booking_id' => $this->bookingId,
-                            'dish_id' => $this->dishItems[$key]['dish_id'],
-                            'quantity' => $this->dishItems[$key]['quantity'],
-                            'update' => true
-                        ]);
-                    }
+                // Update dishes and add-ons
+                BookingDishKey::where('booking_id', $this->bookingId)->delete();
+                foreach ($this->selectedDishes as $dish) {
+                    BookingDishKey::create([
+                        'booking_id' => $this->bookingId,
+                        'dish_id' => $dish['id'],
+                        'quantity' => $dish['quantity']
+                    ]);
+                }
+
+                AddOn::where('booking_id', $this->bookingId)->delete();
+                foreach ($this->selectedAddOns as $addOn) {
+                    AddOn::create([
+                        'booking_id' => $this->bookingId,
+                        'dish_id' => $addOn['id'],
+                        'quantity' => $addOn['quantity']
+                    ]);
                 }
 
                 $billing = Billing::where('booking_id', $this->bookingId)->first();
+                $paid_amounts = PaidAmount::where('billing_id', $billing->id)->first();
                 if ($billing) {
                     $billing->update([
                         'total_amt' => $booking_data['total_price'],
-                        // 'payable_amt' => $booking_data['total_price'],
                         'additional_amt' => $additionalAmt,
                         'advance_amt' => $advanceAmt,
                         'discount_amt' => $discountAmt,
                         'status_id' => $billingStatusId,
                     ]);
+
+                    $paid_amounts->update([
+                        'billing_id' => $billing->id,
+                        'payable_amt' => $booking_data['total_price'],
+                    ]);
                 } else {
-                    // Create billing if it does not exist
                     $billing = Billing::create([
                         'customer_id' => $booking->customer_id,
                         'booking_id' => $booking->id,
@@ -380,59 +437,23 @@ class BookingForm extends Component
                     ]);
                 }
 
-                foreach ($this->addOns as $key => $value) {
-                    if ($this->addOns[$key]['id'] == null) {
-                        AddOn::create([
-                            'booking_id' => $this->bookingId,
-                            'dish_id' => $this->addOns[$key]['dish_id'],
-                            'quantity' => $this->addOns[$key]['quantity'],
-                            'update' => true
-                        ]);
-                    } else {
-                        $dish_ni = AddOn::find($this->addOns[$key]['id']);
-                        $dish_ni->update([
-                            'booking_id' => $this->bookingId,
-                            'dish_id' => $this->addOns[$key]['dish_id'],
-                            'quantity' => $this->addOns[$key]['quantity'],
-                            'update' => true
-                        ]);
-                    }
-                }
-
-                foreach ($this->dishItems as $key => $value) {
-                    BookingDishKey::where('booking_id', '=', $this->bookingId)
-                        ->update(['update' => 0]);
-                }
-
-                foreach ($this->addOns as $key => $value) {
-                    AddOn::where('booking_id', '=', $this->bookingId)
-                        ->update(['update' => 0]);
-                }
-
-
-
-                $action = "edit";
+                $action = 'edit';
                 $message = 'Successfully Updated';
             } else {
-
                 $booking_data['status_id'] = 2;
                 $booking_data['dt_booked'] = Carbon::now();
 
                 $booking = Booking::create($booking_data);
-
                 $address_data['booking_id'] = $booking->id;
                 Address::create($address_data);
-
+                $address_data2['customer_id'] = $booking->customer_id;
+                CustomerAddress::create($address_data2);
+                
 
                 $currentYear = "BKG";
                 $paddedRowId = str_pad($booking->id, 6, '0', STR_PAD_LEFT);
                 $result = $currentYear . $paddedRowId;
-
-                // dd($result);
-                $booking->update([
-                    'booking_no' => $result
-                ]);
-
+                $booking->update(['booking_no' => $result]);
 
                 $billing = Billing::create([
                     'customer_id' => $booking->customer_id,
@@ -449,45 +470,42 @@ class BookingForm extends Component
                     'payable_amt' => $booking_data['total_price'],
                 ]);
 
-                // dd($billing->customer_id);
-                foreach ($this->dishItems as $key => $value) {
+                foreach ($this->selectedDishes as $dish) {
                     BookingDishKey::create([
                         'booking_id' => $booking->id,
-                        'dish_id' => $this->dishItems[$key]['dish_id'],
-                        'quantity' => $this->dishItems[$key]['quantity'],
+                        'dish_id' => $dish['id'],
+                        'quantity' => $dish['quantity'],
                         'status_id' => 1,
                         'update' => false
                     ]);
                 }
 
-                foreach ($this->addOns as $key => $value) {
+                foreach ($this->selectedAddOns as $addOn) {
                     AddOn::create([
                         'booking_id' => $booking->id,
-                        'dish_id' => $this->addOns[$key]['dish_id'],
-                        'quantity' => $this->addOns[$key]['quantity'],
+                        'dish_id' => $addOn['id'],
+                        'quantity' => $addOn['quantity'],
                         'status_id' => 1,
                         'update' => false
                     ]);
                 }
 
-                $action = "store";
+                $action = 'store';
                 $message = 'Successfully Created';
             }
 
-            // dd('hello');
-            $action = "store";
-            $message = 'Successfully Created';
             DB::commit();
-            event(new BookingCreated($booking));
 
             BookingDishKey::where('booking_id', '=', $this->bookingId)
-                ->whereNotIn('dish_id', collect($this->dishItems)->pluck('dish_id')->toArray())
+                ->whereNotIn('dish_id', collect($this->selectedDishes)->pluck('id')->toArray())
                 ->delete();
 
             AddOn::where('booking_id', '=', $this->bookingId)
-                ->whereNotIn('dish_id', collect($this->addOns)->pluck('dish_id')->toArray())
+                ->whereNotIn('dish_id', collect($this->selectedAddOns)->pluck('id')->toArray())
                 ->delete();
 
+            $this->selectedDishes = [];
+            $this->selectedAddOns = [];
             $this->emit('flashAction', $action, $message);
             $this->resetInputFields();
             $this->emit('closeBookingModal');
@@ -499,10 +517,13 @@ class BookingForm extends Component
         }
     }
 
+
     public function calculateTotalPrice()
     {
         $packagePrice = 0;
         $addOnPrice = 0;
+
+        // dd($this->selectedAddOns);
 
         if (!empty($this->package_id)) {
             $package = Package::find($this->package_id);
@@ -512,15 +533,16 @@ class BookingForm extends Component
             }
         }
 
-        foreach ($this->addOns as $addOn) {
-            if (!empty($addOn['dish_id'])) {
-                $add = Dish::find($addOn['dish_id']);
+        foreach ($this->selectedAddOns as $addOn) {
+            if (!empty($addOn['id'])) {
+                $dish = Dish::find($addOn['id']);
 
-                if ($add) {
+                if ($dish) {
                     if ($addOn['quantity'] == 0.5) {
-                        $addOnPrice = (float)$add->price_half;
+                        $addOnPrice += (float) $dish->price_half;
+                    } else {
+                        $addOnPrice += (float) $dish->price_full * (int) $addOn['quantity'];
                     }
-                    $addOnPrice += (float) $add->price_full * (int) $addOn['quantity'];
                 }
             }
         }
@@ -535,6 +557,9 @@ class BookingForm extends Component
         $total = $packagePrice * $noPax;
         $overallPrice = $total + $addOnPrice;
 
+        $this->totalBookingPrice = $total;
+        $this->totalAddOnPrice = $addOnPrice;
+
         // Ensure that additional_amt, advance_amt, and discount_amt are numeric
         $additionalAmt = is_numeric(str_replace(',', '', $this->additional_amt)) ? str_replace(',', '', $this->additional_amt) : 0;
         $advanceAmt = is_numeric(str_replace(',', '', $this->advance_amt)) ? str_replace(',', '', $this->advance_amt) : 0;
@@ -548,11 +573,13 @@ class BookingForm extends Component
         $this->total_price = '₱ ' . number_format($discountOverallPrice, 2);
     }
 
+
     public function deleteDish($dishIndex)
     {
         unset($this->dishItems[$dishIndex]);
         $this->dishItems = array_values($this->dishItems);
     }
+
 
     public function deleteAddOnDish($addOnIndex)
     {
@@ -562,6 +589,7 @@ class BookingForm extends Component
         $this->calculateTotalPrice();
     }
 
+
     public function mount()
     {
         $this->resetInputFields();
@@ -570,10 +598,173 @@ class BookingForm extends Component
         $this->addOns = [];
     }
 
+    // For ReBooking the existing booking record
+    public function reBook()
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $customer_data = $this->validate([
+                'first_name' => 'required',
+                'middle_name' => 'nullable',
+                'last_name' => 'required',
+                'contact_no' => 'nullable',
+                'gender_id' => 'nullable',
+            ]);
+
+            $booking_data = $this->validate([
+                'package_id' => 'required',
+                'selectedVenue' => 'required',
+                'event_name' => 'nullable',
+                'no_pax' => 'required',
+                'date_event' => 'required|date|after_or_equal:today',
+                'call_time' => 'nullable',
+                'total_price' => 'nullable',
+                'dt_booked' => 'nullable',
+                'remarks' => 'nullable',
+                'status_id' => 'nullable',
+                'additional_amt' => 'nullable',
+                'advance_amt' => 'nullable',
+                'discount_amt' => 'nullable',
+                'color' => 'nullable',
+                'color2' => 'nullable',
+            ]);
+
+            $address_data = $this->validate([
+                'city' => 'nullable',
+                'barangay' => 'nullable',
+                'specific_address' => 'nullable',
+                'landmark' => 'nullable',
+                'venue_address' => 'nullable',
+            ]);
+
+            if (empty($this->selectedDishes)) {
+                $this->selectedDishes = [];
+            }
+
+            if (empty($this->selectedAddOns)) {
+                $this->selectedAddOns = [];
+            }
+
+            $booking_data['total_price'] = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
+            $booking_data['venue_id'] = $this->selectedVenue;
+
+            $additionalAmt = str_replace(',', '', $booking_data['additional_amt'] ?? 0);
+            $advanceAmt = str_replace(',', '', $booking_data['advance_amt'] ?? 0);
+            $discountAmt = str_replace(',', '', $booking_data['discount_amt'] ?? 0);
+            $totalPrice = str_replace(['₱', ' ', ','], '', $booking_data['total_price']);
+
+            // Set the status_id based on advance_amt
+            $billingStatusId = $advanceAmt != 0 ? 13 : 6;
+
+            if (!$this->customer_id) {
+                if (!$this->selectedCustomerId) {
+                    $newCustomer = Customer::create($customer_data);
+                    $booking_data['customer_id'] = $newCustomer->id;
+                } else {
+                    $booking_data['customer_id'] = $this->selectedCustomerId;
+                }
+            } else {
+                $booking_data['customer_id'] = $this->customer_id;
+                $cust = Customer::whereId($this->customer_id)->first();
+                $user = User::whereId($cust->user_id)->first();
+                if ($user) {
+                    $user->update([
+                        'first_name' => $this->first_name,
+                        'middle_name' => $this->middle_name,
+                        'last_name' => $this->last_name,
+                    ]);
+                }
+
+                $cust->update([
+                    'first_name' => $this->first_name,
+                    'middle_name' => $this->middle_name,
+                    'last_name' => $this->last_name,
+                ]);
+            }
+
+            if ($this->bookingId) {
+                $booking_data['status_id'] = 2;
+                $booking_data['dt_booked'] = Carbon::now();
+
+                $booking = Booking::create($booking_data);
+                $address_data['booking_id'] = $booking->id;
+                Address::create($address_data);
+
+                $currentYear = "BKG";
+                $paddedRowId = str_pad($booking->id, 6, '0', STR_PAD_LEFT);
+                $result = $currentYear . $paddedRowId;
+                $booking->update(['booking_no' => $result]);
+
+                $billing = Billing::create([
+                    'customer_id' => $booking->customer_id,
+                    'booking_id' => $booking->id,
+                    'total_amt' => $booking_data['total_price'],
+                    'additional_amt' => $additionalAmt,
+                    'advance_amt' => $advanceAmt,
+                    'discount_amt' => $discountAmt,
+                    'status_id' => 6,
+                ]);
+
+                PaidAmount::create([
+                    'billing_id' => $billing->id,
+                    'payable_amt' => $booking_data['total_price'],
+                ]);
+
+                foreach ($this->selectedDishes as $dish) {
+                    BookingDishKey::create([
+                        'booking_id' => $booking->id,
+                        'dish_id' => $dish['id'],
+                        'quantity' => $dish['quantity'],
+                        'status_id' => 1,
+                        'update' => false
+                    ]);
+                }
+
+                foreach ($this->selectedAddOns as $addOn) {
+                    AddOn::create([
+                        'booking_id' => $booking->id,
+                        'dish_id' => $addOn['id'],
+                        'quantity' => $addOn['quantity'],
+                        'status_id' => 1,
+                        'update' => false
+                    ]);
+                }
+
+                $action = 'store';
+                $message = 'Successfully Created';
+            }
+
+            DB::commit();
+
+            BookingDishKey::where('booking_id', '=', $this->bookingId)
+                ->whereNotIn('dish_id', collect($this->selectedDishes)->pluck('id')->toArray())
+                ->delete();
+
+            AddOn::where('booking_id', '=', $this->bookingId)
+                ->whereNotIn('dish_id', collect($this->selectedAddOns)->pluck('id')->toArray())
+                ->delete();
+
+            $this->selectedDishes = [];
+            $this->selectedAddOns = [];
+            $this->emit('flashAction', $action, $message);
+            $this->resetInputFields();
+            $this->emit('closeBookingModal');
+            $this->emit('refreshParentBooking');
+            $this->emit('refreshTable');
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorMessage = $e->getMessage();
+        }
+    }
+
+
     public function render()
     {
+        $booking = Booking::whereId($this->bookingId)->first();
         $customers = Customer::all();
-        $dishes = Dish::all();
+        $dishes = Dish::where('name', 'like', "%{$this->search}%")->get();
         // $packages = Package::all(); 
         $menus = Menu::all();
         $venues = Venue::all();

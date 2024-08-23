@@ -213,7 +213,7 @@ if ($('#s-line').length > 0) {
 var sline = {
   chart: {
     height: 350,
-    type: 'line',
+    type: 'area',
     zoom: {
       enabled: false
     },
@@ -230,7 +230,7 @@ var sline = {
   },
   series: [{
     name: "Desktops",
-    data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+    data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 150, 30, 50]
   }],
   title: {
     text: 'Product Trends by Month',
@@ -243,7 +243,7 @@ var sline = {
     },
   },
   xaxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   }
 }
 
